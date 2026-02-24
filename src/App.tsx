@@ -90,11 +90,13 @@ const Navbar = () => {
       <div className="hidden md:flex items-center space-x-8">
         <div className="flex space-x-8 text-xs font-semibold tracking-widest uppercase">
           {navLinks.map((link) => (
-            isHomePage ? (
-              <a key={link.name} href={link.href.replace('/', '')} className="hover:text-accent transition-colors">{link.name}</a>
-            ) : (
-              <Link key={link.name} to={link.href} className="hover:text-accent transition-colors">{link.name}</Link>
-            )
+            <Link 
+              key={link.name} 
+              to={link.href} 
+              className="hover:text-accent transition-colors"
+            >
+              {link.name}
+            </Link>
           ))}
         </div>
         <LanguageTranslator />
@@ -118,11 +120,14 @@ const Navbar = () => {
             className="absolute top-full left-0 w-full bg-beige p-8 flex flex-col space-y-4 shadow-lg md:hidden"
           >
             {navLinks.map((link) => (
-              isHomePage ? (
-                <a key={link.name} href={link.href.replace('/', '')} onClick={() => setIsOpen(false)} className="text-sm font-semibold tracking-widest uppercase">{link.name}</a>
-              ) : (
-                <Link key={link.name} to={link.href} onClick={() => setIsOpen(false)} className="text-sm font-semibold tracking-widest uppercase">{link.name}</Link>
-              )
+              <Link 
+                key={link.name} 
+                to={link.href} 
+                onClick={() => setIsOpen(false)} 
+                className="text-sm font-semibold tracking-widest uppercase"
+              >
+                {link.name}
+              </Link>
             ))}
           </motion.div>
         )}
@@ -2236,9 +2241,12 @@ const Home = () => {
 
   useEffect(() => {
     if (hash) {
-      const element = document.getElementById(hash.replace('#', ''));
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        const yOffset = -100; // Offset for sticky navbar
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
   }, [hash]);
