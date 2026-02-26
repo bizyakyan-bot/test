@@ -1,75 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, Globe } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
 
-const LanguageTranslator = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'sl', name: 'Slovenian', flag: '🇸🇮' },
-    { code: 'de', name: 'German', flag: '🇩🇪' },
-    { code: 'it', name: 'Italian', flag: '🇮🇹' },
-  ];
-
-  const changeLanguage = (langCode: string) => {
-    const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event('change'));
-    }
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (isOpen && !(event.target as Element).closest('.language-translator')) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
-
-  return (
-    <div className="relative language-translator">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 text-forest hover:text-accent transition-colors p-2 rounded-full hover:bg-black/5"
-        aria-label="Select Language"
-      >
-        <Globe size={18} />
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-2xl border border-forest/5 overflow-hidden z-[60]"
-          >
-            {languages.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => changeLanguage(lang.code)}
-                className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-beige transition-colors text-xs font-bold tracking-widest uppercase text-forest"
-              >
-                <span className="text-base">{lang.flag}</span>
-                <span>{lang.name}</span>
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <div id="google_translate_element" className="hidden"></div>
-    </div>
-  );
-};
-
-const Navbar = () => {
+const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -93,18 +29,22 @@ const Navbar = () => {
             <Link 
               key={link.name} 
               to={link.href} 
+              onClick={(e) => {
+                if (link.name === 'About Us') {
+                  e.preventDefault();
+                  onOpenAbout();
+                }
+              }}
               className="hover:text-accent transition-colors"
             >
               {link.name}
             </Link>
           ))}
         </div>
-        <LanguageTranslator />
       </div>
 
       {/* Mobile Menu Toggle */}
       <div className="flex items-center space-x-4 md:hidden">
-        <LanguageTranslator />
         <button onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -123,7 +63,13 @@ const Navbar = () => {
               <Link 
                 key={link.name} 
                 to={link.href} 
-                onClick={() => setIsOpen(false)} 
+                onClick={(e) => {
+                  if (link.name === 'About Us') {
+                    e.preventDefault();
+                    onOpenAbout();
+                  }
+                  setIsOpen(false);
+                }} 
                 className="text-sm font-semibold tracking-widest uppercase"
               >
                 {link.name}
@@ -136,11 +82,11 @@ const Navbar = () => {
   );
 }
 
-const StickyBackButton = ({ to }: { to: string }) => {
+const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }) => {
   const navigate = useNavigate();
   return (
     <button 
-      onClick={() => navigate(to)}
+      onClick={onClick || (() => to && navigate(to))}
       className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-white/80 backdrop-blur-md text-forest px-5 py-2.5 rounded-full hover:bg-white hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-xl border border-forest/5"
     >
       <ArrowLeft size={14} className="mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -181,69 +127,391 @@ const Hero = () => {
   );
 }
 
+interface AccommodationCardProps {
+  apt: Apartment;
+  viewMode?: 'grid' | 'list';
+  origin?: 'home' | 'list';
+  key?: React.Key;
+}
+
+const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCardProps) => {
+  const isAvailable = apt.id === 'apartment-kuhala';
+  
+  const CardContent = (
+    <div className={`group bg-white rounded-2xl transition-all duration-300 shadow-sm hover:shadow-xl border border-forest/5 ${
+      viewMode === 'grid' 
+        ? 'flex flex-col h-full overflow-hidden' 
+        : 'flex flex-col md:flex-row w-full overflow-visible'
+    } ${!isAvailable ? 'cursor-default' : 'cursor-pointer'}`}>
+      <div className={`relative overflow-hidden ${
+        viewMode === 'grid' 
+          ? 'aspect-[4/3] w-full' 
+          : 'w-full md:w-[40%] h-56 md:h-auto aspect-[4/3] md:aspect-auto'
+      } ${viewMode === 'list' ? 'rounded-t-2xl md:rounded-t-none md:rounded-l-2xl' : ''}`}>
+        <motion.img 
+          whileHover={isAvailable ? { scale: 1.05 } : {}}
+          transition={{ duration: 0.5 }}
+          src={apt.images[0]} 
+          alt={apt.name} 
+          className="w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+        {!isAvailable && (
+          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow-lg border border-white/10 z-10">
+            Not yet available
+          </div>
+        )}
+      </div>
+
+      <div className={`p-6 md:p-8 flex flex-col justify-between ${
+        viewMode === 'grid' ? 'flex-1' : 'flex-1 md:w-[60%]'
+      }`}>
+        <div>
+          <h3 className={`font-heading text-2xl md:text-3xl font-bold mb-2 transition-colors ${isAvailable ? 'group-hover:text-accent' : ''}`}>
+            {apt.name}
+          </h3>
+          <div className="flex flex-wrap gap-4 text-sm text-forest/70 mb-4 font-medium">
+            <span>{apt.size}</span>
+            <span className="opacity-30">•</span>
+            <span>{apt.beds}</span>
+          </div>
+          <ul className={`grid gap-x-4 gap-y-2 mb-6 ${
+            viewMode === 'grid' 
+              ? 'grid-cols-2' 
+              : 'grid-cols-2 lg:grid-cols-3'
+          }`}>
+            {apt.amenities.slice(0, 6).map((amenity, i) => (
+              <li key={i} className="flex items-center text-sm text-forest/80">
+                <Check size={16} className="text-accent mr-2 flex-shrink-0" />
+                <span className="truncate">{amenity}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div className="mt-6 flex items-center justify-between pt-4 border-t border-forest/5">
+          <span className="font-bold text-xl md:text-2xl text-forest">{apt.price}</span>
+          {isAvailable ? (
+            <button className="px-6 md:px-10 py-3 bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all text-xs font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap">
+              View Details
+            </button>
+          ) : (
+            <button disabled className="px-6 md:px-10 py-3 bg-forest/5 text-forest/30 rounded-full text-xs font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap">
+              Coming Soon
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  return isAvailable ? (
+    <Link to={`/apartment/${apt.id}`} state={{ from: origin }} key={apt.id}>
+      {CardContent}
+    </Link>
+  ) : (
+    <div key={apt.id}>
+      {CardContent}
+    </div>
+  );
+};
+
+const AccommodationsAllPage = () => {
+  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [priceFilter, setPriceFilter] = useState<'none' | 'low-high' | 'high-low'>('none');
+  const [bedsFilter, setBedsFilter] = useState<'all' | '1' | '2+'>('all');
+  const [amenitiesFilter, setAmenitiesFilter] = useState<string[]>([]);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const filteredApartments = apartments.filter(apt => {
+    if (bedsFilter === '1') {
+      if (!apt.beds.toLowerCase().includes('1')) return false;
+    } else if (bedsFilter === '2+') {
+      const matches = apt.beds.match(/\d/g);
+      const bedCount = matches ? matches.reduce((acc: number, curr: string) => acc + parseInt(curr), 0) : 0;
+      if (bedCount < 2) return false;
+    }
+
+    if (amenitiesFilter.length > 0) {
+      if (!amenitiesFilter.every(filter => 
+        apt.amenities.some(amenity => amenity.toLowerCase().includes(filter.toLowerCase()))
+      )) return false;
+    }
+
+    return true;
+  }).sort((a, b) => {
+    if (priceFilter === 'none') return 0;
+    const getPrice = (p: string) => parseInt(p.replace(/[^0-9]/g, '').substring(0, 3)) || 0;
+    const priceA = getPrice(a.price);
+    const priceB = getPrice(b.price);
+    return priceFilter === 'low-high' ? priceA - priceB : priceB - priceA;
+  });
+
+  const toggleAmenity = (amenity: string) => {
+    setAmenitiesFilter(prev => 
+      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+    );
+  };
+
+  const FilterContent = () => (
+    <div className="bg-white p-8 rounded-2xl border border-forest/5 shadow-sm">
+      <div className="flex items-center justify-between mb-8 text-forest">
+        <div className="flex items-center">
+          <SlidersHorizontal size={18} className="mr-2" />
+          <span className="font-bold uppercase tracking-widest text-xs">Filters</span>
+        </div>
+        <button 
+          onClick={() => setIsMobileFiltersOpen(false)}
+          className="lg:hidden p-2 hover:bg-forest/5 rounded-full transition-colors"
+        >
+          <X size={20} />
+        </button>
+      </div>
+
+      {/* Price Filter */}
+      <div className="mb-8">
+        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Price Range</label>
+        <select 
+          value={priceFilter}
+          onChange={(e) => setPriceFilter(e.target.value as any)}
+          className="w-full bg-beige border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-accent/20"
+        >
+          <option value="none">Sort by</option>
+          <option value="low-high">Price: Low to High</option>
+          <option value="high-low">Price: High to Low</option>
+        </select>
+      </div>
+
+      {/* Beds Filter */}
+      <div className="mb-8">
+        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Beds</label>
+        <div className="flex gap-2">
+          {['all', '1', '2+'].map((option) => (
+            <button
+              key={option}
+              onClick={() => setBedsFilter(option as any)}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all ${
+                bedsFilter === option 
+                  ? 'bg-forest text-white border-forest' 
+                  : 'bg-transparent border-forest/10 text-forest/60 hover:border-forest/30'
+              }`}
+            >
+              {option === 'all' ? 'All' : option}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Amenities Filter */}
+      <div>
+        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Amenities</label>
+        <div className="space-y-2">
+          {['WiFi', 'Kitchen', 'Balcony', 'Parking', 'View'].map((amenity) => (
+            <button
+              key={amenity}
+              onClick={() => toggleAmenity(amenity)}
+              className={`w-full flex items-center px-4 py-2 rounded-lg text-sm transition-all ${
+                amenitiesFilter.includes(amenity)
+                  ? 'bg-accent/10 text-accent font-bold'
+                  : 'text-forest/60 hover:bg-forest/5'
+              }`}
+            >
+              <div className={`w-4 h-4 rounded border mr-3 flex items-center justify-center transition-all ${
+                amenitiesFilter.includes(amenity) ? 'bg-accent border-accent' : 'border-forest/20'
+              }`}>
+                {amenitiesFilter.includes(amenity) && <Check size={12} className="text-white" />}
+              </div>
+              {amenity}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <button 
+        onClick={() => {
+          setPriceFilter('none');
+          setBedsFilter('all');
+          setAmenitiesFilter([]);
+        }}
+        className="w-full mt-8 text-xs font-bold uppercase tracking-widest text-forest/40 hover:text-accent transition-colors"
+      >
+        Clear All Filters
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="bg-beige min-h-screen w-full overflow-x-hidden">
+      <StickyBackButton to="/#accommodation" />
+
+      {/* 1. HERO SECTION */}
+      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <img 
+          src="https://picsum.photos/seed/accommodations-hero/1920/1080" 
+          alt="Soca Valley Accommodations" 
+          className="absolute inset-0 w-full h-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        
+        <div className="relative z-10 text-center px-4 max-w-4xl">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+          >
+            All Accommodations
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 font-medium"
+          >
+            Find your perfect home in the heart of the Julian Alps.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* 2. CONTENT SECTION */}
+      <section className="py-24 px-4 md:px-16 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center space-x-4">
+              <div className="bg-white p-1 rounded-lg border border-forest/5 flex">
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
+                >
+                  <LayoutGrid size={20} />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
+                >
+                  <List size={20} />
+                </button>
+              </div>
+              <p className="text-sm text-forest/60 font-medium">{filteredApartments.length} properties found</p>
+            </div>
+            
+            <button 
+              onClick={() => setIsMobileFiltersOpen(true)}
+              className="lg:hidden flex items-center px-4 py-2 bg-white border border-forest/10 rounded-lg text-sm font-bold text-forest"
+            >
+              <SlidersHorizontal size={16} className="mr-2" />
+              Filters
+            </button>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-4 gap-12">
+          {/* Filters Sidebar (Desktop) */}
+          <div className="hidden lg:block lg:col-span-1">
+            <div className="sticky top-32">
+              <FilterContent />
+            </div>
+          </div>
+
+          {/* Results Grid/List */}
+          <div className="lg:col-span-3">
+            {filteredApartments.length > 0 ? (
+              <div className={viewMode === 'grid' ? 'grid grid-cols-1 min-[400px]:grid-cols-2 gap-8' : 'space-y-8'}>
+                {filteredApartments.map((apt) => (
+                  <AccommodationCard 
+                    key={apt.id} 
+                    apt={apt} 
+                    viewMode={viewMode} 
+                    origin="list"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="h-64 flex flex-col items-center justify-center text-forest/40 bg-white/30 rounded-2xl border border-dashed border-forest/10">
+                <p className="text-lg font-medium mb-2">No properties match your filters</p>
+                <button 
+                  onClick={() => {
+                    setPriceFilter('none');
+                    setBedsFilter('all');
+                    setAmenitiesFilter([]);
+                  }}
+                  className="text-accent font-bold uppercase tracking-widest text-xs"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile Filters Modal */}
+      <AnimatePresence>
+        {isMobileFiltersOpen && (
+          <div className="fixed inset-0 z-[120] lg:hidden">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFiltersOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto bg-beige rounded-t-3xl p-6"
+            >
+              <FilterContent />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const Accommodation = () => {
   return (
-    <section id="accommodation" className="py-20 px-4 md:px-16 bg-white">
-      <h2 className="font-heading text-4xl md:text-5xl font-bold mb-12 text-forest">Accommodation</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {apartments.map((apt) => {
-          const isAvailable = apt.id === 'apartment-kuhala';
-          const CardContent = (
-            <div className={`group block ${!isAvailable ? 'cursor-default' : 'cursor-pointer'}`}>
-              <div className="overflow-hidden rounded-xl mb-6 aspect-[4/3] relative">
-                <motion.img 
-                  whileHover={isAvailable ? { scale: 1.05 } : {}}
-                  transition={{ duration: 0.5 }}
-                  src={apt.images[0]} 
-                  alt={apt.name} 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-                {!isAvailable && (
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow-lg border border-white/10 z-10">
-                    Not yet available
-                  </div>
-                )}
-              </div>
-              <h3 className={`font-heading text-2xl font-bold mb-2 transition-colors ${isAvailable ? 'group-hover:text-accent' : ''}`}>{apt.name}</h3>
-              <div className="flex flex-wrap gap-4 text-sm text-forest/70 mb-4">
-                <span>{apt.size}</span>
-                <span>•</span>
-                <span>{apt.beds}</span>
-              </div>
-              <ul className="grid grid-cols-2 gap-2 mb-6">
-                {apt.amenities.slice(0, 6).map((amenity, i) => (
-                  <li key={i} className="flex items-center text-sm">
-                    <Check size={16} className="text-accent mr-2" />
-                    {amenity}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-lg">{apt.price}</span>
-                {isAvailable ? (
-                  <button className="px-6 py-2 border border-forest rounded-full group-hover:bg-forest group-hover:text-white transition-all text-sm font-semibold uppercase tracking-wider">
-                    View Details
-                  </button>
-                ) : (
-                  <button disabled className="px-6 py-2 border border-forest/30 text-forest/50 rounded-full text-sm font-semibold uppercase tracking-wider cursor-not-allowed opacity-70">
-                    Coming Soon
-                  </button>
-                )}
-              </div>
-            </div>
-          );
+    <section id="accommodation-section" className="py-20 px-4 md:px-16 bg-white">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest">Accommodation</h2>
+          <p className="text-forest/60 mt-4 max-w-xl">
+            Discover our range of carefully curated apartments in the heart of Bovec. From cozy studios to spacious family suites.
+          </p>
+        </div>
+        <Link 
+          to="/accommodations/all"
+          className="flex items-center text-accent font-bold uppercase tracking-widest text-sm group"
+        >
+          View More <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+      
+      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+        {apartments.map((apt) => (
+          <AccommodationCard 
+            key={apt.id} 
+            apt={apt} 
+            origin="home"
+          />
+        ))}
+      </div>
 
-          return isAvailable ? (
-            <Link to={`/apartment/${apt.id}`} key={apt.id}>
-              {CardContent}
-            </Link>
-          ) : (
-            <div key={apt.id}>
-              {CardContent}
-            </div>
-          );
-        })}
+      <div className="mt-16 text-center">
+        <Link 
+          to="/accommodations/all"
+          className="inline-block px-12 py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
+        >
+          View All Properties
+        </Link>
       </div>
     </section>
   );
@@ -388,6 +656,7 @@ const Slideshow = ({ images }: { images: string[] }) => {
 const ApartmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const apartment = apartments.find(a => a.id === id);
 
   useEffect(() => {
@@ -399,8 +668,19 @@ const ApartmentDetail = () => {
       <div className="min-h-screen flex items-center justify-center bg-beige">
         <div className="text-center">
           <h2 className="text-4xl font-bold mb-4">Apartment not found</h2>
-          <button onClick={() => navigate('/')} className="text-accent flex items-center justify-center">
-            <ArrowLeft className="mr-2" /> Back to Home
+          <button 
+            onClick={() => {
+              if (location.state?.from === 'home') {
+                navigate('/', { state: { scrollTo: 'accommodation-section' } });
+              } else if (location.state?.from === 'list') {
+                navigate('/accommodations/all');
+              } else {
+                navigate('/accommodations/all');
+              }
+            }} 
+            className="text-accent flex items-center justify-center mx-auto"
+          >
+            <ArrowLeft className="mr-2" /> Back
           </button>
         </div>
       </div>
@@ -409,7 +689,15 @@ const ApartmentDetail = () => {
 
   return (
     <div className="bg-beige min-h-screen pb-20">
-      <StickyBackButton to="/#accommodation" />
+      <StickyBackButton onClick={() => {
+        if (location.state?.from === 'home') {
+          navigate('/', { state: { scrollTo: 'accommodation-section' } });
+        } else if (location.state?.from === 'list') {
+          navigate('/accommodations/all');
+        } else {
+          navigate('/accommodations/all');
+        }
+      }} />
       
       <div className="max-w-7xl mx-auto px-4 md:px-16 pt-20">
         <Slideshow images={apartment.images} />
@@ -931,7 +1219,7 @@ const HikingPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Hiking in Bovec
           </motion.h1>
@@ -1087,7 +1375,7 @@ const SkydivingPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Skydiving in Bovec
           </motion.h1>
@@ -1353,7 +1641,7 @@ const CyclingPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Cycling in Bovec
           </motion.h1>
@@ -1627,7 +1915,7 @@ const SocaRiverPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Soca River Adventures
           </motion.h1>
@@ -1867,7 +2155,7 @@ const WhereToEatPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Where to Eat in Bovec
           </motion.h1>
@@ -2083,7 +2371,7 @@ const LocalShopsPage = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
+            className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 uppercase tracking-tight"
           >
             Local Shops in Bovec
           </motion.h1>
@@ -2237,10 +2525,15 @@ const LocalShopsPage = () => {
 };
 
 const Home = () => {
-  const { hash } = useLocation();
+  const { hash, state } = useLocation();
 
   useEffect(() => {
-    if (hash) {
+    if (state?.scrollTo) {
+      const element = document.getElementById(state.scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: 'auto' });
+      }
+    } else if (hash) {
       const id = hash.replace('#', '');
       const element = document.getElementById(id);
       if (element) {
@@ -2249,7 +2542,7 @@ const Home = () => {
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
-  }, [hash]);
+  }, [hash, state]);
 
   return (
     <>
@@ -2263,14 +2556,96 @@ const Home = () => {
   );
 };
 
+const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="relative w-full max-w-2xl bg-beige rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+          >
+            <button 
+              onClick={onClose}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-black/5 transition-colors z-10"
+            >
+              <X size={24} className="text-forest" />
+            </button>
+            
+            <div className="p-8 md:p-12 overflow-y-auto">
+              <div className="mb-8">
+                <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2">Soca Valley Stays</h2>
+                <p className="text-accent font-semibold tracking-widest uppercase text-sm">Apartments near Bovec, Slovenia</p>
+              </div>
+              
+              <div className="prose prose-forest max-w-none">
+                <p className="text-lg font-medium text-forest mb-6">Welcome to Soca Valley Stays.</p>
+                <p className="text-forest/80 mb-6">
+                  Nestled in the heart of the Soca Valley near Bovec, we offer comfortable and carefully designed apartments for guests seeking nature, adventure, and relaxation.
+                </p>
+                <p className="text-forest/80 mb-6">
+                  Our mission is simple — to provide a welcoming place that feels like home while you explore one of Slovenia’s most beautiful regions.
+                </p>
+                <p className="text-forest/80 mb-8">
+                  Located near Bovec, our apartments are the perfect starting point for hiking, cycling, rafting, skiing, and discovering the emerald Soca River.
+                </p>
+                
+                <div className="bg-white/50 rounded-xl p-6 border border-forest/5">
+                  <p className="font-bold text-forest mb-4 uppercase tracking-widest text-xs">We focus on:</p>
+                  <ul className="space-y-3">
+                    {['Clean and modern interiors', 'Fully equipped kitchens', 'Free WiFi', 'Private parking', 'Personal hospitality'].map((item, i) => (
+                      <li key={i} className="flex items-center text-forest/80">
+                        <Check size={16} className="text-accent mr-3 flex-shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <p className="mt-8 text-forest font-bold italic">We look forward to welcoming you to Soca Valley.</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function App() {
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+
   return (
     <HashRouter>
       <div className="min-h-screen font-sans selection:bg-accent selection:text-white">
-        <Navbar />
+        <Navbar onOpenAbout={() => setIsAboutOpen(true)} />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
             <Route path="/apartment/:id" element={<ApartmentDetail />} />
             <Route path="/hiking" element={<HikingPage />} />
             <Route path="/skydiving" element={<SkydivingPage />} />
@@ -2281,6 +2656,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
       </div>
     </HashRouter>
   );

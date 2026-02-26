@@ -9,9 +9,18 @@
   --color-beige: #f9f8f6;
 }
 
-body {
+html, body {
   background-color: var(--color-beige);
   color: var(--color-forest);
+  overflow-x: hidden;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 @layer utilities {
