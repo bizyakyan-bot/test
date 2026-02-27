@@ -99,8 +99,17 @@ const Hero = () => {
   return (
     <section id="about" className="px-4 md:px-16 pt-8 pb-16 relative">
       <div className="mb-8">
-        <h1 className="font-heading text-5xl md:text-8xl lg:text-[10rem] font-bold leading-none tracking-tight text-forest uppercase">
-          Soca Valley<br />Apartments
+        <h1 className="font-heading font-bold text-forest uppercase leading-[0.8] flex flex-col w-full overflow-hidden">
+          <span className="text-[11.2vw] flex justify-between w-full select-none">
+            {"SOČA VALLEY".split("").map((char, i) => (
+              <span key={i}>{char === " " ? "\u00A0" : char}</span>
+            ))}
+          </span>
+          <span className="text-[11.2vw] flex justify-between w-full select-none">
+            {"APARTMENTS".split("").map((char, i) => (
+              <span key={i}>{char}</span>
+            ))}
+          </span>
         </h1>
       </div>
       
@@ -479,7 +488,7 @@ const AccommodationsAllPage = () => {
 
 const Accommodation = () => {
   return (
-    <section id="accommodation-section" className="py-20 px-4 md:px-16 bg-white">
+    <section id="accommodation" className="py-20 px-4 md:px-16 bg-white">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest">Accommodation</h2>
@@ -671,7 +680,7 @@ const ApartmentDetail = () => {
           <button 
             onClick={() => {
               if (location.state?.from === 'home') {
-                navigate('/', { state: { scrollTo: 'accommodation-section' } });
+                navigate('/#accommodation');
               } else if (location.state?.from === 'list') {
                 navigate('/accommodations/all');
               } else {
@@ -691,7 +700,7 @@ const ApartmentDetail = () => {
     <div className="bg-beige min-h-screen pb-20">
       <StickyBackButton onClick={() => {
         if (location.state?.from === 'home') {
-          navigate('/', { state: { scrollTo: 'accommodation-section' } });
+          navigate('/#accommodation');
         } else if (location.state?.from === 'list') {
           navigate('/accommodations/all');
         } else {
@@ -1104,10 +1113,6 @@ const Footer = () => {
   return (
     <footer className="bg-forest text-beige/60 py-8 px-4 md:px-16 border-t border-beige/10 flex flex-col md:flex-row items-center justify-between">
       <p>&copy; {new Date().getFullYear()} Soca Valley Apartments. All rights reserved.</p>
-      <div className="flex space-x-6 mt-4 md:mt-0">
-        <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-        <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-      </div>
     </footer>
   );
 }
@@ -2528,19 +2533,22 @@ const Home = () => {
   const { hash, state } = useLocation();
 
   useEffect(() => {
-    if (state?.scrollTo) {
-      const element = document.getElementById(state.scrollTo);
-      if (element) {
-        element.scrollIntoView({ behavior: 'auto' });
-      }
-    } else if (hash) {
-      const id = hash.replace('#', '');
+    const scrollToElement = (id: string, smooth = true) => {
       const element = document.getElementById(id);
       if (element) {
         const yOffset = -100; // Offset for sticky navbar
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
+        window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' });
       }
+    };
+
+    if (state?.scrollTo) {
+      // Small timeout to ensure the component is rendered
+      setTimeout(() => scrollToElement(state.scrollTo, false), 100);
+    } else if (hash) {
+      const id = hash.replace('#', '');
+      // Small timeout to ensure the component is rendered
+      setTimeout(() => scrollToElement(id, true), 100);
     }
   }, [hash, state]);
 
