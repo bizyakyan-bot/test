@@ -198,14 +198,14 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
           </ul>
         </div>
         
-        <div className="mt-6 flex items-center justify-between pt-4 border-t border-forest/5">
+        <div className="mt-6 flex flex-col items-start gap-3 pt-4 border-t border-forest/5">
           <span className="font-bold text-xl md:text-2xl text-forest">{apt.price}</span>
           {isAvailable ? (
-            <button className="px-6 md:px-10 py-3 bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all text-xs font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap">
+            <button className="px-4 md:px-6 py-2 bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all text-xs font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap">
               View Details
             </button>
           ) : (
-            <button disabled className="px-6 md:px-10 py-3 bg-forest/5 text-forest/30 rounded-full text-xs font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap">
+            <button disabled className="px-4 md:px-6 py-2 bg-forest/5 text-forest/30 rounded-full text-xs font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap">
               Coming Soon
             </button>
           )}
@@ -496,15 +496,9 @@ const Accommodation = () => {
             Discover our range of carefully curated apartments in the heart of Bovec. From cozy studios to spacious family suites.
           </p>
         </div>
-        <Link 
-          to="/accommodations/all"
-          className="flex items-center text-accent font-bold uppercase tracking-widest text-sm group"
-        >
-          View More <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-        </Link>
       </div>
       
-      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 items-center">
         {apartments.map((apt) => (
           <AccommodationCard 
             key={apt.id} 
@@ -512,15 +506,14 @@ const Accommodation = () => {
             origin="home"
           />
         ))}
-      </div>
-
-      <div className="mt-16 text-center">
-        <Link 
-          to="/accommodations/all"
-          className="inline-block px-12 py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
-        >
-          View All Properties
-        </Link>
+        <div className="flex justify-center min-[400px]:justify-start lg:col-span-3 lg:justify-center lg:mt-8">
+          <Link 
+            to="/accommodations/all"
+            className="inline-block px-12 py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
+          >
+            View All Properties
+          </Link>
+        </div>
       </div>
     </section>
   );
