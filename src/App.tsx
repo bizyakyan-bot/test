@@ -85,13 +85,13 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
 const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }) => {
   const navigate = useNavigate();
   return (
-    <button 
-      onClick={onClick || (() => to && navigate(to))}
-      className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-white/80 backdrop-blur-md text-forest px-5 py-2.5 rounded-full hover:bg-white hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-xl border border-forest/5"
-    >
-      <ArrowLeft size={14} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-      Back
-    </button>
+      <button 
+        onClick={onClick || (() => to && navigate(to))}
+        className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-white/80 backdrop-blur-md text-forest px-5 py-2.5 rounded-full hover:bg-white hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-xl border border-forest/5"
+      >
+        <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+        Back
+      </button>
   );
 };
 
@@ -129,7 +129,7 @@ const Hero = () => {
 
         <button className="absolute top-8 right-8 md:top-16 md:right-16 w-24 h-24 md:w-32 md:h-32 bg-accent rounded-full flex flex-col items-center justify-center text-white hover:scale-105 transition-transform shadow-xl">
           <span className="text-xs md:text-sm font-semibold tracking-widest uppercase mb-1">Book</span>
-          <span className="text-xs md:text-sm font-semibold tracking-widest uppercase flex items-center">Now <ArrowRight size={16} className="ml-1" /></span>
+          <span className="text-xs md:text-sm font-semibold tracking-widest uppercase flex items-center">Now <ArrowRight size={18} className="ml-1" /></span>
         </button>
       </div>
     </section>
@@ -150,13 +150,13 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
     <div className={`group bg-white rounded-2xl transition-all duration-300 shadow-sm hover:shadow-xl border border-forest/5 ${
       viewMode === 'grid' 
         ? 'flex flex-col h-full overflow-hidden' 
-        : 'flex flex-col md:flex-row w-full overflow-visible'
+        : 'flex flex-row w-full overflow-hidden md:overflow-visible'
     } ${!isAvailable ? 'cursor-default' : 'cursor-pointer'}`}>
-      <div className={`relative overflow-hidden ${
+      <div className={`relative overflow-hidden flex-shrink-0 ${
         viewMode === 'grid' 
           ? 'aspect-[4/3] w-full' 
-          : 'w-full md:w-[40%] h-56 md:h-auto aspect-[4/3] md:aspect-auto'
-      } ${viewMode === 'list' ? 'rounded-t-2xl md:rounded-t-none md:rounded-l-2xl' : ''}`}>
+          : 'w-[120px] md:w-[40%] h-auto md:h-auto aspect-square md:aspect-auto'
+      } ${viewMode === 'list' ? 'rounded-l-xl md:rounded-l-2xl md:rounded-t-none' : ''}`}>
         <motion.img 
           whileHover={isAvailable ? { scale: 1.05 } : {}}
           transition={{ duration: 0.5 }}
@@ -166,46 +166,57 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
           referrerPolicy="no-referrer"
         />
         {!isAvailable && (
-          <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded shadow-lg border border-white/10 z-10">
-            Not yet available
+          <div className={`absolute ${viewMode === 'grid' ? 'top-2 right-2' : 'top-1 right-1'} md:top-4 md:right-4 bg-black/60 backdrop-blur-sm text-white text-[8px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 md:px-3 md:py-1.5 rounded shadow-lg border border-white/10 z-10`}>
+            {viewMode === 'grid' ? 'N/A' : 'Not available'}
           </div>
         )}
       </div>
 
-      <div className={`p-6 md:p-8 flex flex-col justify-between ${
-        viewMode === 'grid' ? 'flex-1' : 'flex-1 md:w-[60%]'
+      <div className={`flex flex-col justify-between ${
+        viewMode === 'grid' ? 'p-3 md:p-6 flex-1' : 'p-4 md:p-8 flex-1 md:w-[60%]'
       }`}>
         <div>
-          <h3 className={`font-heading text-2xl md:text-3xl font-bold mb-2 transition-colors ${isAvailable ? 'group-hover:text-accent' : ''}`}>
+          <h3 className={`font-heading font-bold mb-1 md:mb-2 transition-colors leading-tight ${
+            viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-3xl'
+          } ${isAvailable ? 'group-hover:text-accent' : ''}`}>
             {apt.name}
           </h3>
-          <div className="flex flex-wrap gap-4 text-sm text-forest/70 mb-4 font-medium">
+          <div className={`flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-forest/70 mb-2 md:mb-4 font-medium ${
+            viewMode === 'grid' ? 'text-[10px] md:text-sm' : 'text-xs md:text-sm'
+          }`}>
             <span>{apt.size}</span>
             <span className="opacity-30">•</span>
             <span>{apt.beds}</span>
           </div>
-          <ul className={`grid gap-x-4 gap-y-2 mb-6 ${
+          
+          <ul className={`grid gap-x-2 gap-y-1 md:gap-x-4 md:gap-y-2 mb-3 md:mb-6 ${
             viewMode === 'grid' 
-              ? 'grid-cols-2' 
-              : 'grid-cols-2 lg:grid-cols-3'
+              ? 'hidden md:grid grid-cols-2' 
+              : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
           }`}>
-            {apt.amenities.slice(0, 6).map((amenity, i) => (
-              <li key={i} className="flex items-center text-sm text-forest/80">
-                <Check size={16} className="text-accent mr-2 flex-shrink-0" />
+            {apt.amenities.slice(0, viewMode === 'grid' ? 4 : 6).map((amenity, i) => (
+              <li key={i} className="flex items-center text-[10px] md:text-sm text-forest/80">
+                <Check size={16} className="text-accent mr-1 md:mr-2 flex-shrink-0" />
                 <span className="truncate">{amenity}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <div className="mt-6 flex flex-col items-start gap-3 pt-4 border-t border-forest/5">
-          <span className="font-bold text-xl md:text-2xl text-forest">{apt.price}</span>
+        <div className={`flex flex-col items-center gap-2 md:gap-3 pt-2 md:pt-4 border-t border-forest/5 text-center`}>
+          <span className={`font-bold text-forest ${
+            viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-2xl'
+          }`}>{apt.price}</span>
           {isAvailable ? (
-            <button className="px-4 md:px-6 py-2 bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all text-xs font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap">
+            <button className={`bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap ${
+              viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
+            }`}>
               View Details
             </button>
           ) : (
-            <button disabled className="px-4 md:px-6 py-2 bg-forest/5 text-forest/30 rounded-full text-xs font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap">
+            <button disabled className={`bg-forest/5 text-forest/30 rounded-full font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap ${
+              viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
+            }`}>
               Coming Soon
             </button>
           )}
@@ -215,11 +226,11 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
   );
 
   return isAvailable ? (
-    <Link to={`/apartment/${apt.id}`} state={{ from: origin }} key={apt.id}>
+    <Link to={`/apartment/${apt.id}`} state={{ from: origin }} key={apt.id} className={viewMode === 'grid' ? 'h-full block' : 'block'}>
       {CardContent}
     </Link>
   ) : (
-    <div key={apt.id}>
+    <div key={apt.id} className={viewMode === 'grid' ? 'h-full' : ''}>
       {CardContent}
     </div>
   );
@@ -278,7 +289,7 @@ const AccommodationsAllPage = () => {
           onClick={() => setIsMobileFiltersOpen(false)}
           className="lg:hidden p-2 hover:bg-forest/5 rounded-full transition-colors"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
       </div>
 
@@ -333,7 +344,7 @@ const AccommodationsAllPage = () => {
               <div className={`w-4 h-4 rounded border mr-3 flex items-center justify-center transition-all ${
                 amenitiesFilter.includes(amenity) ? 'bg-accent border-accent' : 'border-forest/20'
               }`}>
-                {amenitiesFilter.includes(amenity) && <Check size={12} className="text-white" />}
+                {amenitiesFilter.includes(amenity) && <Check size={16} className="text-white" />}
               </div>
               {amenity}
             </button>
@@ -397,13 +408,13 @@ const AccommodationsAllPage = () => {
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
                 >
-                  <LayoutGrid size={20} />
+                  <LayoutGrid size={18} />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
                 >
-                  <List size={20} />
+                  <List size={18} />
                 </button>
               </div>
               <p className="text-sm text-forest/60 font-medium">{filteredApartments.length} properties found</p>
@@ -413,7 +424,7 @@ const AccommodationsAllPage = () => {
               onClick={() => setIsMobileFiltersOpen(true)}
               className="lg:hidden flex items-center px-4 py-2 bg-white border border-forest/10 rounded-lg text-sm font-bold text-forest"
             >
-              <SlidersHorizontal size={16} className="mr-2" />
+              <SlidersHorizontal size={18} className="mr-2" />
               Filters
             </button>
           </div>
@@ -430,7 +441,7 @@ const AccommodationsAllPage = () => {
           {/* Results Grid/List */}
           <div className="lg:col-span-3">
             {filteredApartments.length > 0 ? (
-              <div className={viewMode === 'grid' ? 'grid grid-cols-1 min-[400px]:grid-cols-2 gap-8' : 'space-y-8'}>
+              <div className={viewMode === 'grid' ? 'grid grid-cols-2 gap-4 md:gap-8' : 'space-y-4 md:space-y-8'}>
                 {filteredApartments.map((apt) => (
                   <AccommodationCard 
                     key={apt.id} 
@@ -498,7 +509,7 @@ const Accommodation = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 items-center">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12">
         {apartments.map((apt) => (
           <AccommodationCard 
             key={apt.id} 
@@ -506,10 +517,10 @@ const Accommodation = () => {
             origin="home"
           />
         ))}
-        <div className="flex justify-center min-[400px]:justify-start lg:col-span-3 lg:justify-center lg:mt-8">
+        <div className="flex items-center justify-center lg:col-span-3 lg:justify-center lg:mt-8 h-full">
           <Link 
             to="/accommodations/all"
-            className="inline-block px-12 py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
+            className="inline-block px-6 py-3 md:px-12 md:py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl text-[10px] md:text-sm text-center"
           >
             View All Properties
           </Link>
