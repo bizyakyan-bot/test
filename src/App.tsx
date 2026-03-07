@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves } from 'lucide-react';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
@@ -126,11 +126,6 @@ const Hero = () => {
             Comfort in the heart of the Soca Valley
           </p>
         </div>
-
-        <button className="absolute top-8 right-8 md:top-16 md:right-16 w-24 h-24 md:w-32 md:h-32 bg-accent rounded-full flex flex-col items-center justify-center text-white hover:scale-105 transition-transform shadow-xl">
-          <span className="text-xs md:text-sm font-semibold tracking-widest uppercase mb-1">Book</span>
-          <span className="text-xs md:text-sm font-semibold tracking-widest uppercase flex items-center">Now <ArrowRight size={18} className="ml-1" /></span>
-        </button>
       </div>
     </section>
   );
@@ -796,46 +791,24 @@ const ApartmentDetail = () => {
 const Activities = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const activities = [
+    { name: "Water Activities", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_214627_1bb348aa-0921-45b8-b0cd-7cba3b6debae.jpeg&w=1280&q=85", link: "/soca-river" },
     { name: "Hiking", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215737_4353f19e-15e6-47a2-a55e-7702fe41a357.png&w=1280&q=85", link: "/hiking" },
     { name: "Skydiving", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215229_27d6bf17-7da2-4df9-8026-b33b2b90e9c1.jpeg&w=1280&q=85", link: "/skydiving" },
+    { name: "Cycling", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215336_6f5fe074-5598-494e-a05e-8d7a66ff1981.png&w=1280&q=85", link: "/cycling" },
     { name: "Where to Eat", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215911_133805b3-a453-4b3c-ab4d-39d41aa1b21a.jpeg&w=1280&q=85", link: "/where-to-eat" },
     { name: "Local Shops", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215619_993cef2e-43fb-4094-9ed1-6b22c236b021.png&w=1280&q=85", link: "/local-shops" },
-    { name: "Cycling", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215336_6f5fe074-5598-494e-a05e-8d7a66ff1981.png&w=1280&q=85", link: "/cycling" },
-    { name: "Soca River Adventures", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_214627_1bb348aa-0921-45b8-b0cd-7cba3b6debae.jpeg&w=1280&q=85", link: "/soca-river" },
   ];
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollTo = direction === 'left' ? scrollLeft - clientWidth / 2 : scrollLeft + clientWidth / 2;
-      scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
-  };
 
   return (
     <section id="activities" className="py-20 px-4 md:px-16 bg-forest text-beige relative overflow-hidden">
       <div className="flex items-center justify-between mb-12">
         <h2 className="font-heading text-4xl md:text-5xl font-bold">Activities</h2>
-        <div className="flex space-x-4">
-          <button 
-            onClick={() => scroll('left')}
-            className="w-12 h-12 rounded-full border border-beige/20 flex items-center justify-center hover:bg-beige hover:text-forest transition-all duration-300"
-          >
-            <ChevronLeft size={24} />
-          </button>
-          <button 
-            onClick={() => scroll('right')}
-            className="w-12 h-12 rounded-full border border-beige/20 flex items-center justify-center hover:bg-beige hover:text-forest transition-all duration-300"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </div>
       </div>
 
       <div className="relative group">
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scroll-smooth no-scrollbar"
+          className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scroll-smooth custom-scrollbar"
         >
           {activities.map((act, idx) => (
             act.link ? (
@@ -877,53 +850,73 @@ const Location = () => {
         <div>
           <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8 text-forest">Location</h2>
           <p className="text-lg mb-8 text-forest/80">
-            Perfectly situated for your mountain adventures. We are located right in the heart of Bovec, giving you easy access to all major attractions.
+            Our apartments are nestled in the heart of the breathtaking Soča Valley, a peaceful alpine setting surrounded by the majestic Julian Alps. This emerald paradise offers a perfect blend of tranquil nature and exhilarating outdoor adventures, with the stunning Soča River just moments away.
           </p>
           <ul className="space-y-6">
             <li className="flex items-start">
-              <MapPin className="text-accent mr-4 mt-1" />
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Waves className="text-accent" size={20} />
+              </div>
               <div>
-                <h4 className="font-bold">Soca River</h4>
-                <p className="text-forest/70">5 minutes walk</p>
+                <h4 className="font-bold">Soča River</h4>
+                <p className="text-forest/70">Famous emerald river known for rafting, kayaking, swimming and stunning scenery.</p>
               </div>
             </li>
             <li className="flex items-start">
-              <MapPin className="text-accent mr-4 mt-1" />
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Mountain className="text-accent" size={20} />
+              </div>
               <div>
-                <h4 className="font-bold">Kanin Ski Resort</h4>
-                <p className="text-forest/70">10 minutes drive</p>
+                <h4 className="font-bold">Julian Alps</h4>
+                <p className="text-forest/70">Spectacular alpine landscape perfect for hiking and nature lovers.</p>
               </div>
             </li>
             <li className="flex items-start">
-              <MapPin className="text-accent mr-4 mt-1" />
-              <div>
-                <h4 className="font-bold">Restaurants & Shops</h4>
-                <p className="text-forest/70">2 minutes walk</p>
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Compass className="text-accent" size={20} />
               </div>
-            </li>
-            <li className="flex items-start">
-              <MapPin className="text-accent mr-4 mt-1" />
               <div>
                 <h4 className="font-bold">Hiking Trails</h4>
-                <p className="text-forest/70">Starting right outside</p>
+                <p className="text-forest/70">Numerous scenic trails with panoramic mountain views.</p>
+              </div>
+            </li>
+            <li className="flex items-start">
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Bike className="text-accent" size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold">Cycling Routes</h4>
+                <p className="text-forest/70">Beautiful cycling routes through valleys, forests and mountain roads.</p>
+              </div>
+            </li>
+            <li className="flex items-start">
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Zap className="text-accent" size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold">Outdoor Adventures</h4>
+                <p className="text-forest/70">Rafting, canyoning, zipline, paragliding and other adrenaline activities.</p>
+              </div>
+            </li>
+            <li className="flex items-start">
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
+                <Utensils className="text-accent" size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold">Local Restaurants</h4>
+                <p className="text-forest/70">Traditional Slovenian cuisine and cozy local restaurants in the valley.</p>
               </div>
             </li>
           </ul>
         </div>
-        <div className="h-[500px] bg-gray-200 rounded-xl overflow-hidden relative">
-          {/* Placeholder for Map */}
+        <div className="h-[600px] bg-gray-200 rounded-xl overflow-hidden relative shadow-2xl">
           <img 
-            src="https://picsum.photos/seed/map/800/1000" 
-            alt="Map of Bovec" 
-            className="w-full h-full object-cover opacity-80"
+            src="https://www.socavalley.com/wp-content/uploads/slider/cache/914173898ae5d95346d7229c72f6ef2b/Soca_bridge_BRV-scaled.webp" 
+            alt="Beautiful Soča Valley" 
+            className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="bg-white px-6 py-3 rounded-full shadow-lg font-bold text-forest flex items-center">
-              <MapPin className="text-accent mr-2" size={20} />
-              Soca Valley Apartments
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-black/10"></div>
         </div>
       </div>
     </section>
@@ -2328,19 +2321,19 @@ const LocalShopsPage = () => {
       name: "Od ovce do izdelka",
       description: "A charming local shop offering authentic sheep-based and regional products from the Soca Valley.",
       highlights: ["Local cheeses", "Dairy products", "Traditional specialties", "Authentic Slovenian flavors"],
-      image: "https://picsum.photos/seed/sheep-shop/800/600"
+      image: "https://www.slovenec.org/wp-content/uploads/2023/10/Rokodelski-atelje-ustanovljen-od-Drustva-od-ovce-do-izdelka-je-velika-pridobitev-za-Bovec-.jpg"
     },
     {
       name: "SPAR Bovec",
       description: "Modern supermarket with a wide selection of groceries and daily essentials.",
       highlights: ["Fresh produce", "Bakery section", "Household essentials", "Convenient central location"],
-      image: "https://picsum.photos/seed/spar-bovec/800/600"
+      image: "https://www.spar.si/content/dam/sparsiwebsite/mediji/v-bovcu-se-odpira-112-trgovina-spar/nova-trgovina-sparboveclarge.jpg/_jcr_content/renditions/responsive.665.337.0,113,1619,933.noborder.1e623b2782b81839.jpg"
     },
     {
       name: "Mercator Bovec",
       description: "Local grocery store offering daily shopping convenience.",
       highlights: ["Groceries and beverages", "Local food products", "Snacks for outdoor trips", "Quick and easy shopping"],
-      image: "https://picsum.photos/seed/mercator-bovec/800/600"
+      image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Bovec_-_Mercator.jpg"
     },
     {
       name: "Šport Tekstil Bovec",
@@ -2352,7 +2345,7 @@ const LocalShopsPage = () => {
       name: "Alpska šola Bovec",
       description: "Professional outdoor and mountaineering shop connected to the local alpine school.",
       highlights: ["Climbing gear", "Via ferrata equipment", "Mountaineering supplies", "Expert local advice"],
-      image: "https://picsum.photos/seed/alpska-sola/800/600"
+      image: "https://scontent.fmbx2-1.fna.fbcdn.net/v/t1.6435-9/136946622_3627124394020711_1502190629321812009_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=13d280&_nc_ohc=6ASzIizFE9kQ7kNvwH3uJdS&_nc_oc=Admob2pXodN235OVxs58M562y6awOSZ9sWEHyL_NoG_DuuOprcaa2huZcZ4QcInLncMe3Ng2Fy9SJH3ynV3hSTD1&_nc_zt=23&_nc_ht=scontent.fmbx2-1.fna&_nc_gid=JfQIholvcE7IhmYZkN7uhQ&_nc_ss=8&oh=00_AfzozG5mMpCP6yKwh4q9xsAA-PqMvlwFEJ_QnYhLEt8leQ&oe=69D40119"
     },
     {
       name: "MERKUR Bovec",
