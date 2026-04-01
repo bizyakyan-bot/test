@@ -10,6 +10,7 @@ export interface Apartment {
   isAvailable: boolean;
   bookingUrl?: string;
   bookingScript?: string;
+  calendarScript?: string;
 }
 
 export const apartments: Apartment[] = [
@@ -80,7 +81,8 @@ To help us prepare for our next guests, please follow these simple steps before 
       "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/7e540190-6554-4d0f-9be1-2683317e47d2.png?im_w=960"
     ],
     isAvailable: true,
-    bookingScript: "https://www.bentral.com/service/embed/price-list.js?id=5f6a6b354d415f4e&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536"
+    bookingScript: "https://www.bentral.com/service/embed/booking.js?id=5f6a6b354d415f4e&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536",
+    calendarScript: "https://www.bentral.com/service/embed/calendar.js?uid=5f5459304d6a494d&unit=5f5459304d6a494d&months=1&last=true&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536"
   },
 
   {

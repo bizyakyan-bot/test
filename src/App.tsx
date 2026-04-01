@@ -521,14 +521,43 @@ const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear container
-    containerRef.current.innerHTML = '';
-
-    const script = document.createElement('script');
-    script.src = scriptUrl;
-    script.async = true;
+    // Create an iframe to host the script safely. This is often necessary for 
+    // third-party embed scripts that use document.write or expect a clean environment.
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '1200px'; // Generous height for the price list/booking
+    iframe.style.border = 'none';
+    iframe.setAttribute('scrolling', 'auto');
+    iframe.title = "Bentral Booking Widget";
     
-    containerRef.current.appendChild(script);
+    containerRef.current.innerHTML = '';
+    containerRef.current.appendChild(iframe);
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (doc) {
+      // Ensure we use https
+      const fullUrl = scriptUrl.startsWith('//') ? 'https:' + scriptUrl : scriptUrl;
+      
+      doc.open();
+      doc.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <style>
+              body { margin: 0; padding: 0; background: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+              /* Hide any powered by if the script doesn't respect the param */
+              .powered-by { display: none !important; }
+            </style>
+          </head>
+          <body>
+            <script src="${fullUrl}"></script>
+          </body>
+        </html>
+      `);
+      doc.close();
+    }
 
     return () => {
       if (containerRef.current) {
@@ -537,7 +566,7 @@ const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
     };
   }, [scriptUrl]);
 
-  return <div ref={containerRef} id="booking-widget" className="bentral-container w-full min-h-[400px] mt-8" />;
+  return <div ref={containerRef} id="booking-widget" className="bentral-container w-full min-h-[600px] mt-8 overflow-hidden rounded-2xl bg-white shadow-sm border border-forest/5" />;
 };
 
 const ApartmentDetail = () => {
@@ -545,6 +574,7 @@ const ApartmentDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const apartment = apartments.find(a => a.id === id);
+  const [activeTab, setActiveTab] = useState<'booking' | 'calendar'>('booking');
 
   if (!apartment) {
     return (
@@ -577,10 +607,49 @@ const ApartmentDetail = () => {
               <ReactMarkdown>{apartment.description}</ReactMarkdown>
             </div>
 
-            {apartment.bookingScript && (
-              <div className="mt-12 p-8 bg-white rounded-2xl shadow-sm border border-forest/5">
-                <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Pricing & Booking</h3>
-                <BentralWidget scriptUrl={apartment.bookingScript} />
+            {(apartment.bookingScript || apartment.calendarScript) && (
+              <div className="mt-12 p-8 bg-white rounded-2xl shadow-sm border border-forest/5" id="booking-widget">
+                <div className="flex flex-wrap gap-4 mb-8 border-b border-forest/10 pb-4">
+                  {apartment.bookingScript && (
+                    <button 
+                      onClick={() => setActiveTab('booking')}
+                      className={`font-heading text-xl font-bold uppercase tracking-widest pb-2 transition-all ${activeTab === 'booking' ? 'text-accent border-b-2 border-accent' : 'text-forest/40 hover:text-forest/60'}`}
+                    >
+                      Pricing & Booking
+                    </button>
+                  )}
+                  {apartment.calendarScript && (
+                    <button 
+                      onClick={() => setActiveTab('calendar')}
+                      className={`font-heading text-xl font-bold uppercase tracking-widest pb-2 transition-all ${activeTab === 'calendar' ? 'text-accent border-b-2 border-accent' : 'text-forest/40 hover:text-forest/60'}`}
+                    >
+                      Availability Calendar
+                    </button>
+                  )}
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {activeTab === 'booking' && apartment.bookingScript && (
+                    <motion.div
+                      key="booking"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <BentralWidget scriptUrl={apartment.bookingScript} />
+                    </motion.div>
+                  )}
+                  {activeTab === 'calendar' && apartment.calendarScript && (
+                    <motion.div
+                      key="calendar"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <BentralWidget scriptUrl={apartment.calendarScript} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 
@@ -611,6 +680,7 @@ const ApartmentDetail = () => {
                 {apartment.bookingScript ? (
                   <button 
                     onClick={() => {
+                      setActiveTab('booking');
                       const element = document.getElementById('booking-widget');
                       if (element) {
                         const yOffset = -100;
@@ -636,8 +706,12 @@ const ApartmentDetail = () => {
                     Book Now
                   </button>
                 )}
+                
                 <button 
                   onClick={() => {
+                    if (apartment.calendarScript) {
+                      setActiveTab('calendar');
+                    }
                     const element = document.getElementById('booking-widget');
                     if (element) {
                       const yOffset = -100;
