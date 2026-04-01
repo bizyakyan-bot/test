@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -7,6 +8,17 @@
   --color-forest: #1f3a3d;
   --color-accent: #1e6f8c;
   --color-beige: #f9f8f6;
+}
+
+@layer base {
+  .prose {
+    --tw-prose-headings: var(--color-forest);
+    --tw-prose-body: var(--color-forest);
+    --tw-prose-bold: var(--color-forest);
+    --tw-prose-links: var(--color-accent);
+    --tw-prose-bullets: var(--color-accent);
+    --tw-prose-counters: var(--color-accent);
+  }
 }
 
 html, body {

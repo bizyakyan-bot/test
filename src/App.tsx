@@ -1,9 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves } from 'lucide-react';
-import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
+
+// Scroll to top component that only scrolls on PUSH/REPLACE, not POP (back button)
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  const navigationType = useNavigationType();
+
+  useEffect(() => {
+    if (navigationType !== 'POP') {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, navigationType]);
+
+  return null;
+};
 
 const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,9 +99,28 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
 
 const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  const handleBack = () => {
+    if (onClick) {
+      onClick();
+    } else if (location.state?.from) {
+      // We have a known return path within the app. 
+      // navigate(-1) is preferred to restore the exact scroll position.
+      navigate(-1);
+    } else if (to) {
+      // Fallback for direct links or when state is lost
+      navigate(to);
+    } else if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
       <button 
-        onClick={onClick || (() => to && navigate(to))}
+        onClick={handleBack}
         className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-white/80 backdrop-blur-md text-forest px-5 py-2.5 rounded-full hover:bg-white hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-xl border border-forest/5"
       >
         <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -139,7 +173,8 @@ interface AccommodationCardProps {
 }
 
 const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCardProps) => {
-  const isAvailable = apt.id === 'apartment-kuhala';
+  const isAvailable = apt.isAvailable;
+  const location = useLocation();
   
   const CardContent = (
     <div className={`group bg-white rounded-2xl transition-all duration-300 shadow-sm hover:shadow-xl border border-forest/5 ${
@@ -221,7 +256,7 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
   );
 
   return isAvailable ? (
-    <Link to={`/apartment/${apt.id}`} state={{ from: origin }} key={apt.id} className={viewMode === 'grid' ? 'h-full block' : 'block'}>
+    <Link to={`/apartment/${apt.id}`} state={{ from: location.pathname + location.hash }} key={apt.id} className={viewMode === 'grid' ? 'h-full block' : 'block'}>
       {CardContent}
     </Link>
   ) : (
@@ -234,131 +269,6 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
 const AccommodationsAllPage = () => {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [priceFilter, setPriceFilter] = useState<'none' | 'low-high' | 'high-low'>('none');
-  const [bedsFilter, setBedsFilter] = useState<'all' | '1' | '2+'>('all');
-  const [amenitiesFilter, setAmenitiesFilter] = useState<string[]>([]);
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const filteredApartments = apartments.filter(apt => {
-    if (bedsFilter === '1') {
-      if (!apt.beds.toLowerCase().includes('1')) return false;
-    } else if (bedsFilter === '2+') {
-      const matches = apt.beds.match(/\d/g);
-      const bedCount = matches ? matches.reduce((acc: number, curr: string) => acc + parseInt(curr), 0) : 0;
-      if (bedCount < 2) return false;
-    }
-
-    if (amenitiesFilter.length > 0) {
-      if (!amenitiesFilter.every(filter => 
-        apt.amenities.some(amenity => amenity.toLowerCase().includes(filter.toLowerCase()))
-      )) return false;
-    }
-
-    return true;
-  }).sort((a, b) => {
-    if (priceFilter === 'none') return 0;
-    const getPrice = (p: string) => parseInt(p.replace(/[^0-9]/g, '').substring(0, 3)) || 0;
-    const priceA = getPrice(a.price);
-    const priceB = getPrice(b.price);
-    return priceFilter === 'low-high' ? priceA - priceB : priceB - priceA;
-  });
-
-  const toggleAmenity = (amenity: string) => {
-    setAmenitiesFilter(prev => 
-      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
-    );
-  };
-
-  const FilterContent = () => (
-    <div className="bg-white p-8 rounded-2xl border border-forest/5 shadow-sm">
-      <div className="flex items-center justify-between mb-8 text-forest">
-        <div className="flex items-center">
-          <SlidersHorizontal size={18} className="mr-2" />
-          <span className="font-bold uppercase tracking-widest text-xs">Filters</span>
-        </div>
-        <button 
-          onClick={() => setIsMobileFiltersOpen(false)}
-          className="lg:hidden p-2 hover:bg-forest/5 rounded-full transition-colors"
-        >
-          <X size={18} />
-        </button>
-      </div>
-
-      {/* Price Filter */}
-      <div className="mb-8">
-        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Price Range</label>
-        <select 
-          value={priceFilter}
-          onChange={(e) => setPriceFilter(e.target.value as any)}
-          className="w-full bg-beige border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-accent/20"
-        >
-          <option value="none">Sort by</option>
-          <option value="low-high">Price: Low to High</option>
-          <option value="high-low">Price: High to Low</option>
-        </select>
-      </div>
-
-      {/* Beds Filter */}
-      <div className="mb-8">
-        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Beds</label>
-        <div className="flex gap-2">
-          {['all', '1', '2+'].map((option) => (
-            <button
-              key={option}
-              onClick={() => setBedsFilter(option as any)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg border transition-all ${
-                bedsFilter === option 
-                  ? 'bg-forest text-white border-forest' 
-                  : 'bg-transparent border-forest/10 text-forest/60 hover:border-forest/30'
-              }`}
-            >
-              {option === 'all' ? 'All' : option}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Amenities Filter */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-widest text-forest/60 mb-3">Amenities</label>
-        <div className="space-y-2">
-          {['WiFi', 'Kitchen', 'Balcony', 'Parking', 'View'].map((amenity) => (
-            <button
-              key={amenity}
-              onClick={() => toggleAmenity(amenity)}
-              className={`w-full flex items-center px-4 py-2 rounded-lg text-sm transition-all ${
-                amenitiesFilter.includes(amenity)
-                  ? 'bg-accent/10 text-accent font-bold'
-                  : 'text-forest/60 hover:bg-forest/5'
-              }`}
-            >
-              <div className={`w-4 h-4 rounded border mr-3 flex items-center justify-center transition-all ${
-                amenitiesFilter.includes(amenity) ? 'bg-accent border-accent' : 'border-forest/20'
-              }`}>
-                {amenitiesFilter.includes(amenity) && <Check size={16} className="text-white" />}
-              </div>
-              {amenity}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <button 
-        onClick={() => {
-          setPriceFilter('none');
-          setBedsFilter('all');
-          setAmenitiesFilter([]);
-        }}
-        className="w-full mt-8 text-xs font-bold uppercase tracking-widest text-forest/40 hover:text-accent transition-colors"
-      >
-        Clear All Filters
-      </button>
-    </div>
-  );
 
   return (
     <div className="bg-beige min-h-screen w-full overflow-x-hidden">
@@ -412,82 +322,25 @@ const AccommodationsAllPage = () => {
                   <List size={18} />
                 </button>
               </div>
-              <p className="text-sm text-forest/60 font-medium">{filteredApartments.length} properties found</p>
+              <p className="text-sm text-forest/60 font-medium">{apartments.length} properties found</p>
             </div>
-            
-            <button 
-              onClick={() => setIsMobileFiltersOpen(true)}
-              className="lg:hidden flex items-center px-4 py-2 bg-white border border-forest/10 rounded-lg text-sm font-bold text-forest"
-            >
-              <SlidersHorizontal size={18} className="mr-2" />
-              Filters
-            </button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-12">
-          {/* Filters Sidebar (Desktop) */}
-          <div className="hidden lg:block lg:col-span-1">
-            <div className="sticky top-32">
-              <FilterContent />
-            </div>
-          </div>
-
+        <div className="w-full">
           {/* Results Grid/List */}
-          <div className="lg:col-span-3">
-            {filteredApartments.length > 0 ? (
-              <div className={viewMode === 'grid' ? 'grid grid-cols-2 gap-4 md:gap-8' : 'space-y-4 md:space-y-8'}>
-                {filteredApartments.map((apt) => (
-                  <AccommodationCard 
-                    key={apt.id} 
-                    apt={apt} 
-                    viewMode={viewMode} 
-                    origin="list"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="h-64 flex flex-col items-center justify-center text-forest/40 bg-white/30 rounded-2xl border border-dashed border-forest/10">
-                <p className="text-lg font-medium mb-2">No properties match your filters</p>
-                <button 
-                  onClick={() => {
-                    setPriceFilter('none');
-                    setBedsFilter('all');
-                    setAmenitiesFilter([]);
-                  }}
-                  className="text-accent font-bold uppercase tracking-widest text-xs"
-                >
-                  Reset Filters
-                </button>
-              </div>
-            )}
+          <div className={viewMode === 'grid' ? 'grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8' : 'space-y-4 md:space-y-8 max-w-4xl mx-auto'}>
+            {apartments.map((apt) => (
+              <AccommodationCard 
+                key={apt.id} 
+                apt={apt} 
+                viewMode={viewMode} 
+                origin="list"
+              />
+            ))}
           </div>
         </div>
       </section>
-
-      {/* Mobile Filters Modal */}
-      <AnimatePresence>
-        {isMobileFiltersOpen && (
-          <div className="fixed inset-0 z-[120] lg:hidden">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileFiltersOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute bottom-0 left-0 right-0 max-h-[90vh] overflow-y-auto bg-beige rounded-t-3xl p-6"
-            >
-              <FilterContent />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
@@ -515,6 +368,7 @@ const Accommodation = () => {
         <div className="flex items-center justify-center lg:col-span-3 lg:justify-center lg:mt-8 h-full">
           <Link 
             to="/accommodations/all"
+            state={{ from: '/#accommodation' }}
             className="inline-block px-6 py-3 md:px-12 md:py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl text-[10px] md:text-sm text-center"
           >
             View All Properties
@@ -661,35 +515,43 @@ const Slideshow = ({ images }: { images: string[] }) => {
   );
 };
 
+const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Clear container
+    containerRef.current.innerHTML = '';
+
+    const script = document.createElement('script');
+    script.src = scriptUrl;
+    script.async = true;
+    
+    containerRef.current.appendChild(script);
+
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
+  }, [scriptUrl]);
+
+  return <div ref={containerRef} id="booking-widget" className="bentral-container w-full min-h-[400px] mt-8" />;
+};
+
 const ApartmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const apartment = apartments.find(a => a.id === id);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   if (!apartment) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-beige">
         <div className="text-center">
           <h2 className="text-4xl font-bold mb-4">Apartment not found</h2>
-          <button 
-            onClick={() => {
-              if (location.state?.from === 'home') {
-                navigate('/#accommodation');
-              } else if (location.state?.from === 'list') {
-                navigate('/accommodations/all');
-              } else {
-                navigate('/accommodations/all');
-              }
-            }} 
-            className="text-accent flex items-center justify-center mx-auto"
-          >
-            <ArrowLeft className="mr-2" /> Back
-          </button>
+          <StickyBackButton to="/accommodations/all" />
         </div>
       </div>
     );
@@ -697,15 +559,7 @@ const ApartmentDetail = () => {
 
   return (
     <div className="bg-beige min-h-screen pb-20">
-      <StickyBackButton onClick={() => {
-        if (location.state?.from === 'home') {
-          navigate('/#accommodation');
-        } else if (location.state?.from === 'list') {
-          navigate('/accommodations/all');
-        } else {
-          navigate('/accommodations/all');
-        }
-      }} />
+      <StickyBackButton to="/accommodations/all" />
       
       <div className="max-w-7xl mx-auto px-4 md:px-16 pt-20">
         <Slideshow images={apartment.images} />
@@ -719,9 +573,16 @@ const ApartmentDetail = () => {
               {apartment.size} • {apartment.beds}
             </p>
             
-            <div className="prose prose-lg text-forest/80 max-w-none mb-12">
-              <p>{apartment.description}</p>
+            <div className="markdown-body prose prose-lg text-forest/80 max-w-none mb-12">
+              <ReactMarkdown>{apartment.description}</ReactMarkdown>
             </div>
+
+            {apartment.bookingScript && (
+              <div className="mt-12 p-8 bg-white rounded-2xl shadow-sm border border-forest/5">
+                <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Pricing & Booking</h3>
+                <BentralWidget scriptUrl={apartment.bookingScript} />
+              </div>
+            )}
 
             <div className="border-t border-forest/10 pt-12">
               <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Amenities</h3>
@@ -747,9 +608,23 @@ const ApartmentDetail = () => {
               </div>
 
               <div className="space-y-4">
-                {apartment.id === 'apartment-kuhala' ? (
+                {apartment.bookingScript ? (
+                  <button 
+                    onClick={() => {
+                      const element = document.getElementById('booking-widget');
+                      if (element) {
+                        const yOffset = -100;
+                        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                      }
+                    }}
+                    className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm"
+                  >
+                    Book Now
+                  </button>
+                ) : apartment.bookingUrl ? (
                   <a 
-                    href="https://www.booking.com/hotel/si/trnovo-ob-soci-kuhala.sl.html"
+                    href={apartment.bookingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm text-center block"
@@ -761,7 +636,17 @@ const ApartmentDetail = () => {
                     Book Now
                   </button>
                 )}
-                <button className="w-full border border-forest/10 text-forest font-bold py-4 rounded-xl hover:bg-forest hover:text-white transition-all uppercase tracking-widest text-sm">
+                <button 
+                  onClick={() => {
+                    const element = document.getElementById('booking-widget');
+                    if (element) {
+                      const yOffset = -100;
+                      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }}
+                  className="w-full border border-forest/10 text-forest font-bold py-4 rounded-xl hover:bg-forest hover:text-white transition-all uppercase tracking-widest text-sm"
+                >
                   Check Availability
                 </button>
               </div>
@@ -812,7 +697,7 @@ const Activities = () => {
         >
           {activities.map((act, idx) => (
             act.link ? (
-              <Link to={act.link} key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-xl overflow-hidden aspect-[3/4] group/card block">
+              <Link to={act.link} state={{ from: '/#activities' }} key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-xl overflow-hidden aspect-[3/4] group/card block">
                 <img 
                   src={act.image} 
                   alt={act.name} 
@@ -1170,10 +1055,6 @@ const HikingActivityCard = ({ activity, index }: HikingActivityCardProps) => {
 const HikingPage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const officialTrailsUrl = "https://www.soca-valley.com/en/in-search-of-adventure/activities/2021022411543267/hiking-trails/";
 
   const hikingGroups = [
@@ -1354,10 +1235,6 @@ const HikingPage = () => {
 
 const SkydivingPage = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <div className="bg-beige min-h-screen">
@@ -1621,10 +1498,6 @@ const SkydivingPage = () => {
 const CyclingPage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="bg-beige min-h-screen">
       <StickyBackButton to="/#activities" />
@@ -1858,10 +1731,6 @@ const CyclingPage = () => {
 
 const SocaRiverPage = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const riverActivities = [
     {
@@ -2102,10 +1971,6 @@ const SocaRiverPage = () => {
 const WhereToEatPage = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   const restaurants = [
     {
       name: "Gostilna Sovdat",
@@ -2311,10 +2176,6 @@ const WhereToEatPage = () => {
 
 const LocalShopsPage = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const shops = [
     {
@@ -2528,8 +2389,12 @@ const LocalShopsPage = () => {
 
 const Home = () => {
   const { hash, state } = useLocation();
+  const navigationType = useNavigationType();
 
   useEffect(() => {
+    // If it's a back/forward navigation, let the browser handle scroll restoration
+    if (navigationType === 'POP') return;
+
     const scrollToElement = (id: string, smooth = true) => {
       const element = document.getElementById(id);
       if (element) {
@@ -2547,7 +2412,7 @@ const Home = () => {
       // Small timeout to ensure the component is rendered
       setTimeout(() => scrollToElement(id, true), 100);
     }
-  }, [hash, state]);
+  }, [hash, state, navigationType]);
 
   return (
     <>
@@ -2645,6 +2510,7 @@ export default function App() {
 
   return (
     <HashRouter>
+      <ScrollToTop />
       <div className="min-h-screen font-sans selection:bg-accent selection:text-white">
         <Navbar onOpenAbout={() => setIsAboutOpen(true)} />
         <main>

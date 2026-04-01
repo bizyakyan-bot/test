@@ -7,23 +7,82 @@ export interface Apartment {
   amenities: string[];
   price: string;
   images: string[];
+  isAvailable: boolean;
+  bookingUrl?: string;
+  bookingScript?: string;
 }
 
 export const apartments: Apartment[] = [
   {
     id: "alpine-suite",
-    name: "Apartment pr Fejtnǝ",
-    size: "45 m²",
-    beds: "1 Double, 1 Sofa bed",
-    description: "Experience the ultimate alpine getaway in our spacious Apartment pr Fejtnǝ. This beautifully designed apartment combines modern comfort with traditional mountain charm. Enjoy breathtaking views of the Julian Alps from your private balcony. The suite features a fully equipped kitchen, a cozy living area with a sofa bed, and a luxurious double bedroom.",
-    amenities: ["Kitchen", "Balcony", "Free WiFi", "Mountain View", "TV", "Coffee Machine", "Hairdryer"],
-    price: "€120 - €150 / night",
+    name: "Apartment pr Fejtne",
+    size: "64 m²",
+    beds: "2 Double beds, 1 Sofa bed",
+    description: `### Listing Description
+Relax with the whole family at "Apartma Pr Fejtne" – your peaceful retreat in Čezsoča.
+
+Our spacious 64 m² apartment is located in the heart of the serene village of Čezsoča, just a short, 5-minute walk (approx. 250m) from the emerald banks of the Soča River. Whether you are here for adrenaline sports or a quiet nature escape, "Pr Fejtne" offers the perfect base.
+
+The apartment features two bright bedrooms with comfortable king-size beds and an additional sofa bed in the living area, comfortably accommodating up to 6 guests. The kitchen is fully equipped for long stays, and the two outdoor areas (an enclosed balcony and an open veranda) offer stunning views of the surrounding Julian Alps.
+
+### Your Accommodation
+Comfort and convenience in a prime alpine location:
+
+*   **Two Bedrooms:** Both equipped with large king-size beds for a restful night's sleep.
+*   **Living Area:** Features a flat-screen TV, board games, books, and a comfortable sofa bed.
+*   **Fully Equipped Kitchen:** Includes a dishwasher, coffee maker, toaster, and all necessary cookware.
+*   **Modern Amenities:** Free high-speed Wi-Fi, washing machine, and air conditioning/heating.
+*   **Outdoor Spaces:** An enclosed balcony (perfect for morning coffee) and an open veranda to soak in the mountain air.
+*   **Storage:** Secure storage space available for your bicycles or sports equipment.
+
+### Guest Access
+Guests have exclusive access to the entire upper floor of the house. The ground floor is used by the owner for storage (garden tools, etc.) and is not occupied by other guests, ensuring your complete privacy.
+
+**Check-in:** We love to meet our guests in person when possible. However, we also provide a lockbox located at the entrance for a seamless, contactless check-in at your convenience.
+
+### Interaction with Guests
+We value your privacy and want you to feel at home. We are always available via phone or messaging for any questions, local tips, or assistance. Depending on our availability, we may stop by to say hello and ensure everything is perfect, but if you prefer a completely quiet stay, we will respect your space.
+
+### Other Notable Details
+*   **Location:** Located in Čezsoča 21. The beach at the Soča River is just a 5-minute walk away.
+*   **Activities:** The area is a hub for hiking, cycling, and water sports. Countless mountain trails start right from the doorstep.
+*   **Dining:** While Čezsoča is a peaceful village, "Gostišče Vančar" is nearby for local Slovenian dishes. Bovec, with its shops and various restaurants, is only a 5-minute drive away.
+*   **House Rules:** No pets allowed. No smoking inside the apartment.
+*   **Parking:** Free private parking is available directly in front of the house.
+
+### Checkout Instructions
+To help us prepare for our next guests, please follow these simple steps before you leave:
+
+1.  **Dishes:** Please load the dishwasher and start it, or wash and put away any used dishes.
+2.  **Trash:** Please take your trash to the outdoor bins located next to the house.
+3.  **Energy:** Turn off all lights, close the windows, and switch off the AC/heating.
+4.  **Keys:** Return the keys to the lockbox and scramble the code.
+5.  **Security:** Ensure the main entrance door is securely locked.`,
+    amenities: ["Free WiFi", "Free parking", "Fully equipped kitchen", "Private balcony", "Washing machine", "Central heating", "Private entrance", "Dishwasher", "Stove & Oven", "Refrigerator", "Microwave", "Coffee maker", "Toaster", "TV", "Iron", "Hairdryer", "Essentials", "Safe", "Fire extinguisher", "First aid kit", "Board games", "Luggage drop-off"],
+    price: "€160 - €250 / night",
     images: [
-      "https://picsum.photos/seed/apt1-1/1200/800",
-      "https://picsum.photos/seed/apt1-2/1200/800",
-      "https://picsum.photos/seed/apt1-3/1200/800"
-    ]
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/45db5349-4ade-46fc-8e29-a2bb4be450b7.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/455024aa-1257-439b-9ea5-b01ec5393c1e.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/f12ae4fd-4977-4d32-ae3f-2b3dc8382f69.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/8da53910-5ec7-452f-a708-a1419ad56af1.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/030091d9-76cb-4fa9-bc1b-18c019ba8911.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/a11cc499-f2dd-4ec9-bece-467f83f883c4.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/3854794b-7475-4a79-86ce-3d38f45a4932.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/224ea87e-06b5-47b7-9bbe-f81e88171d0a.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/e54a11b4-c080-4444-a540-a5fb513b3113.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/e7597a6e-0f04-469b-aff1-da92e5a0b504.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/86c709d0-0179-48cb-80fa-a069dd0ac42d.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/31633b51-a7a4-47af-807c-81122b23eb1c.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/49a506ee-98c8-456a-acb6-b09a459f8637.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/27d0cc40-0d8a-4bff-bf37-4908af62cf39.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/9aac7032-b882-4ae2-a536-18ac33044d0c.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/a7702fa2-8122-4c23-9bd9-b5e2f9de2a2f.png?im_w=960",
+      "https://a0.muscache.com/im/pictures/hosting/Hosting-1653689384744158535/original/7e540190-6554-4d0f-9be1-2683317e47d2.png?im_w=960"
+    ],
+    isAvailable: true,
+    bookingScript: "https://www.bentral.com/service/embed/price-list.js?id=5f6a6b354d415f4e&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536"
   },
+
   {
     id: "valley-view-studio",
     name: "Apartment Flajs",
@@ -36,7 +95,8 @@ export const apartments: Apartment[] = [
       "https://picsum.photos/seed/apt2-1/1200/800",
       "https://picsum.photos/seed/apt2-2/1200/800",
       "https://picsum.photos/seed/apt2-3/1200/800"
-    ]
+    ],
+    isAvailable: false
   },
   {
     id: "apartment-kuhala",
@@ -70,7 +130,9 @@ export const apartments: Apartment[] = [
       "https://cf.bstatic.com/xdata/images/hotel/max1024x768/273686352.jpg?k=d499ae6df9619916ae5beb1c4f11c911e66b030541b254e9c16cfc0d37ba5d13&o=",
       "https://cf.bstatic.com/xdata/images/hotel/max1024x768/203408423.jpg?k=0774db4dba4295630d1b2386bf607206cf3bf08085227141708e6fd2a943db31&o=",
       "https://cf.bstatic.com/xdata/images/hotel/max1024x768/273686840.jpg?k=cef332fe53313a02a4f0dbf7d9d5fe695e72553a201995dc07709f50187c8b57&o="
-    ]
+    ],
+    isAvailable: true,
+    bookingUrl: "https://www.booking.com/hotel/si/trnovo-ob-soci-kuhala.sl.html"
   }
 ];
 
