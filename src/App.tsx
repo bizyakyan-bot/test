@@ -515,7 +515,7 @@ const Slideshow = ({ images }: { images: string[] }) => {
   );
 };
 
-const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
+const BentralWidget = ({ scriptUrl, height = '1200px' }: { scriptUrl: string, height?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -525,7 +525,7 @@ const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
     // third-party embed scripts that use document.write or expect a clean environment.
     const iframe = document.createElement('iframe');
     iframe.style.width = '100%';
-    iframe.style.height = '1200px'; // Generous height for the price list/booking
+    iframe.style.height = height;
     iframe.style.border = 'none';
     iframe.setAttribute('scrolling', 'auto');
     iframe.title = "Bentral Booking Widget";
@@ -564,9 +564,9 @@ const BentralWidget = ({ scriptUrl }: { scriptUrl: string }) => {
         containerRef.current.innerHTML = '';
       }
     };
-  }, [scriptUrl]);
+  }, [scriptUrl, height]);
 
-  return <div ref={containerRef} id="booking-widget" className="bentral-container w-full min-h-[600px] mt-8 overflow-hidden rounded-2xl bg-white shadow-sm border border-forest/5" />;
+  return <div ref={containerRef} id="booking-widget" className="bentral-container w-full mt-8 overflow-hidden rounded-2xl bg-white" />;
 };
 
 const ApartmentDetail = () => {
@@ -574,7 +574,6 @@ const ApartmentDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const apartment = apartments.find(a => a.id === id);
-  const [activeTab, setActiveTab] = useState<'booking' | 'calendar'>('booking');
 
   if (!apartment) {
     return (
@@ -607,52 +606,6 @@ const ApartmentDetail = () => {
               <ReactMarkdown>{apartment.description}</ReactMarkdown>
             </div>
 
-            {(apartment.bookingScript || apartment.calendarScript) && (
-              <div className="mt-12 p-8 bg-white rounded-2xl shadow-sm border border-forest/5" id="booking-widget">
-                <div className="flex flex-wrap gap-4 mb-8 border-b border-forest/10 pb-4">
-                  {apartment.bookingScript && (
-                    <button 
-                      onClick={() => setActiveTab('booking')}
-                      className={`font-heading text-xl font-bold uppercase tracking-widest pb-2 transition-all ${activeTab === 'booking' ? 'text-accent border-b-2 border-accent' : 'text-forest/40 hover:text-forest/60'}`}
-                    >
-                      Pricing & Booking
-                    </button>
-                  )}
-                  {apartment.calendarScript && (
-                    <button 
-                      onClick={() => setActiveTab('calendar')}
-                      className={`font-heading text-xl font-bold uppercase tracking-widest pb-2 transition-all ${activeTab === 'calendar' ? 'text-accent border-b-2 border-accent' : 'text-forest/40 hover:text-forest/60'}`}
-                    >
-                      Availability Calendar
-                    </button>
-                  )}
-                </div>
-                
-                <AnimatePresence mode="wait">
-                  {activeTab === 'booking' && apartment.bookingScript && (
-                    <motion.div
-                      key="booking"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      <BentralWidget scriptUrl={apartment.bookingScript} />
-                    </motion.div>
-                  )}
-                  {activeTab === 'calendar' && apartment.calendarScript && (
-                    <motion.div
-                      key="calendar"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      <BentralWidget scriptUrl={apartment.calendarScript} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
-
             <div className="border-t border-forest/10 pt-12">
               <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Amenities</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -679,15 +632,7 @@ const ApartmentDetail = () => {
               <div className="space-y-4">
                 {apartment.bookingScript ? (
                   <button 
-                    onClick={() => {
-                      setActiveTab('booking');
-                      const element = document.getElementById('booking-widget');
-                      if (element) {
-                        const yOffset = -100;
-                        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                      }
-                    }}
+                    onClick={() => navigate(`/booking/${id}`, { state: { from: location.pathname } })}
                     className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm"
                   >
                     Book Now
@@ -710,13 +655,15 @@ const ApartmentDetail = () => {
                 <button 
                   onClick={() => {
                     if (apartment.calendarScript) {
-                      setActiveTab('calendar');
-                    }
-                    const element = document.getElementById('booking-widget');
-                    if (element) {
-                      const yOffset = -100;
-                      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                      window.scrollTo({ top: y, behavior: 'smooth' });
+                      navigate(`/booking/${id}`, { state: { from: location.pathname } });
+                    } else {
+                      // Fallback if no script
+                      const element = document.getElementById('amenities');
+                      if (element) {
+                        const yOffset = -100;
+                        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                      }
                     }
                   }}
                   className="w-full border border-forest/10 text-forest font-bold py-4 rounded-xl hover:bg-forest hover:text-white transition-all uppercase tracking-widest text-sm"
@@ -740,6 +687,67 @@ const ApartmentDetail = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const BookingPage = () => {
+  const { id } = useParams();
+  const apartment = apartments.find(a => a.id === id);
+
+  if (!apartment) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-beige">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold mb-4">Apartment not found</h2>
+          <StickyBackButton to="/accommodations/all" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-beige min-h-screen pb-20">
+      <StickyBackButton to={`/apartment/${id}`} />
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-16 pt-32">
+        <div className="mb-12 text-center">
+          <h1 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2 uppercase tracking-tight">
+            {apartment.name}
+          </h1>
+          <p className="text-accent font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Left Side: Booking */}
+          <div id="booking-section" className="bg-white p-8 rounded-2xl shadow-xl border border-forest/5">
+            <h3 className="font-heading text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+              Pricing & Booking
+            </h3>
+            {apartment.bookingScript ? (
+              <BentralWidget scriptUrl={apartment.bookingScript} height="1200px" />
+            ) : (
+              <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
+                Booking system not available for this property.
+              </div>
+            )}
+          </div>
+
+          {/* Right Side: Calendar */}
+          <div id="calendar-section" className="bg-white p-8 rounded-2xl shadow-xl border border-forest/5">
+            <h3 className="font-heading text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+              Availability Calendar
+            </h3>
+            {apartment.calendarScript ? (
+              <BentralWidget scriptUrl={apartment.calendarScript} height="800px" />
+            ) : (
+              <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
+                Calendar not available for this property.
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -2592,6 +2600,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
             <Route path="/apartment/:id" element={<ApartmentDetail />} />
+            <Route path="/booking/:id" element={<BookingPage />} />
             <Route path="/hiking" element={<HikingPage />} />
             <Route path="/skydiving" element={<SkydivingPage />} />
             <Route path="/cycling" element={<CyclingPage />} />
