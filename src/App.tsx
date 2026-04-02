@@ -35,7 +35,14 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
 
   return (
     <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-beige sticky top-0 z-50">
-      <Link to="/" className="font-heading font-bold text-sm tracking-widest uppercase">J.Bizjak</Link>
+      <a 
+        href="https://www.instagram.com/b.i.z.i.c/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-colors"
+      >
+        J.Bizjak
+      </a>
       
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center space-x-8">
@@ -211,6 +218,12 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
           } ${isAvailable ? 'group-hover:text-accent' : ''}`}>
             {apt.name}
           </h3>
+          <div className={`flex items-center text-accent font-bold mb-2 uppercase tracking-widest ${
+            viewMode === 'grid' ? 'text-[8px] md:text-xs' : 'text-[10px] md:text-sm'
+          }`}>
+            <MapPin size={viewMode === 'grid' ? 10 : 14} className="mr-1 flex-shrink-0" />
+            <span>{apt.location}</span>
+          </div>
           <div className={`flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-forest/70 mb-2 md:mb-4 font-medium ${
             viewMode === 'grid' ? 'text-[10px] md:text-sm' : 'text-xs md:text-sm'
           }`}>
@@ -598,6 +611,10 @@ const ApartmentDetail = () => {
             <h1 className="font-heading text-4xl md:text-6xl font-bold text-forest mb-4 uppercase tracking-tight">
               {apartment.name}
             </h1>
+            <div className="flex items-center text-accent font-bold mb-4 uppercase tracking-widest text-sm">
+              <MapPin size={18} className="mr-2 flex-shrink-0" />
+              <span>{apartment.location}</span>
+            </div>
             <p className="text-xl text-forest/60 mb-8 font-medium">
               {apartment.size} • {apartment.beds}
             </p>
@@ -718,6 +735,10 @@ const BookingPage = () => {
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2 uppercase tracking-tight">
             {apartment.name}
           </h1>
+          <div className="flex items-center justify-center text-accent font-bold mb-4 uppercase tracking-widest text-xs">
+            <MapPin size={14} className="mr-1 flex-shrink-0" />
+            <span>{apartment.location}</span>
+          </div>
           <p className="text-accent font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
         </div>
 

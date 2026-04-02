@@ -11,6 +11,7 @@ export interface Apartment {
   bookingUrl?: string;
   bookingScript?: string;
   calendarScript?: string;
+  location: string;
 }
 
 export const apartments: Apartment[] = [
@@ -82,7 +83,8 @@ To help us prepare for our next guests, please follow these simple steps before 
     ],
     isAvailable: true,
     bookingScript: "https://www.bentral.com/service/embed/booking.js?id=5f6a6b354d415f4e&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536",
-    calendarScript: "https://www.bentral.com/service/embed/calendar.js?uid=5f5459304d6a494d&unit=5f5459304d6a494d&months=1&last=true&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536"
+    calendarScript: "https://www.bentral.com/service/embed/calendar.js?uid=5f5459304d6a494d&unit=5f5459304d6a494d&months=1&last=true&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536",
+    location: "Čezsoča"
   },
 
   {
@@ -98,13 +100,14 @@ To help us prepare for our next guests, please follow these simple steps before 
       "https://picsum.photos/seed/apt2-2/1200/800",
       "https://picsum.photos/seed/apt2-3/1200/800"
     ],
-    isAvailable: false
+    isAvailable: false,
+    location: "Soča"
   },
   {
     id: "apartment-kuhala",
     name: "Apartment Kuhala",
     size: "75 m²",
-    beds: "2 Double beds",
+    beds: "1 Double bed, 2 Bunk beds",
     description: "Experience a spacious alpine retreat in Apartment Kuhala. This comfortable and beautifully furnished apartment offers a relaxing atmosphere with modern amenities and traditional mountain charm. Enjoy peaceful surroundings, mountain views, and a fully equipped kitchen, making it perfect for families or groups seeking comfort and convenience in Bovec.",
     amenities: ["Kitchen", "Balcony", "Free WiFi", "Free private parking", "Mountain view", "Private bathroom", "Family rooms", "Terrace"],
     price: "€140 – €180 / night",
@@ -134,7 +137,8 @@ To help us prepare for our next guests, please follow these simple steps before 
       "https://cf.bstatic.com/xdata/images/hotel/max1024x768/273686840.jpg?k=cef332fe53313a02a4f0dbf7d9d5fe695e72553a201995dc07709f50187c8b57&o="
     ],
     isAvailable: true,
-    bookingUrl: "https://www.booking.com/hotel/si/trnovo-ob-soci-kuhala.sl.html"
+    bookingUrl: "https://www.booking.com/hotel/si/trnovo-ob-soci-kuhala.sl.html",
+    location: "Trnovo ob Soči"
   }
 ];
 
