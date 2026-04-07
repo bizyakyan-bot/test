@@ -582,6 +582,88 @@ const BentralWidget = ({ scriptUrl, height = '1200px' }: { scriptUrl: string, he
   return <div ref={containerRef} id="booking-widget" className="bentral-container w-full mt-8 overflow-hidden rounded-2xl bg-white" />;
 };
 
+const ExpandableDescription = ({ description }: { description: string }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [shouldShowButton, setShouldShowButton] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      // If content height is more than 300px, we should show the expand button
+      setShouldShowButton(contentRef.current.scrollHeight > 300);
+    }
+  }, [description]);
+
+  return (
+    <div className="relative mb-12">
+      <div 
+        ref={contentRef}
+        className={`markdown-body prose prose-lg text-forest/80 max-w-none transition-all duration-500 ease-in-out overflow-hidden ${
+          !isExpanded && shouldShowButton ? 'max-h-[300px] lg:max-h-none' : 'max-h-[5000px]'
+        }`}
+      >
+        <ReactMarkdown>{description}</ReactMarkdown>
+      </div>
+      
+      {!isExpanded && shouldShowButton && (
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-beige to-transparent flex items-end justify-center pb-2 lg:hidden">
+          <button 
+            onClick={() => setIsExpanded(true)}
+            className="bg-white/80 backdrop-blur-md text-forest px-6 py-2 rounded-full shadow-lg border border-forest/5 font-bold uppercase tracking-widest text-[10px] hover:bg-white transition-all"
+          >
+            Read More
+          </button>
+        </div>
+      )}
+
+      {isExpanded && shouldShowButton && (
+        <div className="flex justify-center mt-4 lg:hidden">
+          <button 
+            onClick={() => setIsExpanded(false)}
+            className="text-forest/60 font-bold uppercase tracking-widest text-[10px] hover:text-forest transition-all"
+          >
+            Show Less
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ExpandableAmenities = ({ amenities }: { amenities: string[] }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const initialCount = 8;
+  const hasMore = amenities.length > initialCount;
+  const displayedAmenities = isExpanded ? amenities : amenities.slice(0, initialCount);
+
+  return (
+    <div className="border-t border-forest/10 pt-12">
+      <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Amenities</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        {displayedAmenities.map((amenity, i) => (
+          <div key={i} className="flex items-center text-forest/80">
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
+              <Check size={18} className="text-accent" />
+            </div>
+            <span className="font-medium">{amenity}</span>
+          </div>
+        ))}
+      </div>
+      
+      {hasMore && (
+        <div className="mt-8 flex justify-center lg:hidden">
+          <button 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="bg-white/80 backdrop-blur-md text-forest px-8 py-3 rounded-full shadow-lg border border-forest/5 font-bold uppercase tracking-widest text-[10px] hover:bg-white transition-all"
+          >
+            {isExpanded ? 'Show Less' : 'View All Amenities'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ApartmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -619,23 +701,9 @@ const ApartmentDetail = () => {
               {apartment.size} • {apartment.beds}
             </p>
             
-            <div className="markdown-body prose prose-lg text-forest/80 max-w-none mb-12">
-              <ReactMarkdown>{apartment.description}</ReactMarkdown>
-            </div>
+            <ExpandableDescription description={apartment.description} />
 
-            <div className="border-t border-forest/10 pt-12">
-              <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Amenities</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {apartment.amenities.map((amenity, i) => (
-                  <div key={i} className="flex items-center text-forest/80">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
-                      <Check size={18} className="text-accent" />
-                    </div>
-                    <span className="font-medium">{amenity}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <ExpandableAmenities amenities={apartment.amenities} />
           </div>
 
           <div className="lg:col-span-1">
