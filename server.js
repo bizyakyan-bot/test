@@ -16,6 +16,11 @@ app.get('/favicon.png', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'favicon.png'));
 });
 
+// Also serve favicon.ico for browsers that request it by default
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'favicon.png'));
+});
+
 // Fallback to index.html for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
