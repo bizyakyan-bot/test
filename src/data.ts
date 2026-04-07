@@ -83,7 +83,7 @@ To help us prepare for our next guests, please follow these simple steps before 
     ],
     isAvailable: true,
     bookingScript: "https://www.bentral.com/service/embed/booking.js?id=5f6a6b354d415f4e&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536",
-    calendarScript: "https://www.bentral.com/service/embed/calendar.js?uid=5f5459304d6a494d&unit=5f5459304d6a494d&months=1&last=true&poweredby=0&key=fb4a7c9efc59543ece7e621a731be536",
+    calendarScript: "https://www.bentral.com/service/embed/calendar.js?uid=5f5459304d6a494d&months=6&cols=1&last=true&lang=sl&key=fb4a7c9efc59543ece7e621a731be536",
     location: "Čezsoča"
   },
 

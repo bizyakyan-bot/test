@@ -742,14 +742,14 @@ const BookingPage = () => {
           <p className="text-accent font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Side: Booking */}
-          <div id="booking-section" className="bg-white p-8 rounded-2xl shadow-xl border border-forest/5">
-            <h3 className="font-heading text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Left Side: Booking - Narrower */}
+          <div id="booking-section" className="lg:col-span-5 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
               Pricing & Booking
             </h3>
             {apartment.bookingScript ? (
-              <BentralWidget scriptUrl={apartment.bookingScript} height="1200px" />
+              <BentralWidget scriptUrl={apartment.bookingScript} height="1100px" />
             ) : (
               <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
                 Booking system not available for this property.
@@ -757,13 +757,13 @@ const BookingPage = () => {
             )}
           </div>
 
-          {/* Right Side: Calendar */}
-          <div id="calendar-section" className="bg-white p-8 rounded-2xl shadow-xl border border-forest/5">
-            <h3 className="font-heading text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+          {/* Right Side: Calendar - Wider */}
+          <div id="calendar-section" className="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
               Availability Calendar
             </h3>
             {apartment.calendarScript ? (
-              <BentralWidget scriptUrl={apartment.calendarScript} height="800px" />
+              <BentralWidget scriptUrl={apartment.calendarScript} height="1850px" />
             ) : (
               <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
                 Calendar not available for this property.
