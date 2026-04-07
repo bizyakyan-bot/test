@@ -11,6 +11,11 @@ const port = process.env.PORT || 3000;
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
+// Explicitly serve favicon.png for better compatibility
+app.get('/favicon.png', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'favicon.png'));
+});
+
 // Fallback to index.html for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
