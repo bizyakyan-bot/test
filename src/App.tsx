@@ -810,9 +810,9 @@ const BookingPage = () => {
           <p className="text-accent font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* Left Side: Booking - Narrower */}
-          <div id="booking-section" className="lg:col-span-5 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
+          {/* Left Side: Booking */}
+          <div id="booking-section" className="lg:col-span-1 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
             <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
               Pricing & Booking
             </h3>
@@ -825,8 +825,8 @@ const BookingPage = () => {
             )}
           </div>
 
-          {/* Right Side: Calendar - Wider */}
-          <div id="calendar-section" className="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
+          {/* Right Side: Calendar */}
+          <div id="calendar-section" className="lg:col-span-1 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
             <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
               Availability Calendar
             </h3>
