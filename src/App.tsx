@@ -140,16 +140,53 @@ const Hero = () => {
   return (
     <section id="about" className="px-4 md:px-16 pt-8 pb-16 relative">
       <div className="mb-8">
-        <h1 className="font-heading font-bold text-forest uppercase leading-[0.8] flex flex-col w-full overflow-hidden">
-          <span className="text-[11.2vw] flex justify-between w-full select-none">
-            {"SOČA VALLEY".split("").map((char, i) => (
-              <span key={i}>{char === " " ? "\u00A0" : char}</span>
+        <h1 className="font-heading font-black text-forest uppercase leading-[0.85] flex flex-col w-full overflow-hidden">
+          <span className="text-[11.2vw] font-black tracking-tight select-none">
+            {"SOCA VALLEY".split("").map((char, i) => (
+              <motion.span 
+                key={i}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.03, ease: "easeOut" }}
+                className="inline-block"
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
             ))}
           </span>
-          <span className="text-[11.2vw] flex justify-between w-full select-none">
-            {"APARTMENTS".split("").map((char, i) => (
-              <span key={i}>{char}</span>
-            ))}
+          <span className="text-[11.2vw] flex items-center select-none mt-2 w-full">
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+              className="font-heading font-black text-accent tracking-tighter text-[11.2vw]"
+            >
+              {"HUB".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.4 + i * 0.05 }}
+                  className="inline-block"
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <motion.span
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.7 }}
+                className="text-forest inline-block"
+              >
+                .
+              </motion.span>
+            </motion.span>
+            <motion.span 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="origin-left h-[0.8vw] bg-accent/30 flex-grow ml-6 rounded-full self-center" 
+            />
           </span>
         </h1>
       </div>
@@ -1165,7 +1202,7 @@ const Contact = () => {
 const Footer = () => {
   return (
     <footer className="bg-forest text-beige/60 py-8 px-4 md:px-16 border-t border-beige/10 flex flex-col md:flex-row items-center justify-between">
-      <p>&copy; {new Date().getFullYear()} Soca Valley Apartments. All rights reserved.</p>
+      <p>&copy; {new Date().getFullYear()} Soca Valley Hub. All rights reserved.</p>
     </footer>
   );
 }
@@ -2638,12 +2675,12 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             
             <div className="p-8 md:p-12 overflow-y-auto">
               <div className="mb-8">
-                <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2">Soca Valley Stays</h2>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2">Soca Valley Hub</h2>
                 <p className="text-accent font-semibold tracking-widest uppercase text-sm">Apartments near Bovec, Slovenia</p>
               </div>
               
               <div className="prose prose-forest max-w-none">
-                <p className="text-lg font-medium text-forest mb-6">Welcome to Soca Valley Stays.</p>
+                <p className="text-lg font-medium text-forest mb-6">Welcome to Soca Valley Hub.</p>
                 <p className="text-forest/80 mb-6">
                   Nestled in the heart of the Soca Valley near Bovec, we offer comfortable and carefully designed apartments for guests seeking nature, adventure, and relaxation.
                 </p>
