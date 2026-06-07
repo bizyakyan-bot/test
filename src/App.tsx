@@ -5,6 +5,7 @@ import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, Chevr
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
+import { ThreeCanvas } from './components/ThreeCanvas';
 
 // Scroll to top component that only scrolls on PUSH/REPLACE, not POP (back button)
 const ScrollToTop = () => {
@@ -34,12 +35,12 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   ];
 
   return (
-    <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-beige sticky top-0 z-50">
+    <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-[#061011]/85 backdrop-blur-md sticky top-0 z-50 text-white/90 border-b border-emerald-500/10 shadow-lg">
       <a 
         href="https://www.instagram.com/b.i.z.i.c/" 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-colors"
+        className="font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-all duration-300 drop-shadow-md text-emerald-400 glow-text-emerald"
       >
         J.Bizjak
       </a>
@@ -57,7 +58,7 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
                   onOpenAbout();
                 }
               }}
-              className="hover:text-accent transition-colors"
+              className="hover:text-accent hover:scale-105 transition-all text-white/70 hover:text-white"
             >
               {link.name}
             </Link>
@@ -67,7 +68,7 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
 
       {/* Mobile Menu Toggle */}
       <div className="flex items-center space-x-4 md:hidden">
-        <button onClick={() => setIsOpen(!isOpen)}>
+        <button onClick={() => setIsOpen(!isOpen)} className="text-white">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -79,7 +80,7 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-beige p-8 flex flex-col space-y-4 shadow-lg md:hidden"
+            className="absolute top-full left-0 w-full bg-[#081315]/95 border-b border-emerald-500/10 p-8 flex flex-col space-y-4 shadow-lg md:hidden backdrop-blur-xl"
           >
             {navLinks.map((link) => (
               <Link 
@@ -92,7 +93,7 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
                   }
                   setIsOpen(false);
                 }} 
-                className="text-sm font-semibold tracking-widest uppercase"
+                className="text-sm font-semibold tracking-widest uppercase text-white/80 hover:text-accent transition-colors"
               >
                 {link.name}
               </Link>
@@ -128,7 +129,7 @@ const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }
   return (
       <button 
         onClick={handleBack}
-        className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-white/80 backdrop-blur-md text-forest px-5 py-2.5 rounded-full hover:bg-white hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-xl border border-forest/5"
+        className="fixed top-28 left-4 md:left-16 z-[45] flex items-center bg-black/60 backdrop-blur-md text-emerald-400 px-5 py-2.5 rounded-full border border-emerald-500/25 hover:bg-emerald-500 hover:text-black hover:border-emerald-500 hover:scale-105 transition-all font-bold tracking-widest uppercase text-[10px] group shadow-2xl"
       >
         <ArrowLeft size={18} className="mr-2 group-hover:-translate-x-1 transition-transform" />
         Back
@@ -139,9 +140,9 @@ const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }
 const Hero = () => {
   return (
     <section id="about" className="px-4 md:px-16 pt-8 pb-16 relative">
-      <div className="mb-8">
-        <h1 className="font-heading font-black text-forest uppercase leading-[0.85] flex flex-col w-full overflow-hidden">
-          <span className="text-[11.2vw] font-black tracking-tight select-none">
+      <div className="mb-12">
+        <h1 className="font-heading font-black text-white uppercase leading-[0.85] flex flex-col w-full overflow-hidden">
+          <span className="text-[11.2vw] font-black tracking-tight select-none drop-shadow-2xl">
             {"SOCA VALLEY".split("").map((char, i) => (
               <motion.span 
                 key={i}
@@ -159,7 +160,7 @@ const Hero = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="font-heading font-black text-accent tracking-tighter text-[11.2vw]"
+              className="font-heading font-black text-emerald-400 tracking-tighter text-[11.2vw] glow-text-emerald"
             >
               {"HUB".split("").map((char, i) => (
                 <motion.span
@@ -176,7 +177,7 @@ const Hero = () => {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.7 }}
-                className="text-forest inline-block"
+                className="text-emerald-300 inline-block glow-text-emerald"
               >
                 .
               </motion.span>
@@ -185,21 +186,22 @@ const Hero = () => {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="origin-left h-[0.8vw] bg-accent/30 flex-grow ml-6 rounded-full self-center" 
+              className="origin-left h-[0.8vw] bg-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)] flex-grow ml-6 rounded-full self-center" 
             />
           </span>
         </h1>
       </div>
       
-      <div className="relative w-full h-[60vh] md:h-[80vh] rounded-xl overflow-hidden">
+      <div className="relative w-full h-[60vh] md:h-[80vh] rounded-3xl overflow-hidden shadow-3xl glass-panel">
         <img 
           src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260219_225914_78050ddb-90c2-4464-bfbf-117e0c1c14b8.jpeg&w=1280&q=85" 
           alt="Bovec Town Square at Sunset" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-80"
           referrerPolicy="no-referrer"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/30 to-black/20" />
         
-        <div className="absolute bottom-8 left-8 md:bottom-16 md:left-16 max-w-sm">
+        <div className="absolute bottom-8 left-8 md:bottom-16 md:left-16 max-w-sm z-10 p-6 rounded-2xl glass-panel border border-white/5 shadow-xl">
           <p className="text-white text-lg md:text-xl font-medium drop-shadow-md">
             Comfort in the heart of the Soca Valley
           </p>
@@ -221,11 +223,11 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
   const location = useLocation();
   
   const CardContent = (
-    <div className={`group bg-white rounded-2xl transition-all duration-300 shadow-sm hover:shadow-xl border border-forest/5 ${
+    <div className={`group glass-panel rounded-3xl transition-all duration-300 shadow-2xl border border-white/5 ${
       viewMode === 'grid' 
         ? 'flex flex-col h-full overflow-hidden' 
         : 'flex flex-row w-full overflow-hidden md:overflow-visible'
-    } ${!isAvailable ? 'cursor-default' : 'cursor-pointer'}`}>
+    } ${!isAvailable ? 'cursor-default' : 'cursor-pointer hover:scale-[1.02]'}`}>
       <div className={`relative overflow-hidden flex-shrink-0 ${
         viewMode === 'grid' 
           ? 'aspect-[4/3] w-full' 
@@ -240,7 +242,7 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
           referrerPolicy="no-referrer"
         />
         {!isAvailable && (
-          <div className={`absolute ${viewMode === 'grid' ? 'top-2 right-2' : 'top-1 right-1'} md:top-4 md:right-4 bg-black/60 backdrop-blur-sm text-white text-[8px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 md:px-3 md:py-1.5 rounded shadow-lg border border-white/10 z-10`}>
+          <div className={`absolute ${viewMode === 'grid' ? 'top-2 right-2' : 'top-1 right-1'} md:top-4 md:right-4 bg-black/75 backdrop-blur-sm text-emerald-400 border border-emerald-500/30 text-[8px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 md:px-3 md:py-1.5 rounded shadow-lg z-10`}>
             {viewMode === 'grid' ? 'N/A' : 'Not available'}
           </div>
         )}
@@ -250,18 +252,18 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
         viewMode === 'grid' ? 'p-3 md:p-6 flex-1' : 'p-4 md:p-8 flex-1 md:w-[60%]'
       }`}>
         <div>
-          <h3 className={`font-heading font-bold mb-1 md:mb-2 transition-colors leading-tight ${
+          <h3 className={`font-heading font-bold mb-1 md:mb-2 transition-colors leading-tight text-white ${
             viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-3xl'
-          } ${isAvailable ? 'group-hover:text-accent' : ''}`}>
+          } ${isAvailable ? 'group-hover:text-emerald-400' : ''}`}>
             {apt.name}
           </h3>
-          <div className={`flex items-center text-accent font-bold mb-2 uppercase tracking-widest ${
+          <div className={`flex items-center text-emerald-400 font-bold mb-2 uppercase tracking-widest ${
             viewMode === 'grid' ? 'text-[8px] md:text-xs' : 'text-[10px] md:text-sm'
           }`}>
-            <MapPin size={viewMode === 'grid' ? 10 : 14} className="mr-1 flex-shrink-0" />
+            <MapPin size={viewMode === 'grid' ? 10 : 14} className="mr-1 flex-shrink-0 text-emerald-400" />
             <span>{apt.location}</span>
           </div>
-          <div className={`flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-forest/70 mb-2 md:mb-4 font-medium ${
+          <div className={`flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-slate-300 mb-2 md:mb-4 font-medium ${
             viewMode === 'grid' ? 'text-[10px] md:text-sm' : 'text-xs md:text-sm'
           }`}>
             <span>{apt.size}</span>
@@ -275,26 +277,26 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
               : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
           }`}>
             {apt.amenities.slice(0, viewMode === 'grid' ? 4 : 6).map((amenity, i) => (
-              <li key={i} className="flex items-center text-[10px] md:text-sm text-forest/80">
-                <Check size={16} className="text-accent mr-1 md:mr-2 flex-shrink-0" />
+              <li key={i} className="flex items-center text-[10px] md:text-sm text-slate-300">
+                <Check size={16} className="text-emerald-400 mr-1 md:mr-2 flex-shrink-0" />
                 <span className="truncate">{amenity}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <div className={`flex flex-col items-center gap-2 md:gap-3 pt-2 md:pt-4 border-t border-forest/5 text-center`}>
-          <span className={`font-bold text-forest ${
+        <div className={`flex flex-col items-center gap-2 md:gap-3 pt-2 md:pt-4 border-t border-white/10 text-center`}>
+          <span className={`font-bold text-emerald-400 glow-text-emerald ${
             viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-2xl'
           }`}>{apt.price}</span>
           {isAvailable ? (
-            <button className={`bg-forest text-white rounded-full hover:bg-accent hover:scale-105 transition-all font-bold uppercase tracking-widest shadow-lg shadow-forest/10 whitespace-nowrap ${
+            <button className={`bg-emerald-500 hover:bg-emerald-400 text-black rounded-full hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all font-bold uppercase tracking-widest whitespace-nowrap ${
               viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
             }`}>
               View Details
             </button>
           ) : (
-            <button disabled className={`bg-forest/5 text-forest/30 rounded-full font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap ${
+            <button disabled className={`bg-white/5 text-slate-500 rounded-full font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap ${
               viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
             }`}>
               Coming Soon
@@ -321,18 +323,18 @@ const AccommodationsAllPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   return (
-    <div className="bg-beige min-h-screen w-full overflow-x-hidden">
+    <div className="bg-transparent min-h-screen w-full overflow-x-hidden text-white">
       <StickyBackButton to="/#accommodation" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/accommodations-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=1920&q=80" 
           alt="Soca Valley Accommodations" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/45 to-black/30" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -346,7 +348,7 @@ const AccommodationsAllPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Find your perfect home in the heart of the Julian Alps.
           </motion.p>
@@ -358,21 +360,21 @@ const AccommodationsAllPage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-4">
-              <div className="bg-white p-1 rounded-lg border border-forest/5 flex">
+              <div className="bg-black/40 p-1 rounded-xl border border-white/10 flex">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
+                  className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-emerald-500 text-black shadow-md' : 'text-slate-400 hover:text-emerald-400'}`}
                 >
                   <LayoutGrid size={18} />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-forest text-white shadow-md' : 'text-forest/40 hover:text-forest'}`}
+                  className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-500 text-black shadow-md' : 'text-slate-400 hover:text-emerald-400'}`}
                 >
                   <List size={18} />
                 </button>
               </div>
-              <p className="text-sm text-forest/60 font-medium">{apartments.length} properties found</p>
+              <p className="text-sm text-slate-300 font-medium">{apartments.length} properties found</p>
             </div>
           </div>
         </div>
@@ -397,11 +399,11 @@ const AccommodationsAllPage = () => {
 
 const Accommodation = () => {
   return (
-    <section id="accommodation" className="py-20 px-4 md:px-16 bg-white">
+    <section id="accommodation" className="py-20 px-4 md:px-16 bg-transparent text-white">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest">Accommodation</h2>
-          <p className="text-forest/60 mt-4 max-w-xl">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white uppercase tracking-tight">Accommodation</h2>
+          <p className="text-slate-300 mt-4 max-w-xl text-lg font-light">
             Discover our range of carefully curated apartments in the heart of Bovec. From cozy studios to spacious family suites.
           </p>
         </div>
@@ -419,7 +421,7 @@ const Accommodation = () => {
           <Link 
             to="/accommodations/all"
             state={{ from: '/#accommodation' }}
-            className="inline-block px-6 py-3 md:px-12 md:py-4 bg-forest text-beige rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-xl text-[10px] md:text-sm text-center"
+            className="inline-block px-12 py-4 bg-emerald-500 hover:bg-emerald-400 text-black rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] text-xs md:text-sm text-center"
           >
             View All Properties
           </Link>
@@ -458,28 +460,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: {
       className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-12"
       onClick={onClose}
     >
-      <button 
-        onClick={(e) => { e.stopPropagation(); onClose(); }}
-        className="absolute top-8 right-8 text-white/70 hover:text-white transition-colors z-[110]"
-      >
-        <X size={32} />
-      </button>
-
-      <button 
-        onClick={(e) => { e.stopPropagation(); onPrev(); }}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-[110]"
-      >
-        <ChevronLeft size={32} />
-      </button>
-
-      <button 
-        onClick={(e) => { e.stopPropagation(); onNext(); }}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-[110]"
-      >
-        <ChevronRight size={32} />
-      </button>
-
-      <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div className="relative w-full h-full flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentIndex}
@@ -488,8 +469,9 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3 }}
-            className="max-w-full max-h-full object-contain shadow-2xl cursor-grab active:cursor-grabbing"
+            className="max-w-full max-h-full object-contain shadow-2xl cursor-grab active:cursor-grabbing z-10"
             referrerPolicy="no-referrer"
+            onClick={(e) => e.stopPropagation()}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             onDragEnd={(_, info) => {
@@ -499,6 +481,30 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: {
           />
         </AnimatePresence>
       </div>
+
+      <button 
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        className="absolute top-8 right-8 text-white/70 hover:text-white transition-colors z-[120] cursor-pointer"
+        aria-label="Close Lightbox"
+      >
+        <X size={32} />
+      </button>
+
+      <button 
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-[120] cursor-pointer"
+        aria-label="Previous Image"
+      >
+        <ChevronLeft size={32} />
+      </button>
+
+      <button 
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-all z-[120] cursor-pointer"
+        aria-label="Next Image"
+      >
+        <ChevronRight size={32} />
+      </button>
     </motion.div>
   );
 };
@@ -635,7 +641,7 @@ const ExpandableDescription = ({ description }: { description: string }) => {
     <div className="relative mb-12">
       <div 
         ref={contentRef}
-        className={`markdown-body prose prose-lg text-forest/80 max-w-none transition-all duration-500 ease-in-out overflow-hidden ${
+        className={`markdown-body prose prose-lg prose-invert text-slate-200 font-light max-w-none transition-all duration-500 ease-in-out overflow-hidden ${
           !isExpanded && shouldShowButton ? 'max-h-[300px] lg:max-h-none' : 'max-h-[5000px]'
         }`}
       >
@@ -643,10 +649,10 @@ const ExpandableDescription = ({ description }: { description: string }) => {
       </div>
       
       {!isExpanded && shouldShowButton && (
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-beige to-transparent flex items-end justify-center pb-2 lg:hidden">
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#061011] to-transparent flex items-end justify-center pb-2 lg:hidden">
           <button 
             onClick={() => setIsExpanded(true)}
-            className="bg-white/80 backdrop-blur-md text-forest px-6 py-2 rounded-full shadow-lg border border-forest/5 font-bold uppercase tracking-widest text-[10px] hover:bg-white transition-all"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-2 rounded-full shadow-lg font-bold uppercase tracking-widest text-[10px] transition-all"
           >
             Read More
           </button>
@@ -657,7 +663,7 @@ const ExpandableDescription = ({ description }: { description: string }) => {
         <div className="flex justify-center mt-4 lg:hidden">
           <button 
             onClick={() => setIsExpanded(false)}
-            className="text-forest/60 font-bold uppercase tracking-widest text-[10px] hover:text-forest transition-all"
+            className="text-emerald-400 font-bold uppercase tracking-widest text-[10px] hover:text-emerald-300 transition-all"
           >
             Show Less
           </button>
@@ -674,15 +680,15 @@ const ExpandableAmenities = ({ amenities }: { amenities: string[] }) => {
   const displayedAmenities = isExpanded ? amenities : amenities.slice(0, initialCount);
 
   return (
-    <div className="border-t border-forest/10 pt-12">
-      <h3 className="font-heading text-2xl font-bold text-forest mb-8 uppercase tracking-widest">Amenities</h3>
+    <div className="border-t border-white/10 pt-12">
+      <h3 className="font-heading text-2xl font-bold text-white mb-8 uppercase tracking-widest">Amenities</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
         {displayedAmenities.map((amenity, i) => (
-          <div key={i} className="flex items-center text-forest/80">
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm">
-              <Check size={18} className="text-accent" />
+          <div key={i} className="flex items-center text-slate-300 font-light">
+            <div className="w-10 h-10 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4">
+              <Check size={18} className="text-emerald-400" />
             </div>
-            <span className="font-medium">{amenity}</span>
+            <span className="font-medium text-slate-200">{amenity}</span>
           </div>
         ))}
       </div>
@@ -691,7 +697,7 @@ const ExpandableAmenities = ({ amenities }: { amenities: string[] }) => {
         <div className="mt-8 flex justify-center lg:hidden">
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="bg-white/80 backdrop-blur-md text-forest px-8 py-3 rounded-full shadow-lg border border-forest/5 font-bold uppercase tracking-widest text-[10px] hover:bg-white transition-all"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-3 rounded-full shadow-lg font-bold uppercase tracking-widest text-[10px] transition-all"
           >
             {isExpanded ? 'Show Less' : 'View All Amenities'}
           </button>
@@ -709,9 +715,9 @@ const ApartmentDetail = () => {
 
   if (!apartment) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-beige">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4">Apartment not found</h2>
+      <div className="min-h-screen flex items-center justify-center bg-transparent text-white">
+        <div className="text-center glass-panel p-12 rounded-3xl border border-white/10 shadow-2xl">
+          <h2 className="text-4xl font-bold mb-4 font-heading text-white">Apartment not found</h2>
           <StickyBackButton to="/accommodations/all" />
         </div>
       </div>
@@ -719,7 +725,7 @@ const ApartmentDetail = () => {
   }
 
   return (
-    <div className="bg-beige min-h-screen pb-20">
+    <div className="bg-transparent min-h-screen pb-20 text-white">
       <StickyBackButton to="/accommodations/all" />
       
       <div className="max-w-7xl mx-auto px-4 md:px-16 pt-20">
@@ -727,14 +733,14 @@ const ApartmentDetail = () => {
 
         <div className="mt-12 grid lg:grid-cols-3 gap-16">
           <div className="lg:col-span-2">
-            <h1 className="font-heading text-4xl md:text-6xl font-bold text-forest mb-4 uppercase tracking-tight">
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-white mb-4 uppercase tracking-tight">
               {apartment.name}
             </h1>
-            <div className="flex items-center text-accent font-bold mb-4 uppercase tracking-widest text-sm">
+            <div className="flex items-center text-emerald-400 font-bold mb-4 uppercase tracking-widest text-sm">
               <MapPin size={18} className="mr-2 flex-shrink-0" />
               <span>{apartment.location}</span>
             </div>
-            <p className="text-xl text-forest/60 mb-8 font-medium">
+            <p className="text-xl text-slate-300 mb-8 font-medium">
               {apartment.size} • {apartment.beds}
             </p>
             
@@ -744,18 +750,18 @@ const ApartmentDetail = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white p-8 rounded-2xl shadow-xl sticky top-32">
+            <div className="glass-panel-heavy p-8 border border-white/10 rounded-3xl shadow-2xl sticky top-32 text-white">
               <div className="mb-8">
-                <p className="text-sm text-forest/60 uppercase tracking-widest mb-1">Price from</p>
-                <p className="text-4xl font-bold text-forest">{apartment.price.split(' ')[0]}</p>
-                <p className="text-sm text-forest/60">per night</p>
+                <p className="text-sm text-slate-400 uppercase tracking-widest mb-1">Price from</p>
+                <p className="text-4xl font-bold text-emerald-400 glow-text-emerald">{apartment.price.split(' ')[0]}</p>
+                <p className="text-sm text-slate-400">per night</p>
               </div>
 
               <div className="space-y-4">
                 {apartment.bookingScript ? (
                   <button 
                     onClick={() => navigate(`/booking/${id}`, { state: { from: location.pathname } })}
-                    className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm"
+                    className="w-full bg-emerald-500 text-black font-bold py-4 rounded-xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm"
                   >
                     Book Now
                   </button>
@@ -764,12 +770,12 @@ const ApartmentDetail = () => {
                     href={apartment.bookingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm text-center block"
+                    className="w-full bg-emerald-500 text-black font-bold py-4 rounded-xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm text-center block"
                   >
                     Book Now
                   </a>
                 ) : (
-                  <button className="w-full bg-accent text-white font-bold py-4 rounded-xl hover:bg-accent/90 transition-all shadow-lg shadow-accent/20 uppercase tracking-widest text-sm">
+                  <button className="w-full bg-emerald-500 text-black font-bold py-4 rounded-xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20 uppercase tracking-widest text-sm">
                     Book Now
                   </button>
                 )}
@@ -788,23 +794,23 @@ const ApartmentDetail = () => {
                       }
                     }
                   }}
-                  className="w-full border border-forest/10 text-forest font-bold py-4 rounded-xl hover:bg-forest hover:text-white transition-all uppercase tracking-widest text-sm"
+                  className="w-full border border-emerald-500/30 text-emerald-400 font-bold py-4 rounded-xl hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all uppercase tracking-widest text-sm"
                 >
                   Check Availability
                 </button>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-forest/5 space-y-4">
-                <div className="flex items-center text-sm text-forest/60">
-                  <Check size={16} className="text-accent mr-3" />
+              <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
+                <div className="flex items-center text-sm text-slate-300">
+                  <Check size={16} className="text-emerald-400 mr-3" />
                   <span>Free cancellation up to 7 days</span>
                 </div>
-                <div className="flex items-center text-sm text-forest/60">
-                  <Check size={16} className="text-accent mr-3" />
+                <div className="flex items-center text-sm text-slate-300">
+                  <Check size={16} className="text-emerald-400 mr-3" />
                   <span>No prepayment required</span>
                 </div>
-                <div className="flex items-center text-sm text-forest/60">
-                  <Check size={16} className="text-accent mr-3" />
+                <div className="flex items-center text-sm text-slate-300">
+                  <Check size={16} className="text-emerald-400 mr-3" />
                   <span>Instant confirmation</span>
                 </div>
               </div>
@@ -822,9 +828,9 @@ const BookingPage = () => {
 
   if (!apartment) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-beige">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
-          <h2 className="text-4xl font-bold mb-4">Apartment not found</h2>
+          <h2 className="text-4xl font-bold mb-4 text-white">Apartment not found</h2>
           <StickyBackButton to="/accommodations/all" />
         </div>
       </div>
@@ -832,45 +838,45 @@ const BookingPage = () => {
   }
 
   return (
-    <div className="bg-beige min-h-screen pb-20">
+    <div className="bg-transparent min-h-screen pb-20 text-white">
       <StickyBackButton to={`/apartment/${id}`} />
       
       <div className="max-w-7xl mx-auto px-4 md:px-16 pt-32">
         <div className="mb-12 text-center">
-          <h1 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2 uppercase tracking-tight">
+          <h1 className="font-heading text-4xl md:text-5xl font-bold text-white mb-2 uppercase tracking-tight">
             {apartment.name}
           </h1>
-          <div className="flex items-center justify-center text-accent font-bold mb-4 uppercase tracking-widest text-xs">
+          <div className="flex items-center justify-center text-emerald-400 font-bold mb-4 uppercase tracking-widest text-xs">
             <MapPin size={14} className="mr-1 flex-shrink-0" />
             <span>{apartment.location}</span>
           </div>
-          <p className="text-accent font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
+          <p className="text-emerald-400 font-bold uppercase tracking-widest text-sm">Booking & Availability</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 items-start">
           {/* Left Side: Booking */}
-          <div id="booking-section" className="lg:col-span-1 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
-            <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+          <div id="booking-section" className="lg:col-span-1 glass-panel p-6 md:p-8 rounded-3xl shadow-2xl border border-white/10 h-fit">
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-white mb-6 uppercase tracking-widest border-b border-white/10 pb-4">
               Pricing & Booking
             </h3>
             {apartment.bookingScript ? (
               <BentralWidget scriptUrl={apartment.bookingScript} height="1100px" />
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
+              <div className="flex items-center justify-center h-[400px] text-slate-400 italic">
                 Booking system not available for this property.
               </div>
             )}
           </div>
 
           {/* Right Side: Calendar */}
-          <div id="calendar-section" className="lg:col-span-1 bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-forest/5 h-fit">
-            <h3 className="font-heading text-xl md:text-2xl font-bold text-forest mb-6 uppercase tracking-widest border-b border-forest/10 pb-4">
+          <div id="calendar-section" className="lg:col-span-1 glass-panel p-6 md:p-8 rounded-3xl shadow-2xl border border-white/10 h-fit">
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-white mb-6 uppercase tracking-widest border-b border-white/10 pb-4">
               Availability Calendar
             </h3>
             {apartment.calendarScript ? (
               <BentralWidget scriptUrl={apartment.calendarScript} height="1850px" />
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-forest/40 italic">
+              <div className="flex items-center justify-center h-[400px] text-slate-400 italic">
                 Calendar not available for this property.
               </div>
             )}
@@ -893,9 +899,9 @@ const Activities = () => {
   ];
 
   return (
-    <section id="activities" className="py-20 px-4 md:px-16 bg-forest text-beige relative overflow-hidden">
+    <section id="activities" className="py-20 px-4 md:px-16 bg-transparent text-white relative overflow-hidden">
       <div className="flex items-center justify-between mb-12">
-        <h2 className="font-heading text-4xl md:text-5xl font-bold">Activities</h2>
+        <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase tracking-tight">Activities</h2>
       </div>
 
       <div className="relative group">
@@ -905,26 +911,27 @@ const Activities = () => {
         >
           {activities.map((act, idx) => (
             act.link ? (
-              <Link to={act.link} state={{ from: '/#activities' }} key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-xl overflow-hidden aspect-[3/4] group/card block">
+              <Link to={act.link} state={{ from: '/#activities' }} key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-3xl overflow-hidden aspect-[3/4] group/card border border-emerald-500/15 hover:border-emerald-500/30 transition-all duration-300 shadow-2xl block hover:scale-[1.01]">
                 <img 
                   src={act.image} 
                   alt={act.name} 
-                  className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 opacity-90 group-hover/card:opacity-100"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
-                  <h3 className="font-heading text-2xl font-bold text-white">{act.name}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-8">
+                  <h3 className="font-heading text-2xl font-bold text-white mb-2">{act.name}</h3>
+                  <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest flex items-center">Explore adventure <ArrowRight size={12} className="ml-1 animate-pulse" /></span>
                 </div>
               </Link>
             ) : (
-              <div key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-xl overflow-hidden aspect-[3/4] group/card">
+              <div key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-3xl overflow-hidden aspect-[3/4] group/card border border-emerald-500/15 shadow-2xl hover:scale-[1.01]">
                 <img 
                   src={act.image} 
                   alt={act.name} 
-                  className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 opacity-90"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8">
                   <h3 className="font-heading text-2xl font-bold text-white">{act.name}</h3>
                 </div>
               </div>
@@ -938,78 +945,78 @@ const Activities = () => {
 
 const Location = () => {
   return (
-    <section id="location" className="py-20 px-4 md:px-16 bg-beige">
+    <section id="location" className="py-20 px-4 md:px-16 bg-transparent text-white">
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8 text-forest">Location</h2>
-          <p className="text-lg mb-8 text-forest/80">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8 uppercase tracking-tight text-white">Location</h2>
+          <p className="text-lg mb-8 text-slate-300 font-light leading-relaxed">
             Our apartments are nestled in the heart of the breathtaking Soča Valley, a peaceful alpine setting surrounded by the majestic Julian Alps. This emerald paradise offers a perfect blend of tranquil nature and exhilarating outdoor adventures, with the stunning Soča River just moments away.
           </p>
-          <ul className="space-y-6">
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Waves className="text-accent" size={20} />
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Waves className="text-emerald-400 font-bold" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Soča River</h4>
-                <p className="text-forest/70">Famous emerald river known for rafting, kayaking, swimming and stunning scenery.</p>
+                <h4 className="font-bold text-white">Soča River</h4>
+                <p className="text-slate-300 text-xs mt-1">Famous emerald river known for rafting, kayaking and scenery.</p>
               </div>
             </li>
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Mountain className="text-accent" size={20} />
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Mountain className="text-emerald-400" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Julian Alps</h4>
-                <p className="text-forest/70">Spectacular alpine landscape perfect for hiking and nature lovers.</p>
+                <h4 className="font-bold text-white">Julian Alps</h4>
+                <p className="text-slate-300 text-xs mt-1">Spectacular alpine landscape perfect for hiking and nature.</p>
               </div>
             </li>
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Compass className="text-accent" size={20} />
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Compass className="text-emerald-400" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Hiking Trails</h4>
-                <p className="text-forest/70">Numerous scenic trails with panoramic mountain views.</p>
+                <h4 className="font-bold text-white">Hiking Trails</h4>
+                <p className="text-slate-300 text-xs mt-1">Numerous scenic trails with panoramic mountain views.</p>
               </div>
             </li>
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Bike className="text-accent" size={20} />
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Bike className="text-emerald-400" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Cycling Routes</h4>
-                <p className="text-forest/70">Beautiful cycling routes through valleys, forests and mountain roads.</p>
+                <h4 className="font-bold text-white">Cycling Routes</h4>
+                <p className="text-slate-300 text-xs mt-1">Beautiful cycling routes through valleys and forests.</p>
               </div>
             </li>
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Zap className="text-accent" size={20} />
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Zap className="text-emerald-400" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Outdoor Adventures</h4>
-                <p className="text-forest/70">Rafting, canyoning, zipline, paragliding and other adrenaline activities.</p>
+                <h4 className="font-bold text-white">Adrenaline</h4>
+                <p className="text-slate-300 text-xs mt-1">Rafting, canyoning, paragliding and adventures.</p>
               </div>
             </li>
-            <li className="flex items-start">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mr-4 shadow-sm shrink-0">
-                <Utensils className="text-accent" size={20} />
+            <li className="flex items-start glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mr-4 shrink-0">
+                <Utensils className="text-emerald-400" size={22} />
               </div>
               <div>
-                <h4 className="font-bold">Local Restaurants</h4>
-                <p className="text-forest/70">Traditional Slovenian cuisine and cozy local restaurants in the valley.</p>
+                <h4 className="font-bold text-white">Dining</h4>
+                <p className="text-slate-300 text-xs mt-1">Traditional Slovenian cuisine and local restaurants.</p>
               </div>
             </li>
           </ul>
         </div>
-        <div className="h-[600px] bg-gray-200 rounded-xl overflow-hidden relative shadow-2xl">
+        <div className="h-[600px] rounded-3xl overflow-hidden relative shadow-3xl border border-emerald-500/15 glass-panel group">
           <img 
             src="https://www.socavalley.com/wp-content/uploads/slider/cache/914173898ae5d95346d7229c72f6ef2b/Soca_bridge_BRV-scaled.webp" 
             alt="Beautiful Soča Valley" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#061011]/80 via-transparent to-black/10" />
         </div>
       </div>
     </section>
@@ -1018,14 +1025,14 @@ const Location = () => {
 
 const Reviews = () => {
   return (
-    <section id="reviews" className="py-20 px-4 md:px-16 bg-white">
+    <section id="reviews" className="py-20 px-4 md:px-16 bg-transparent text-white">
       <div className="text-center mb-16">
-        <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-forest">Guest Reviews</h2>
-        <div className="flex items-center justify-center gap-2 text-xl font-bold">
-          <span className="text-accent flex"><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /></span>
-          <span>4.9/5</span>
+        <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tight text-white text-shadow-emerald">Guest Reviews</h2>
+        <div className="flex items-center justify-center gap-2 text-xl font-bold text-emerald-400">
+          <span className="text-emerald-400 flex"><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /><Star fill="currentColor" size={20} /></span>
+          <span className="glow-text-emerald">4.9/5</span>
         </div>
-        <p className="text-forest/70 mt-2">Based on Booking.com & Airbnb ratings</p>
+        <p className="text-slate-300 mt-2 text-lg font-light">Based on Booking.com & Airbnb ratings</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
@@ -1034,14 +1041,16 @@ const Reviews = () => {
           { text: "Perfect base for our rafting trip. The beds were so comfortable after a long day on the river. Will definitely return!", author: "Markus T.", country: "Germany" },
           { text: "Beautiful modern design while keeping the cozy cabin feel. The view from the balcony in the morning is breathtaking.", author: "Elena R.", country: "Italy" }
         ].map((review, idx) => (
-          <div key={idx} className="bg-beige p-8 rounded-xl">
-            <div className="flex text-accent mb-4">
-              <Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" />
-            </div>
-            <p className="text-forest/80 mb-6 italic">"{review.text}"</p>
+          <div key={idx} className="glass-panel p-8 rounded-2xl border border-white/5 shadow-2xl flex flex-col justify-between hover:scale-[1.02] transition-all duration-300">
             <div>
-              <p className="font-bold">{review.author}</p>
-              <p className="text-sm text-forest/60">{review.country}</p>
+              <div className="flex text-emerald-400 mb-4 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" />
+              </div>
+              <p className="text-slate-200 mb-6 italic leading-relaxed font-light">"{review.text}"</p>
+            </div>
+            <div>
+              <p className="font-bold text-white text-base">{review.author}</p>
+              <p className="text-xs text-emerald-400 tracking-wider font-semibold uppercase mt-1">{review.country}</p>
             </div>
           </div>
         ))}
@@ -1086,47 +1095,47 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 md:px-16 bg-forest text-beige">
+    <section id="contact" className="py-20 px-4 md:px-16 bg-transparent text-white">
       <div className="grid md:grid-cols-2 gap-16">
         <div>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8">Get in Touch</h2>
-          <p className="mb-12 text-beige/80 text-lg">
+          <h2 className="font-heading text-4xl md:text-5xl font-bold mb-8 uppercase tracking-tight text-white text-shadow-emerald">Get in Touch</h2>
+          <p className="mb-12 text-slate-300 text-lg font-light leading-relaxed">
             Ready to book your stay or have some questions? We'd love to hear from you.
           </p>
           
           <div className="space-y-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mr-6">
-                <Phone className="text-accent" />
+            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
+                <Phone className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-beige/60 uppercase tracking-wider mb-1">Phone</p>
-                <p className="font-bold text-xl">+386 70 316 806</p>
+                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Phone</p>
+                <p className="font-bold text-xl text-white">+386 70 316 806</p>
               </div>
             </div>
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mr-6">
-                <Mail className="text-accent" />
+            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
+                <Mail className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-beige/60 uppercase tracking-wider mb-1">Email</p>
-                <p className="font-bold text-xl">bizyakyan@gmail.com</p>
+                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Email</p>
+                <p className="font-bold text-xl text-white">bizyakyan@gmail.com</p>
               </div>
             </div>
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mr-6">
-                <MapPin className="text-accent" />
+            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
+                <MapPin className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-beige/60 uppercase tracking-wider mb-1">Address</p>
-                <p className="font-bold text-xl">Brdo 24<br/>5230 Bovec, Slovenia</p>
+                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Address</p>
+                <p className="font-bold text-xl text-white">Brdo 24<br/>5230 Bovec, Slovenia</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white text-forest p-8 rounded-xl min-h-[400px] flex flex-col">
-          <h3 className="font-heading text-2xl font-bold mb-6">Send a Request</h3>
+        <div className="glass-panel-heavy text-white p-8 md:p-12 rounded-3xl min-h-[400px] flex flex-col border border-emerald-500/20 shadow-3xl">
+          <h3 className="font-heading text-2xl font-bold mb-6 text-white uppercase tracking-tight">Send a Request</h3>
           
           {status === 'success' ? (
             <motion.div 
@@ -1134,14 +1143,14 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               className="flex-1 flex flex-col items-center justify-center text-center space-y-4"
             >
-              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/10">
                 <Check size={32} />
               </div>
-              <p className="text-xl font-bold text-forest">Thank you!</p>
-              <p className="text-forest/70">Your request has been sent successfully. We will contact you soon.</p>
+              <p className="text-2xl font-bold text-white uppercase tracking-tight">Thank you!</p>
+              <p className="text-slate-300 font-light">Your request has been sent successfully. We will contact you soon.</p>
               <button 
                 onClick={() => setStatus('idle')}
-                className="text-accent font-bold uppercase tracking-widest text-sm hover:underline mt-4"
+                className="text-emerald-400 font-bold uppercase tracking-widest text-xs hover:underline mt-4 transition-all"
               >
                 Send another request
               </button>
@@ -1153,31 +1162,31 @@ const Contact = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2">First Name</label>
-                  <input type="text" name="firstName" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent" />
+                  <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">First Name</label>
+                  <input type="text" name="firstName" required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Last Name</label>
-                  <input type="text" name="lastName" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent" />
+                  <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">Last Name</label>
+                  <input type="text" name="lastName" required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2">Email</label>
-                <input type="email" name="email" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent" />
+                <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">Email</label>
+                <input type="email" name="email" required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Check-in</label>
-                  <input type="date" name="checkin" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent" />
+                  <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">Check-in</label>
+                  <input type="date" name="checkin" required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Check-out</label>
-                  <input type="date" name="checkout" required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent" />
+                  <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">Check-out</label>
+                  <input type="date" name="checkout" required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2">Message</label>
-                <textarea name="message" rows={4} required className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-accent"></textarea>
+                <label className="block text-xs uppercase tracking-wider font-bold text-slate-300 mb-2">Message</label>
+                <textarea name="message" rows={4} required className="w-full p-3 bg-black/40 border border-white/10 rounded-lg text-white focus:outline-none focus:border-emerald-500 font-light transition-all"></textarea>
               </div>
               
               {status === 'error' && (
@@ -1187,7 +1196,7 @@ const Contact = () => {
               <button 
                 type="submit" 
                 disabled={status === 'submitting'}
-                className="w-full bg-accent text-white font-bold py-4 rounded-lg hover:bg-accent/90 transition-colors uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-4 rounded-lg hover:scale-[1.01] transition-all uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] cursor-pointer mt-4"
               >
                 {status === 'submitting' ? 'Sending...' : 'Send Request'}
               </button>
@@ -1201,8 +1210,9 @@ const Contact = () => {
 
 const Footer = () => {
   return (
-    <footer className="bg-forest text-beige/60 py-8 px-4 md:px-16 border-t border-beige/10 flex flex-col md:flex-row items-center justify-between">
-      <p>&copy; {new Date().getFullYear()} Soca Valley Hub. All rights reserved.</p>
+    <footer className="bg-transparent text-slate-400 py-12 px-4 md:px-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between z-10 relative">
+      <p className="text-sm font-light tracking-wide">&copy; {new Date().getFullYear()} Soca Valley Hub. All rights reserved.</p>
+      <p className="text-xs text-white/45 mt-2 md:mt-0 font-mono">ADRENALINE & ECO LUXURY RESORT</p>
     </footer>
   );
 }
@@ -1270,41 +1280,41 @@ const HikingPage = () => {
       title: "Scenic Valley Walks",
       description: "Enjoy peaceful walks along crystal-clear rivers and through lush green valleys. Perfect for families and those seeking tranquility.",
       hikes: ["Soca Trail", "Lepena Valley", "Tolmin Gorges"],
-      image: "https://picsum.photos/seed/valley-walks/800/600"
+      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80"
     },
     {
       title: "Waterfalls & Natural Wonders",
       description: "Discover the most spectacular water features of the region, from hidden pools to Slovenia's highest falls.",
       hikes: ["Virje Waterfall", "Boka Waterfall"],
-      image: "https://picsum.photos/seed/waterfalls/800/600"
+      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80"
     },
     {
       title: "Alpine Viewpoints",
       description: "Hike to stunning vantage points that offer panoramic views of the Julian Alps and the valleys below.",
       hikes: ["Slemenova Špica", "Mangart Saddle", "Svinjak"],
-      image: "https://picsum.photos/seed/alpine-views/800/600"
+      image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&q=80"
     },
     {
       title: "High Mountain Adventures",
       description: "Challenge yourself with high-altitude treks to iconic summits and pristine alpine lakes.",
       hikes: ["Mount Krn", "Krn Lakes"],
-      image: "https://picsum.photos/seed/mountain-adv/800/600"
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"
     }
   ];
 
   return (
-    <div className="bg-beige min-h-screen pb-0">
+    <div className="bg-transparent min-h-screen pb-0 text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/hiking-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=80" 
           alt="Hiking in the Julian Alps" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-75"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -1318,7 +1328,7 @@ const HikingPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Explore the breathtaking trails of the Julian Alps and Soca Valley.
           </motion.p>
@@ -1334,7 +1344,7 @@ const HikingPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-2xl text-forest leading-relaxed font-medium">
+            <p className="text-2xl text-slate-200 leading-relaxed font-light">
               Bovec is one of Slovenia’s most spectacular hiking destinations. Surrounded by dramatic peaks, turquoise rivers, waterfalls, and alpine meadows, it offers trails for every level — from relaxed valley walks to challenging mountain summits.
             </p>
           </motion.div>
@@ -1342,10 +1352,10 @@ const HikingPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/hiking-intro-2/800/600" 
+              src="https://images.unsplash.com/photo-1472214222541-d510753a4707?w=800&q=80" 
               alt="Hiking adventure in Bovec" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -1356,7 +1366,7 @@ const HikingPage = () => {
       </section>
 
       {/* 3. FEATURED HIKING EXPERIENCES */}
-      <section className="py-24 px-4 md:px-16 bg-white overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden">
         <div className="max-w-7xl mx-auto space-y-32">
           {hikingGroups.map((group, i) => (
             <motion.div 
@@ -1368,23 +1378,23 @@ const HikingPage = () => {
               className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
             >
               <div className="flex-1 space-y-6">
-                <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">{group.title}</h2>
-                <p className="text-xl text-forest/70 leading-relaxed">{group.description}</p>
+                <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">{group.title}</h2>
+                <p className="text-xl text-slate-300 leading-relaxed font-light">{group.description}</p>
                 <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-widest text-forest/50 font-bold">Recommended Hikes</p>
+                  <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold">Recommended Hikes</p>
                   <ul className="space-y-3">
                     {group.hikes.map((hike, idx) => (
-                      <li key={idx} className="flex items-center text-forest/80">
-                        <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                          <Check size={14} className="text-accent" />
+                      <li key={idx} className="flex items-center text-slate-200">
+                        <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                          <Check size={14} className="text-emerald-400" />
                         </div>
-                        <span className="font-semibold">{hike}</span>
+                        <span className="font-medium text-slate-200">{hike}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
                 <img 
                   src={group.image} 
                   alt={group.title} 
@@ -1399,21 +1409,21 @@ const HikingPage = () => {
       </section>
 
       {/* 4. OFFICIAL TRAILS LINK SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige text-center">
+      <section className="py-24 px-4 md:px-16 bg-transparent text-center border-t border-white/5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="max-w-3xl mx-auto space-y-8"
         >
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-forest uppercase tracking-tight">
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-white uppercase tracking-tight">
             Looking for more hiking routes?
           </h2>
           <a 
             href={officialTrailsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block px-10 py-5 border-2 border-forest text-forest font-bold rounded-full hover:bg-forest hover:text-white transition-all uppercase tracking-widest text-sm"
+            className="inline-block px-10 py-5 border-2 border-emerald-500/30 text-emerald-400 font-bold rounded-full hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all uppercase tracking-widest text-sm"
           >
             Explore All Hiking Trails
           </a>
@@ -1421,7 +1431,7 @@ const HikingPage = () => {
       </section>
 
       {/* 5. FINAL CTA */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -1431,7 +1441,7 @@ const HikingPage = () => {
           <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Ready to explore Bovec on foot?</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_25px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -1445,18 +1455,18 @@ const SkydivingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-beige min-h-screen">
+    <div className="bg-transparent min-h-screen text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/skydiving-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1447069387593-a5de0862481e?w=1920&q=80" 
           alt="Skydiving above the Julian Alps" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-75"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -1470,7 +1480,7 @@ const SkydivingPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Feel the freedom. Jump above the Alps.
           </motion.p>
@@ -1486,10 +1496,10 @@ const SkydivingPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               Experience the ultimate adrenaline rush above the breathtaking Julian Alps. Skydiving in Bovec offers unforgettable panoramic views of the Soca Valley, emerald rivers, and dramatic mountain peaks.
             </p>
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               Whether you are a first-time jumper or an experienced skydiver, Bovec provides a safe and professionally guided adventure in one of Europe’s most scenic drop zones.
             </p>
           </motion.div>
@@ -1497,10 +1507,10 @@ const SkydivingPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/skydiving-intro/800/600" 
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80" 
               alt="Skydiving adventure" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -1511,7 +1521,7 @@ const SkydivingPage = () => {
       </section>
 
       {/* 3. TANDEM SKYDIVING SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-white overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
@@ -1520,8 +1530,8 @@ const SkydivingPage = () => {
             className="flex flex-col md:flex-row gap-12 md:gap-24 items-center"
           >
             <div className="flex-1 space-y-6">
-              <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">Tandem Skydiving Experience</h2>
-              <p className="text-xl text-forest/70 leading-relaxed">
+              <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">Tandem Skydiving Experience</h2>
+              <p className="text-xl text-slate-300 leading-relaxed font-light">
                 No previous experience required — jump together with a certified instructor.
               </p>
               <ul className="space-y-4">
@@ -1532,18 +1542,18 @@ const SkydivingPage = () => {
                   "Safe landing in Bovec Valley",
                   "Optional photo and video package"
                 ].map((item, idx) => (
-                  <li key={idx} className="flex items-center text-forest/80">
-                    <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Check size={14} className="text-accent" />
+                  <li key={idx} className="flex items-center text-slate-300">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                      <Check size={14} className="text-emerald-400" />
                     </div>
-                    <span className="font-medium">{item}</span>
+                    <span className="font-medium text-slate-200">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
               <img 
-                src="https://picsum.photos/seed/skydiving-tandem/800/600" 
+                src="https://images.unsplash.com/photo-1510519138101-570d1dca3d66?w=800&q=80" 
                 alt="Tandem Skydiving" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 loading="lazy"
@@ -1555,7 +1565,7 @@ const SkydivingPage = () => {
       </section>
 
       {/* 4. LICENSED SKYDIVING SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
@@ -1564,8 +1574,8 @@ const SkydivingPage = () => {
             className="flex flex-col md:flex-row-reverse gap-12 md:gap-24 items-center"
           >
             <div className="flex-1 space-y-6">
-              <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">For Experienced Skydivers</h2>
-              <p className="text-xl text-forest/70 leading-relaxed">
+              <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">For Experienced Skydivers</h2>
+              <p className="text-xl text-slate-300 leading-relaxed font-light">
                 Bovec is a well-known European skydiving location attracting international jumpers.
               </p>
               <ul className="space-y-4">
@@ -1575,18 +1585,18 @@ const SkydivingPage = () => {
                   "Training camps and events",
                   "Stable weather conditions during the season"
                 ].map((item, idx) => (
-                  <li key={idx} className="flex items-center text-forest/80">
-                    <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Check size={14} className="text-accent" />
+                  <li key={idx} className="flex items-center text-slate-300">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                      <Check size={14} className="text-emerald-400" />
                     </div>
-                    <span className="font-medium">{item}</span>
+                    <span className="font-medium text-slate-200">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
               <img 
-                src="https://picsum.photos/seed/skydiving-pro/800/600" 
+                src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80" 
                 alt="Experienced Skydiving" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 loading="lazy"
@@ -1598,23 +1608,23 @@ const SkydivingPage = () => {
       </section>
 
       {/* 5. WHY SKYDIVE IN BOVEC */}
-      <section className="py-24 px-4 md:px-16 bg-white">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]"
+            className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/skydiving-scenic/800/600" 
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80" 
               alt="Aerial view of Bovec" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
           </motion.div>
           <div className="space-y-8">
-            <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-widest">Why Skydive in Bovec?</h2>
+            <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-widest">Why Skydive in Bovec?</h2>
             <ul className="space-y-6">
               {[
                 "Unique alpine mountain scenery",
@@ -1623,9 +1633,9 @@ const SkydivingPage = () => {
                 "High safety standards",
                 "Unforgettable bucket-list experience"
               ].map((item, i) => (
-                <li key={i} className="flex items-center text-xl text-forest/80">
-                  <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <Check size={18} className="text-accent" />
+                <li key={i} className="flex items-center text-xl text-slate-200 font-light">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Check size={18} className="text-emerald-400" />
                   </div>
                   {item}
                 </li>
@@ -1636,9 +1646,9 @@ const SkydivingPage = () => {
       </section>
 
       {/* 6. WHO IS IT FOR SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <h2 className="font-heading text-4xl font-bold text-center text-forest mb-16 uppercase tracking-widest">Who is it for?</h2>
+          <h2 className="font-heading text-4xl font-bold text-center text-white mb-16 uppercase tracking-widest">Who is it for?</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[
               "Adrenaline lovers",
@@ -1650,7 +1660,7 @@ const SkydivingPage = () => {
               <motion.div 
                 key={i}
                 whileHover={{ scale: 1.05 }}
-                className="bg-white p-8 rounded-2xl shadow-md text-center font-bold text-forest border border-forest/5"
+                className="glass-panel p-8 rounded-2xl shadow-2xl text-center font-bold text-white border border-white/10"
               >
                 {item}
               </motion.div>
@@ -1660,22 +1670,22 @@ const SkydivingPage = () => {
       </section>
 
       {/* Official Skydiving Provider Section */}
-      <section className="py-24 px-4 md:px-16 bg-white text-center">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="max-w-4xl mx-auto space-y-8"
         >
-          <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">Official Skydiving Provider in Bovec</h2>
-          <p className="text-xl text-forest/70 leading-relaxed">
+          <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">Official Skydiving Provider in Bovec</h2>
+          <p className="text-xl text-slate-300 leading-relaxed font-light">
             For bookings, detailed information, tandem jumps and training programs, we recommend Skydive Bovec – the official skydiving provider in the Soca Valley.
           </p>
           <a 
             href="https://www.skydivebovec.com/sl"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-10 py-5 bg-forest text-white font-bold rounded-full hover:bg-forest/90 hover:scale-105 transition-all uppercase tracking-widest text-sm shadow-xl shadow-forest/20 group"
+            className="inline-flex items-center px-10 py-5 bg-emerald-500 text-black font-bold rounded-full hover:bg-emerald-400 hover:scale-105 transition-all uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(16,185,129,0.3)] group"
           >
             Visit Skydive Bovec <ExternalLink size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </a>
@@ -1683,7 +1693,7 @@ const SkydivingPage = () => {
       </section>
 
       {/* 7. FINAL CALL TO ACTION */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -1693,7 +1703,7 @@ const SkydivingPage = () => {
           <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Ready to experience Bovec from the sky?</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_25px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -1707,18 +1717,18 @@ const CyclingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-beige min-h-screen">
+    <div className="bg-transparent min-h-screen text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/cycling-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=1920&q=80" 
           alt="Cycling in the Julian Alps" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-75"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -1732,7 +1742,7 @@ const CyclingPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Explore the Soca Valley on two wheels.
           </motion.p>
@@ -1748,7 +1758,7 @@ const CyclingPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               Cycling in Bovec offers breathtaking alpine scenery, legendary mountain climbs, and peaceful valley rides along the emerald Soca River. Whether you are a road cyclist, mountain biker, or leisure rider, Bovec provides routes for every level.
             </p>
           </motion.div>
@@ -1756,10 +1766,10 @@ const CyclingPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/cycling-intro/800/600" 
+              src="https://images.unsplash.com/photo-1544192240-4a34fed0104c?w=800&q=80" 
               alt="Cycling adventure" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -1770,9 +1780,9 @@ const CyclingPage = () => {
       </section>
 
       {/* 3. ROAD CYCLING ROUTES SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-white">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <h2 className="font-heading text-4xl font-bold text-center text-forest mb-16 uppercase tracking-widest">Road Cycling Routes</h2>
+          <h2 className="font-heading text-4xl font-bold text-center text-white mb-16 uppercase tracking-widest">Road Cycling Routes</h2>
           <div className="space-y-20">
             {roadCyclingRoutes.map((route, i) => (
               <motion.div 
@@ -1783,32 +1793,32 @@ const CyclingPage = () => {
                 className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 items-center`}
               >
                 <div className="flex-1 space-y-6">
-                  <h3 className="text-3xl font-bold text-forest">{route.title}</h3>
+                  <h3 className="text-3xl font-bold text-white">{route.title}</h3>
                   <div className="grid grid-cols-2 gap-6">
                     {route.elevation && (
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-forest/50 font-bold mb-1">Elevation</p>
-                        <p className="font-semibold">{route.elevation}</p>
+                        <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-1">Elevation</p>
+                        <p className="font-semibold text-slate-100">{route.elevation}</p>
                       </div>
                     )}
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-forest/50 font-bold mb-1">Difficulty</p>
-                      <p className="font-semibold">{route.difficulty}</p>
+                      <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-1">Difficulty</p>
+                      <p className="font-semibold text-slate-100">{route.difficulty}</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-widest text-forest/50 font-bold mb-2">Highlights</p>
+                    <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-2">Highlights</p>
                     <ul className="space-y-2">
                       {route.highlights.map((h, idx) => (
-                        <li key={idx} className="flex items-center text-forest/80">
-                          <Check size={16} className="text-accent mr-3" />
+                        <li key={idx} className="flex items-center text-slate-300">
+                          <Check size={16} className="text-emerald-400 mr-3" />
                           {h}
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-                <div className="flex-1 w-full aspect-video rounded-2xl overflow-hidden shadow-xl">
+                <div className="flex-1 w-full aspect-video rounded-2xl overflow-hidden shadow-xl border border-white/5">
                   <img 
                     src={route.image} 
                     alt={route.title} 
@@ -1824,16 +1834,16 @@ const CyclingPage = () => {
       </section>
 
       {/* 4. MOUNTAIN BIKING SECTION */}
-      <section className="py-24 px-4 md:px-16 max-w-7xl mx-auto">
-        <h2 className="font-heading text-4xl font-bold text-center text-forest mb-16 uppercase tracking-widest">Mountain Biking</h2>
+      <section className="py-24 px-4 md:px-16 max-w-7xl mx-auto border-t border-white/5">
+        <h2 className="font-heading text-4xl font-bold text-center text-white mb-16 uppercase tracking-widest">Mountain Biking</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {mtbRoutes.map((route) => (
             <motion.div 
               key={route.id}
               whileHover={{ y: -10 }}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-forest/5"
+              className="glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10"
             >
-              <div className="aspect-video overflow-hidden">
+              <div className="aspect-video overflow-hidden border-b border-white/5">
                 <img 
                   src={route.image} 
                   alt={route.title} 
@@ -1842,11 +1852,11 @@ const CyclingPage = () => {
                 />
               </div>
               <div className="p-6 space-y-4">
-                <h3 className="text-xl font-bold text-forest">{route.title}</h3>
-                <p className="text-forest/70 text-sm">{route.description}</p>
+                <h3 className="text-xl font-bold text-white">{route.title}</h3>
+                <p className="text-slate-300 text-sm font-light leading-relaxed">{route.description}</p>
                 <div className="pt-2">
-                  <p className="text-xs uppercase tracking-widest text-forest/50 font-bold mb-1">Difficulty</p>
-                  <p className="font-semibold text-sm">{route.difficulty}</p>
+                  <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-1">Difficulty</p>
+                  <p className="font-semibold text-sm text-slate-200">{route.difficulty}</p>
                 </div>
               </div>
             </motion.div>
@@ -1855,28 +1865,28 @@ const CyclingPage = () => {
       </section>
 
       {/* 5. CYCLING ACTIVITIES SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <h2 className="font-heading text-4xl font-bold text-center text-forest mb-16 uppercase tracking-widest">Cycling Services</h2>
+          <h2 className="font-heading text-4xl font-bold text-center text-white mb-16 uppercase tracking-widest">Cycling Services</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: <Compass className="text-accent" />, title: "Guided mountain biking tours" },
-              { icon: <Users className="text-accent" />, title: "Road cycling group tours" },
-              { icon: <Zap className="text-accent" />, title: "E-bike rentals" },
-              { icon: <MapIcon className="text-accent" />, title: "GPS route planning" },
-              { icon: <Settings className="text-accent" />, title: "Bike rental shops" },
-              { icon: <Heart className="text-accent" />, title: "MTB skills courses" },
-              { icon: <Calendar className="text-accent" />, title: "Multi-day cycling adventures" }
+              { icon: <Compass className="text-emerald-400" />, title: "Guided mountain biking tours" },
+              { icon: <Users className="text-emerald-400" />, title: "Road cycling group tours" },
+              { icon: <Zap className="text-emerald-400" />, title: "E-bike rentals" },
+              { icon: <MapIcon className="text-emerald-400" />, title: "GPS route planning" },
+              { icon: <Settings className="text-emerald-400" />, title: "Bike rental shops" },
+              { icon: <Heart className="text-emerald-400" />, title: "MTB skills courses" },
+              { icon: <Calendar className="text-emerald-400" />, title: "Multi-day cycling adventures" }
             ].map((item, i) => (
               <motion.div 
                 key={i}
                 whileHover={{ scale: 1.05 }}
-                className="bg-white p-8 rounded-2xl shadow-sm text-center space-y-4 border border-forest/5"
+                className="glass-panel p-8 rounded-2xl shadow-xl text-center space-y-4 border border-white/10"
               >
-                <div className="w-12 h-12 bg-beige rounded-xl flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mx-auto">
                   {item.icon}
                 </div>
-                <p className="font-bold text-forest text-sm leading-snug">{item.title}</p>
+                <p className="font-bold text-white text-sm leading-snug">{item.title}</p>
               </motion.div>
             ))}
           </div>
@@ -1884,18 +1894,18 @@ const CyclingPage = () => {
       </section>
 
       {/* 6. WHY CYCLE IN BOVEC SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-white">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-          <div className="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
+          <div className="rounded-2xl overflow-hidden shadow-2xl aspect-[4/3] border border-white/5">
             <img 
-              src="https://picsum.photos/seed/cycling-scenic/800/600" 
+              src="https://images.unsplash.com/photo-1541614101331-1a5a3a194e92?w=800&q=80" 
               alt="Scenic alpine cycling" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
           </div>
           <div className="space-y-8">
-            <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-widest">Why Cycle in Bovec?</h2>
+            <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-widest">Why Cycle in Bovec?</h2>
             <ul className="space-y-6">
               {[
                 "Clean alpine air",
@@ -1904,9 +1914,9 @@ const CyclingPage = () => {
                 "Spectacular Julian Alps views",
                 "Combination of adventure and tranquility"
               ].map((item, i) => (
-                <li key={i} className="flex items-center text-xl text-forest/80">
-                  <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <Check size={18} className="text-accent" />
+                <li key={i} className="flex items-center text-xl text-slate-200 font-light">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Check size={18} className="text-emerald-400" />
                   </div>
                   {item}
                 </li>
@@ -1917,7 +1927,7 @@ const CyclingPage = () => {
       </section>
 
       {/* 7. FINAL CTA SECTION */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -1927,7 +1937,7 @@ const CyclingPage = () => {
           <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Ready to explore Bovec by bike?</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_25px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -1950,7 +1960,7 @@ const SocaRiverPage = () => {
         "Fun rapids for all levels",
         "Stunning alpine scenery"
       ],
-      image: "https://picsum.photos/seed/soca-rafting/800/600"
+      image: "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?w=800&q=80"
     },
     {
       title: "KAYAKING",
@@ -1961,7 +1971,7 @@ const SocaRiverPage = () => {
         "Calm scenic sections",
         "Technical rapids for experts"
       ],
-      image: "https://picsum.photos/seed/soca-kayak/800/600"
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80"
     },
     {
       title: "CANYONING",
@@ -1972,23 +1982,23 @@ const SocaRiverPage = () => {
         "Professional guides",
         "Fully equipped and safe tours"
       ],
-      image: "https://picsum.photos/seed/soca-canyon/800/600"
+      image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&q=80"
     }
   ];
 
   return (
-    <div className="bg-beige min-h-screen">
+    <div className="bg-transparent min-h-screen text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/soca-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80" 
           alt="Turquoise Soca River" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-75"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -2002,7 +2012,7 @@ const SocaRiverPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Rafting, kayaking and canyoning in the emerald heart of the Julian Alps.
           </motion.p>
@@ -2018,10 +2028,10 @@ const SocaRiverPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               The Soca River is the jewel of the Julian Alps and the center of outdoor adventure in Bovec. Its crystal-clear emerald water offers unforgettable experiences for adrenaline lovers and nature enthusiasts alike.
             </p>
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               From exciting white-water rafting to canyoning in hidden gorges and scenic kayaking routes — the Soca River offers something for everyone.
             </p>
           </motion.div>
@@ -2029,10 +2039,10 @@ const SocaRiverPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/soca-intro/800/600" 
+              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80" 
               alt="Emerald Soca River" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -2043,7 +2053,7 @@ const SocaRiverPage = () => {
       </section>
 
       {/* 3. MAIN ACTIVITIES SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-white overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto space-y-32">
           {riverActivities.map((activity, i) => (
             <motion.div 
@@ -2055,20 +2065,20 @@ const SocaRiverPage = () => {
               className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
             >
               <div className="flex-1 space-y-6">
-                <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">{activity.title}</h2>
-                <p className="text-xl text-forest/70 leading-relaxed">{activity.description}</p>
+                <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">{activity.title}</h2>
+                <p className="text-xl text-slate-300 leading-relaxed font-light">{activity.description}</p>
                 <ul className="space-y-4">
                   {activity.highlights.map((h, idx) => (
-                    <li key={idx} className="flex items-center text-forest/80">
-                      <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                        <Check size={14} className="text-accent" />
+                    <li key={idx} className="flex items-center text-slate-300">
+                      <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <Check size={14} className="text-emerald-400" />
                       </div>
-                      <span className="font-medium">{h}</span>
+                      <span className="font-medium text-slate-200">{h}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
                 <img 
                   src={activity.image} 
                   alt={activity.title} 
@@ -2083,23 +2093,23 @@ const SocaRiverPage = () => {
       </section>
 
       {/* 4. WHY THE SOČA RIVER IS SPECIAL */}
-      <section className="py-24 px-4 md:px-16 bg-beige">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3]"
+            className="rounded-3xl overflow-hidden shadow-2xl aspect-[4/3] border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/soca-aerial/800/600" 
+              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80" 
               alt="Aerial view of Soca River" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
           </motion.div>
           <div className="space-y-8">
-            <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-widest">Why the Soca River is Special</h2>
+            <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-widest">Why the Soca River is Special</h2>
             <ul className="space-y-6">
               {[
                 "Unique emerald color",
@@ -2108,9 +2118,9 @@ const SocaRiverPage = () => {
                 "Suitable for beginners and professionals",
                 "Long adventure season"
               ].map((item, i) => (
-                <li key={i} className="flex items-center text-xl text-forest/80">
-                  <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <Check size={18} className="text-accent" />
+                <li key={i} className="flex items-center text-xl text-slate-200 font-light">
+                  <div className="w-8 h-8 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Check size={18} className="text-emerald-400" />
                   </div>
                   {item}
                 </li>
@@ -2121,11 +2131,11 @@ const SocaRiverPage = () => {
       </section>
 
       {/* 5. TRUSTED LOCAL PARTNERS SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-white">
+      <section className="py-24 px-4 md:px-16 bg-transparent border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-heading text-4xl font-bold text-forest mb-6 uppercase tracking-widest">Our Trusted Adventure Partners</h2>
-            <p className="text-xl text-forest/70 max-w-2xl mx-auto">
+            <h2 className="font-heading text-4xl font-bold text-white mb-6 uppercase tracking-widest">Our Trusted Adventure Partners</h2>
+            <p className="text-xl text-slate-350 max-w-2xl mx-auto font-light leading-relaxed">
               We cooperate with professional and certified local companies to ensure safe and unforgettable river experiences.
             </p>
           </div>
@@ -2135,16 +2145,16 @@ const SocaRiverPage = () => {
               <motion.div 
                 key={i}
                 whileHover={{ y: -8 }}
-                className="bg-beige p-8 rounded-2xl shadow-md border border-forest/5 group"
+                className="glass-panel p-8 rounded-3xl shadow-2xl border border-white/10 group text-white"
               >
-                <h3 className="text-2xl font-bold text-forest mb-3">{partner.name}</h3>
-                <p className="text-forest/70 mb-6 leading-relaxed">{partner.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">{partner.name}</h3>
+                <p className="text-slate-300 mb-6 leading-relaxed font-light">{partner.description}</p>
                 {partner.website && (
                   <a 
                     href={partner.website} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-accent font-bold uppercase tracking-widest text-sm hover:underline"
+                    className="inline-flex items-center text-emerald-400 font-bold uppercase tracking-widest text-sm hover:underline"
                   >
                     Visit Website <ArrowRight size={16} className="ml-2" />
                   </a>
@@ -2156,7 +2166,7 @@ const SocaRiverPage = () => {
       </section>
 
       {/* 6. FINAL CALL TO ACTION */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -2166,7 +2176,7 @@ const SocaRiverPage = () => {
           <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Ready for your Soca River adventure?</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_25px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -2184,47 +2194,47 @@ const WhereToEatPage = () => {
       name: "Gostilna Sovdat",
       description: "Traditional Slovenian cuisine in a cozy alpine atmosphere.",
       highlights: ["Local meat dishes", "Homemade desserts", "Central location", "Warm hospitality"],
-      image: "https://picsum.photos/seed/sovdat/800/600"
+      image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=600&q=80"
     },
     {
       name: "Letni Vrt",
-      description: "Relaxed dining with Mediterranean and Slovenian dishes.",
+      description: "Relaxed dining with Merditerranean and Slovenian dishes.",
       highlights: ["Seasonal ingredients", "Outdoor terrace", "Vegetarian options"],
-      image: "https://picsum.photos/seed/letnivrt/800/600"
+      image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80"
     },
     {
       name: "Gostilna pod Lipco",
       description: "Authentic local recipes with generous portions.",
       highlights: ["Grilled specialties", "Family-friendly atmosphere", "Traditional flavors"],
-      image: "https://picsum.photos/seed/podlipco/800/600"
+      image: "https://images.unsplash.com/photo-1484156818044-c040038b0719?w=600&q=80"
     },
     {
       name: "Bistro 9.45",
       description: "A modern and stylish bistro offering creative dishes made from fresh local ingredients in a relaxed alpine setting.",
       highlights: ["Contemporary cuisine", "Fresh seasonal ingredients", "Elegant yet casual atmosphere", "Great for lunch or relaxed dinner"],
-      image: "https://picsum.photos/seed/bistro945/800/600"
+      image: "https://images.unsplash.com/photo-1424847651672-bf2c98a3002f?w=600&q=80"
     },
     {
       name: "Hotel Mangart Restaurant",
       description: "Modern alpine dining experience.",
       highlights: ["Refined Slovenian dishes", "Elegant setting", "Ideal for special occasions"],
-      image: "https://picsum.photos/seed/mangart-food/800/600"
+      image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80"
     }
   ];
 
   return (
-    <div className="bg-beige min-h-screen">
+    <div className="bg-transparent min-h-screen text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/bovec-food-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80" 
           alt="Where to Eat in Bovec" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -2238,7 +2248,7 @@ const WhereToEatPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Discover authentic local flavors in the heart of the Soca Valley.
           </motion.p>
@@ -2254,7 +2264,7 @@ const WhereToEatPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               Bovec offers a charming selection of restaurants where you can enjoy traditional Slovenian cuisine, fresh local ingredients, and warm alpine hospitality. After a day of adventure, there’s nothing better than a relaxed dinner with mountain views and a glass of local wine.
             </p>
           </motion.div>
@@ -2262,10 +2272,10 @@ const WhereToEatPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/restaurant-interior/800/600" 
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=850&q=80" 
               alt="Restaurant in Bovec" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -2276,7 +2286,7 @@ const WhereToEatPage = () => {
       </section>
 
       {/* 3. RECOMMENDED RESTAURANTS */}
-      <section className="py-24 px-4 md:px-16 bg-white overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto space-y-32">
           {restaurants.map((restaurant, i) => (
             <motion.div 
@@ -2288,22 +2298,22 @@ const WhereToEatPage = () => {
               className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
             >
               <div className="flex-1 space-y-6">
-                <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">{restaurant.name}</h2>
-                <p className="text-xl text-forest/70 leading-relaxed">{restaurant.description}</p>
+                <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">{restaurant.name}</h2>
+                <p className="text-xl text-slate-300 leading-relaxed font-light">{restaurant.description}</p>
                 <div className="space-y-3">
                   <ul className="space-y-3">
                     {restaurant.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-center text-forest/80">
-                        <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                          <Check size={14} className="text-accent" />
+                      <li key={idx} className="flex items-center text-slate-300 font-light">
+                        <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                          <Check size={14} className="text-emerald-400" />
                         </div>
-                        <span className="font-semibold">{highlight}</span>
+                        <span className="font-medium text-slate-200">{highlight}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
                 <img 
                   src={restaurant.image} 
                   alt={restaurant.name} 
@@ -2318,7 +2328,7 @@ const WhereToEatPage = () => {
       </section>
 
       {/* 4. LOCAL SPECIALTIES SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
@@ -2326,9 +2336,9 @@ const WhereToEatPage = () => {
             viewport={{ once: true }}
             className="flex flex-col md:flex-row gap-12 md:gap-24 items-center"
           >
-            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
               <img 
-                src="https://picsum.photos/seed/slovenian-dish/800/600" 
+                src="https://images.unsplash.com/photo-1514516345957-556ca7d90a29?w=800&q=80" 
                 alt="Local Slovenian dishes" 
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -2336,8 +2346,8 @@ const WhereToEatPage = () => {
               />
             </div>
             <div className="flex-1 space-y-6">
-              <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">What to Try in Bovec</h2>
-              <p className="text-xl text-forest/70 leading-relaxed">
+              <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">What to Try in Bovec</h2>
+              <p className="text-xl text-slate-300 leading-relaxed font-light">
                 Traditional alpine cuisine in the Soca Valley is characterized by simple, hearty ingredients that reflect the region's mountain heritage.
               </p>
               <ul className="space-y-4">
@@ -2348,11 +2358,11 @@ const WhereToEatPage = () => {
                   "Game dishes",
                   "Slovenian wines"
                 ].map((item, idx) => (
-                  <li key={idx} className="flex items-center text-forest/80">
-                    <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Check size={14} className="text-accent" />
+                  <li key={idx} className="flex items-center text-slate-300 font-light">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                      <Check size={14} className="text-emerald-400" />
                     </div>
-                    <span className="font-medium">{item}</span>
+                    <span className="font-medium text-slate-200">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -2362,17 +2372,17 @@ const WhereToEatPage = () => {
       </section>
 
       {/* 5. FINAL CTA SECTION */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           className="max-w-3xl mx-auto space-y-8"
         >
-          <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Ready to experience the flavors of Bovec?</h2>
+          <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight text-white animate-pulse">Ready to experience the flavors of Bovec?</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_25px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -2408,7 +2418,7 @@ const LocalShopsPage = () => {
       name: "Šport Tekstil Bovec",
       description: "Outdoor and sports shop providing clothing and equipment for alpine activities.",
       highlights: ["Hiking apparel", "Outdoor footwear", "Sports gear", "Winter clothing"],
-      image: "https://picsum.photos/seed/sport-tekstil/800/600"
+      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80"
     },
     {
       name: "Alpska šola Bovec",
@@ -2420,23 +2430,23 @@ const LocalShopsPage = () => {
       name: "MERKUR Bovec",
       description: "Hardware and practical supplies store for everyday needs.",
       highlights: ["Tools and maintenance items", "Household products", "Basic repair supplies", "Travel necessities"],
-      image: "https://picsum.photos/seed/merkur-bovec/800/600"
+      image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80"
     }
   ];
 
   return (
-    <div className="bg-beige min-h-screen">
+    <div className="bg-transparent min-h-screen text-white">
       <StickyBackButton to="/#activities" />
 
       {/* 1. HERO SECTION */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <img 
-          src="https://picsum.photos/seed/bovec-shops-hero/1920/1080" 
+          src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1920&q=80" 
           alt="Local Shops in Bovec" 
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/50 to-black/40" />
         
         <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.h1 
@@ -2450,7 +2460,7 @@ const LocalShopsPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 font-medium"
+            className="text-xl md:text-2xl text-slate-200 font-light"
           >
             Everything you need — from local specialties to outdoor gear.
           </motion.p>
@@ -2466,7 +2476,7 @@ const LocalShopsPage = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <p className="text-xl text-forest leading-relaxed">
+            <p className="text-xl text-slate-200 leading-relaxed font-light">
               Bovec offers a variety of local shops where you can buy fresh food, traditional products, outdoor equipment, and daily essentials. Whether you're preparing for a hiking trip, cooking in your apartment, or looking for authentic local flavors, everything is conveniently located within walking distance.
             </p>
           </motion.div>
@@ -2474,10 +2484,10 @@ const LocalShopsPage = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl overflow-hidden shadow-2xl aspect-video"
+            className="rounded-2xl overflow-hidden shadow-2xl aspect-video border border-white/5"
           >
             <img 
-              src="https://picsum.photos/seed/shop-interior/800/600" 
+              src="https://images.unsplash.com/photo-1473186578172-c141e6798cf4?w=800&q=80" 
               alt="Local shop in Bovec" 
               className="w-full h-full object-cover"
               loading="lazy"
@@ -2488,7 +2498,7 @@ const LocalShopsPage = () => {
       </section>
 
       {/* 3. FEATURED LOCAL SHOPS */}
-      <section className="py-24 px-4 md:px-16 bg-white overflow-hidden">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
         <div className="max-w-7xl mx-auto space-y-32">
           {shops.map((shop, i) => (
             <motion.div 
@@ -2500,22 +2510,22 @@ const LocalShopsPage = () => {
               className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
             >
               <div className="flex-1 space-y-6">
-                <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">{shop.name}</h2>
-                <p className="text-xl text-forest/70 leading-relaxed">{shop.description}</p>
+                <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">{shop.name}</h2>
+                <p className="text-xl text-slate-300 leading-relaxed font-light">{shop.description}</p>
                 <div className="space-y-3">
                   <ul className="space-y-3">
                     {shop.highlights.map((highlight, idx) => (
-                      <li key={idx} className="flex items-center text-forest/80">
-                        <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                          <Check size={14} className="text-accent" />
+                      <li key={idx} className="flex items-center text-slate-300 font-light">
+                        <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                          <Check size={14} className="text-emerald-400" />
                         </div>
-                        <span className="font-semibold">{highlight}</span>
+                        <span className="font-semibold text-slate-200">{highlight}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
                 <img 
                   src={shop.image} 
                   alt={shop.name} 
@@ -2530,17 +2540,17 @@ const LocalShopsPage = () => {
       </section>
 
       {/* 4. WHAT YOU CAN FIND IN BOVEC SECTION */}
-      <section className="py-24 px-4 md:px-16 bg-beige overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-24 px-4 md:px-16 bg-transparent overflow-hidden border-t border-white/5">
+        <div className="max-w-7xl mx-auto border-t border-white/5 pt-24">
           <motion.div 
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="flex flex-col md:flex-row gap-12 md:gap-24 items-center"
           >
-            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+            <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
               <img 
-                src="https://picsum.photos/seed/local-products/800/600" 
+                src="https://images.unsplash.com/photo-1488459718432-01055e67e44a?w=800&q=80" 
                 alt="Local products in Bovec" 
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -2548,8 +2558,8 @@ const LocalShopsPage = () => {
               />
             </div>
             <div className="flex-1 space-y-6">
-              <h2 className="font-heading text-4xl font-bold text-forest uppercase tracking-tight">What You Can Find in Bovec</h2>
-              <p className="text-xl text-forest/70 leading-relaxed">
+              <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">What You Can Find in Bovec</h2>
+              <p className="text-xl text-slate-300 leading-relaxed font-light">
                 Supporting local businesses not only gives you access to the freshest products but also helps preserve the unique character of our alpine community.
               </p>
               <ul className="space-y-4">
@@ -2561,11 +2571,11 @@ const LocalShopsPage = () => {
                   "Hiking and climbing equipment",
                   "Everyday essentials"
                 ].map((item, idx) => (
-                  <li key={idx} className="flex items-center text-forest/80">
-                    <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                      <Check size={14} className="text-accent" />
+                  <li key={idx} className="flex items-center text-slate-300 font-light">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                      <Check size={14} className="text-emerald-400" />
                     </div>
-                    <span className="font-medium">{item}</span>
+                    <span className="font-medium text-slate-200">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -2575,17 +2585,17 @@ const LocalShopsPage = () => {
       </section>
 
       {/* 5. FINAL CTA SECTION */}
-      <section className="py-32 px-4 md:px-16 bg-forest text-beige text-center">
+      <section className="py-32 px-4 md:px-16 bg-black/40 border-t border-white/5 text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           className="max-w-3xl mx-auto space-y-8"
         >
-          <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight">Everything you need for a comfortable and adventure-filled stay is just steps away.</h2>
+          <h2 className="font-heading text-5xl md:text-6xl font-bold uppercase tracking-tight mb-8">Everything you need for a comfortable and adventure-filled stay is just steps away.</h2>
           <button 
             onClick={() => navigate('/#contact')}
-            className="bg-accent text-white px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-xl shadow-accent/20"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-12 py-5 rounded-full font-bold text-xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(16,185,129,0.4)]"
           >
             Book Your Stay
           </button>
@@ -2595,7 +2605,7 @@ const LocalShopsPage = () => {
   );
 };
 
-const Home = () => {
+const Home = ({ setCurrentSection }: { setCurrentSection: (sec: string) => void }) => {
   const { hash, state } = useLocation();
   const navigationType = useNavigationType();
 
@@ -2613,14 +2623,39 @@ const Home = () => {
     };
 
     if (state?.scrollTo) {
-      // Small timeout to ensure the component is rendered
       setTimeout(() => scrollToElement(state.scrollTo, false), 100);
     } else if (hash) {
       const id = hash.replace('#', '');
-      // Small timeout to ensure the component is rendered
       setTimeout(() => scrollToElement(id, true), 100);
     }
   }, [hash, state, navigationType]);
+
+  // Section visibility tracking utilizing standard IntersectionObserver
+  useEffect(() => {
+    const sections = ['about', 'accommodation', 'activities', 'location', 'reviews', 'contact'];
+    const observers = sections.map(id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setCurrentSection(id);
+          }
+        });
+      }, {
+        rootMargin: '-30% 0px -40% 0px' // Focus intersection triggers
+      });
+      observer.observe(el);
+      return { observer, el };
+    });
+
+    return () => {
+      observers.forEach(obs => {
+        if (obs) obs.observer.unobserve(obs.el);
+      });
+    };
+  }, [setCurrentSection]);
 
   return (
     <>
@@ -2658,52 +2693,52 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="relative w-full max-w-2xl bg-beige rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            className="relative w-full max-w-2xl glass-panel-heavy border border-white/10 rounded-3xl shadow-3xl overflow-hidden max-h-[90vh] flex flex-col text-white"
           >
             <button 
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-black/5 transition-colors z-10"
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-colors z-10"
             >
-              <X size={24} className="text-forest" />
+              <X size={24} className="text-white hover:text-emerald-400" />
             </button>
             
             <div className="p-8 md:p-12 overflow-y-auto">
               <div className="mb-8">
-                <h2 className="font-heading text-4xl md:text-5xl font-bold text-forest mb-2">Soca Valley Hub</h2>
-                <p className="text-accent font-semibold tracking-widest uppercase text-sm">Apartments near Bovec, Slovenia</p>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mb-2 uppercase tracking-tight">Soca Valley Hub</h2>
+                <p className="text-emerald-400 font-semibold tracking-widest uppercase text-xs">Apartments near Bovec, Slovenia</p>
               </div>
               
-              <div className="prose prose-forest max-w-none">
-                <p className="text-lg font-medium text-forest mb-6">Welcome to Soca Valley Hub.</p>
-                <p className="text-forest/80 mb-6">
+              <div className="max-w-none text-slate-300">
+                <p className="text-lg font-medium text-white mb-6">Welcome to Soca Valley Hub.</p>
+                <p className="mb-6 font-light leading-relaxed">
                   Nestled in the heart of the Soca Valley near Bovec, we offer comfortable and carefully designed apartments for guests seeking nature, adventure, and relaxation.
                 </p>
-                <p className="text-forest/80 mb-6">
+                <p className="mb-6 font-light leading-relaxed">
                   Our mission is simple — to provide a welcoming place that feels like home while you explore one of Slovenia’s most beautiful regions.
                 </p>
-                <p className="text-forest/80 mb-8">
+                <p className="mb-8 font-light leading-relaxed">
                   Located near Bovec, our apartments are the perfect starting point for hiking, cycling, rafting, skiing, and discovering the emerald Soca River.
                 </p>
                 
-                <div className="bg-white/50 rounded-xl p-6 border border-forest/5">
-                  <p className="font-bold text-forest mb-4 uppercase tracking-widest text-xs">We focus on:</p>
+                <div className="glass-panel rounded-2xl p-6 border border-white/5">
+                  <p className="font-bold text-emerald-400 mb-4 uppercase tracking-widest text-xs">We focus on:</p>
                   <ul className="space-y-3">
                     {['Clean and modern interiors', 'Fully equipped kitchens', 'Free WiFi', 'Private parking', 'Personal hospitality'].map((item, i) => (
-                      <li key={i} className="flex items-center text-forest/80">
-                        <Check size={16} className="text-accent mr-3 flex-shrink-0" />
+                      <li key={i} className="flex items-center text-slate-200 text-sm">
+                        <Check size={16} className="text-emerald-400 mr-3 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
                 
-                <p className="mt-8 text-forest font-bold italic">We look forward to welcoming you to Soca Valley.</p>
+                <p className="mt-8 text-white font-bold italic">We look forward to welcoming you to Soca Valley.</p>
               </div>
             </div>
           </motion.div>
@@ -2713,31 +2748,58 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
   );
 };
 
+const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
+  const [currentSection, setCurrentSection] = useState('about');
+  const location = useLocation();
+
+  // Set appropriate backdrop focal targets on route change
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      if (location.pathname.startsWith('/apartment') || location.pathname.startsWith('/accommodations')) {
+        setCurrentSection('accommodation');
+      } else if (location.pathname.startsWith('/hiking') || location.pathname.startsWith('/skydiving') || location.pathname.startsWith('/cycling') || location.pathname.startsWith('/soca-river')) {
+        setCurrentSection('activities');
+      } else if (location.pathname.startsWith('/booking')) {
+        setCurrentSection('contact');
+      } else {
+        setCurrentSection('about');
+      }
+    }
+  }, [location.pathname]);
+
+  return (
+    <div className="min-h-screen font-sans selection:bg-emerald-400 selection:text-black relative">
+      {/* 3D background canvas layer */}
+      <ThreeCanvas currentSection={currentSection} />
+      
+      <Navbar onOpenAbout={onOpenAbout} />
+      <main className="relative z-10">
+        <Routes>
+          <Route path="/" element={<Home setCurrentSection={setCurrentSection} />} />
+          <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
+          <Route path="/apartment/:id" element={<ApartmentDetail />} />
+          <Route path="/booking/:id" element={<BookingPage />} />
+          <Route path="/hiking" element={<HikingPage />} />
+          <Route path="/skydiving" element={<SkydivingPage />} />
+          <Route path="/cycling" element={<CyclingPage />} />
+          <Route path="/soca-river" element={<SocaRiverPage />} />
+          <Route path="/where-to-eat" element={<WhereToEatPage />} />
+          <Route path="/local-shops" element={<LocalShopsPage />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 export default function App() {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   return (
     <HashRouter>
       <ScrollToTop />
-      <div className="min-h-screen font-sans selection:bg-accent selection:text-white">
-        <Navbar onOpenAbout={() => setIsAboutOpen(true)} />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
-            <Route path="/apartment/:id" element={<ApartmentDetail />} />
-            <Route path="/booking/:id" element={<BookingPage />} />
-            <Route path="/hiking" element={<HikingPage />} />
-            <Route path="/skydiving" element={<SkydivingPage />} />
-            <Route path="/cycling" element={<CyclingPage />} />
-            <Route path="/soca-river" element={<SocaRiverPage />} />
-            <Route path="/where-to-eat" element={<WhereToEatPage />} />
-            <Route path="/local-shops" element={<LocalShopsPage />} />
-          </Routes>
-        </main>
-        <Footer />
-        <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
-      </div>
+      <AppContent onOpenAbout={() => setIsAboutOpen(true)} />
+      <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
     </HashRouter>
   );
 }

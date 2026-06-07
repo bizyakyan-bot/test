@@ -1,38 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  --color-forest: #1f3a3d;
-  --color-accent: #1e6f8c;
-  --color-beige: #f9f8f6;
+  --color-forest: #0b1a1c;
+  --color-accent: #10b981;
+  --color-beige: #061011;
+  --color-emerald-glow: #34d399;
 }
 
 @layer base {
   .prose {
-    --tw-prose-headings: var(--color-forest);
-    --tw-prose-body: var(--color-forest);
-    --tw-prose-bold: var(--color-forest);
-    --tw-prose-links: var(--color-accent);
-    --tw-prose-bullets: var(--color-accent);
-    --tw-prose-counters: var(--color-accent);
+    --tw-prose-headings: #f8fafc;
+    --tw-prose-body: #cbd5e1;
+    --tw-prose-bold: #f8fafc;
+    --tw-prose-links: #10b981;
+    --tw-prose-bullets: #10b981;
+    --tw-prose-counters: #10b981;
   }
 }
 
 html, body {
-  background-color: var(--color-beige);
-  color: var(--color-forest);
+  background-color: #061011;
+  color: #f1f5f9;
   overflow-x: hidden;
   width: 100%;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
+.glow-text-emerald {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.glow-shadow-emerald {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+}
+
+.glass-panel {
+  background: rgba(11, 26, 28, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel:hover {
+  background: rgba(11, 26, 28, 0.6);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.glass-panel-heavy {
+  background: rgba(8, 19, 21, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.hero-gradient-overlay {
+  background: linear-gradient(180deg, rgba(6, 16, 17, 0.2) 0%, rgba(6, 16, 17, 0.8) 100%);
 }
 
 @layer utilities {
