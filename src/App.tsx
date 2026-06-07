@@ -642,17 +642,17 @@ const ExpandableDescription = ({ description }: { description: string }) => {
       <div 
         ref={contentRef}
         className={`markdown-body prose prose-lg prose-invert text-slate-200 font-light max-w-none transition-all duration-500 ease-in-out overflow-hidden ${
-          !isExpanded && shouldShowButton ? 'max-h-[300px] lg:max-h-none' : 'max-h-[5000px]'
+          !isExpanded && shouldShowButton ? 'max-h-[300px]' : 'max-h-[5000px]'
         }`}
       >
         <ReactMarkdown>{description}</ReactMarkdown>
       </div>
       
       {!isExpanded && shouldShowButton && (
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#061011] to-transparent flex items-end justify-center pb-2 lg:hidden">
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#061011] to-transparent flex items-end justify-center pb-2">
           <button 
             onClick={() => setIsExpanded(true)}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-6 py-2 rounded-full shadow-lg font-bold uppercase tracking-widest text-[10px] transition-all"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-3 rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold uppercase tracking-wider text-xs transition-all transform hover:scale-105"
           >
             Read More
           </button>
@@ -660,10 +660,10 @@ const ExpandableDescription = ({ description }: { description: string }) => {
       )}
 
       {isExpanded && shouldShowButton && (
-        <div className="flex justify-center mt-4 lg:hidden">
+        <div className="flex justify-center mt-6">
           <button 
             onClick={() => setIsExpanded(false)}
-            className="text-emerald-400 font-bold uppercase tracking-widest text-[10px] hover:text-emerald-300 transition-all"
+            className="text-emerald-400 hover:text-emerald-300 font-bold uppercase tracking-wider text-xs transition-all"
           >
             Show Less
           </button>
@@ -694,10 +694,10 @@ const ExpandableAmenities = ({ amenities }: { amenities: string[] }) => {
       </div>
       
       {hasMore && (
-        <div className="mt-8 flex justify-center lg:hidden">
+        <div className="mt-8 flex justify-center">
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-3 rounded-full shadow-lg font-bold uppercase tracking-widest text-[10px] transition-all"
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-3 rounded-full shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold uppercase tracking-wider text-xs transition-all transform hover:scale-105"
           >
             {isExpanded ? 'Show Less' : 'View All Amenities'}
           </button>
