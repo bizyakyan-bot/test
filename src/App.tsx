@@ -35,7 +35,7 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   ];
 
   return (
-    <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-[#061011]/85 backdrop-blur-md sticky top-0 z-50 text-white/90 border-b border-emerald-500/10 shadow-lg">
+    <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-[#061011]/85 backdrop-blur-md fixed top-0 left-0 right-0 w-full z-50 text-white/90 border-b border-emerald-500/10 shadow-lg">
       <a 
         href="https://www.instagram.com/b.i.z.i.c/" 
         target="_blank" 
@@ -139,7 +139,7 @@ const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }
 
 const Hero = () => {
   return (
-    <section id="about" className="px-4 md:px-16 pt-8 pb-16 relative">
+    <section id="about" className="px-4 md:px-16 pt-24 md:pt-28 pb-16 relative">
       <div className="mb-12">
         <h1 className="font-heading font-black text-white uppercase leading-[0.85] flex flex-col w-full overflow-hidden">
           <span className="text-[11.2vw] font-black tracking-tight select-none drop-shadow-2xl">
@@ -728,7 +728,7 @@ const ApartmentDetail = () => {
     <div className="bg-transparent min-h-screen pb-20 text-white">
       <StickyBackButton to="/accommodations/all" />
       
-      <div className="max-w-7xl mx-auto px-4 md:px-16 pt-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-16 pt-28 md:pt-32">
         <Slideshow images={apartment.images} />
 
         <div className="mt-12 grid lg:grid-cols-3 gap-16">
