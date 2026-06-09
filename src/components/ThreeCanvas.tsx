@@ -29,7 +29,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     containerRef.current.appendChild(renderer.domElement);
 
     // --- 2. LIGHTING SYSTEM (AAA Cinematic Ambient & Directional Spotlights) ---
@@ -270,14 +270,14 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
 
     // --- 9. HIGH PERFORMANCE ANIMATION LOOP ---
     let frameId: number;
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     // Flight node values representing smooth target coordinates per viewport section
     const targetCameraPos = new THREE.Vector3(0, 15, 30);
     const targetLookAt = new THREE.Vector3(0, 2, 0);
 
     const tick = () => {
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) / 1000;
 
       // Slow dynamic rotations & wavy animations
       monolith.rotation.y = elapsed * 0.4;
