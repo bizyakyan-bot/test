@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves, Clock, Activity } from 'lucide-react';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
@@ -1272,6 +1272,44 @@ const HikingActivityCard = ({ activity, index }: HikingActivityCardProps) => {
 
 const HikingPage = () => {
   const navigate = useNavigate();
+  const [selectedHike, setSelectedHike] = useState<any>(null);
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number>(0);
+
+  // Lock body scroll when modal is active
+  useEffect(() => {
+    if (selectedHike) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedHike]);
+
+  const rightColumnRef = useRef<HTMLDivElement>(null);
+  const touchStartY = useRef<number>(0);
+
+  // Wheel scroll forward handler for photo column (scrolls right content panel)
+  const handlePhotoWheel = (e: React.WheelEvent) => {
+    if (rightColumnRef.current) {
+      rightColumnRef.current.scrollTop += e.deltaY;
+    }
+  };
+
+  // Touch scroll forwarding for mobile swipe on photo column (scrolls right content panel)
+  const handlePhotoTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handlePhotoTouchMove = (e: React.TouchEvent) => {
+    if (!rightColumnRef.current) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = touchStartY.current - currentY;
+    
+    rightColumnRef.current.scrollTop += deltaY;
+    touchStartY.current = currentY;
+  };
 
   const officialTrailsUrl = "https://www.soca-valley.com/en/in-search-of-adventure/activities/2021022411543267/hiking-trails/";
 
@@ -1279,26 +1317,147 @@ const HikingPage = () => {
     {
       title: "Scenic Valley Walks",
       description: "Enjoy peaceful walks along crystal-clear rivers and through lush green valleys. Perfect for families and those seeking tranquility.",
-      hikes: ["Soca Trail", "Lepena Valley", "Tolmin Gorges"],
-      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80"
+      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+      hikes: [
+        {
+          name: "Soca Trail (Soška pot)",
+          image: "/soca_trail_river.png",
+          difficulty: "Easy",
+          duration: "3 - 5 hours",
+          distance: "12 km (modular sections)",
+          elevation: "+150 m",
+          startPoint: "Trenta (Soca River Source)",
+          routeHighlights: ["Wooden suspension bridges", "Great Soca Gorges", "Triglav National Park scenery"],
+          routeDescription: "This is the most famous nature trail in the valley. It follows the incredible emerald river crossing numerous romantic hanging wooden bridges. You can walk the whole stretch or pick shorter, extremely picturesque segments.",
+          gallery: [
+            { url: "/soca_trail_river.png", label: "Spectacular turquoise-emerald Soca River flowing through the lush green valley" },
+            { url: "/soca_trail_steps.png", label: "Rustic handmade logs and wooden stairs descending into lush alpine undergrowth" },
+            { url: "/soca_trail_moss.png", label: "Fairytale-like walking trails through ancient moss-carpeted pine forests" },
+            { url: "/soca_trail_heather.png", label: "Clean gravel paths bordered by bright purple wild heather and fresh mountain air" },
+            { url: "/soca_trail_sign.png", label: "Informative trail boards and educational markers next to rushing crystal-clear water" }
+          ]
+        },
+        {
+          name: "Lepena Valley Walk",
+          image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80",
+          difficulty: "Easy",
+          duration: "2 hours",
+          distance: "5 km",
+          elevation: "+100 m",
+          startPoint: "Klin Camp (Soca-Lepenca confluence)",
+          routeHighlights: ["Shaded forest paths", "Deep crystal-clear rock pools", "Lepena valley meadows"],
+          routeDescription: "A gentle, refreshing route exploring deep forest trails, lush fields, and the sparkling, deep pools of the Lepenjica creek. It is ideal for warm summer days under the mountain canopies."
+        },
+        {
+          name: "Tolmin Gorges Loop",
+          image: "https://images.unsplash.com/photo-1542332213-9b5a5a3fda35?w=800&q=80",
+          difficulty: "Easy",
+          duration: "1.5 hours",
+          distance: "2 km (circular loop)",
+          elevation: "+80 m",
+          startPoint: "Tolmin Gorge Entrance",
+          routeHighlights: ["Devil's Bridge", "Dante's Cave", "Smaragdos Thermal Spring"],
+          routeDescription: "The lowest entry point of the Triglav National Park. It guides you through a narrow, highly dramatic rocky canyon with carved cliff tunnels, emerald waters, and unique rock structures."
+        }
+      ]
     },
     {
       title: "Waterfalls & Natural Wonders",
       description: "Discover the most spectacular water features of the region, from hidden pools to Slovenia's highest falls.",
-      hikes: ["Virje Waterfall", "Boka Waterfall"],
-      image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80"
+      image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80",
+      hikes: [
+        {
+          name: "Virje Waterfall (Slap Virje)",
+          image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80",
+          difficulty: "Easy",
+          duration: "45 minutes",
+          distance: "1.5 km",
+          elevation: "+50 m",
+          startPoint: "Plužna Village",
+          routeHighlights: ["Slap Virje plunge pool", "Gljun karst spring", "Lush vibrant green moss walls"],
+          routeDescription: "A magical walk downhill from Plužna to view the cartoonish Slap Virje, where the Gljun stream fans out over delicate, green mossy rock shelves into a deep emerald pristine pool."
+        },
+        {
+          name: "Boka Waterfall (Slap Boka)",
+          image: "https://images.unsplash.com/photo-1472214222541-d510753a4707?w=800&q=80",
+          difficulty: "Easy to Moderate",
+          duration: "1.5 hours",
+          distance: "2.5 km",
+          elevation: "+150 m",
+          startPoint: "Boka Hotel Parking",
+          routeHighlights: ["Towering 106m vertical drop", "Panoramic viewing platform", "Dry karst riverbed"],
+          routeDescription: "A slightly stony forest trail leading up to the main viewing platforms to admire Slovenia's most majestic and thunderous waterfall. The water flows directly from a high subterranean cave system."
+        }
+      ]
     },
     {
       title: "Alpine Viewpoints",
       description: "Hike to stunning vantage points that offer panoramic views of the Julian Alps and the valleys below.",
-      hikes: ["Slemenova Špica", "Mangart Saddle", "Svinjak"],
-      image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&q=80"
+      image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&q=80",
+      hikes: [
+        {
+          name: "Slemenova Špica",
+          image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
+          difficulty: "Moderate",
+          duration: "3 - 4 hours",
+          distance: "6 km",
+          elevation: "+640 m",
+          startPoint: "Vršič Pass Summit",
+          routeHighlights: ["Views of the giant Jalovec peak", "Autumn colors in larch woods", "High alpine grassy plateau"],
+          routeDescription: "A legendary high-altitude hike starting at the Vršič Pass. The path climbs through lovely larch forests and over sheep pastures to an breathtaking vertical meadow view over the Planica valley."
+        },
+        {
+          name: "Mangart Saddle (Mangartsko sedlo)",
+          image: "https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&q=80",
+          difficulty: "Moderate",
+          duration: "2.5 hours",
+          distance: "4.5 km",
+          elevation: "+350 m",
+          startPoint: "Mangart Hut Parking",
+          routeHighlights: ["Highest mountain road in Slovenia", "Panoramas of Italian Lakes", "Magnificent steep cliffs"],
+          routeDescription: "Walk along Slovenia's highest road mountain saddle (2055m). Perfect way to experience serious alpine air, blooming mountain flora, and vertical cliffs without a massive vertical climb."
+        },
+        {
+          name: "Svinjak",
+          image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80",
+          difficulty: "Challenging",
+          duration: "4 - 5 hours",
+          distance: "7.5 km",
+          elevation: "+1,200 m",
+          startPoint: "Kal-Koritnica Village",
+          routeHighlights: ["Svinjak pointed summit profile", "Cunegonde castle ruins", "Bovec airfields viewpoint"],
+          routeDescription: "Known as the 'Matterhorn of Bovec' due to its pyramid-like silhouette. This steep, relentless, and hot climb awards mountaineers with an absolute 360-degree aerial panorama of Bovec basins."
+        }
+      ]
     },
     {
       title: "High Mountain Adventures",
       description: "Challenge yourself with high-altitude treks to iconic summits and pristine alpine lakes.",
-      hikes: ["Mount Krn", "Krn Lakes"],
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80"
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
+      hikes: [
+        {
+          name: "Mount Krn (2,244 m)",
+          image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=800&q=80",
+          difficulty: "Challenging",
+          duration: "6 - 7 hours",
+          distance: "11 km",
+          elevation: "+1,250 m",
+          startPoint: "Planina Kuhinja",
+          routeHighlights: ["WWI trenches and fort ruins", "Spectacular 2,244m peak", "Meadow pastures with cheese makers"],
+          routeDescription: "Climb through steep, sunny slopes and rocky fields to reach the summit of Krn. Highly historical route full of WWI relics, trenches, and barbed wire from the Isonzo Front, leading to massive 360 views."
+        },
+        {
+          name: "Krn Lakes (Krnsko jezero)",
+          image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80",
+          difficulty: "Moderate to Challenging",
+          duration: "5 hours",
+          distance: "13 km",
+          elevation: "+800 m",
+          startPoint: "Lepena Valley Hut",
+          routeHighlights: ["Slovenia's largest high-alpine lake", "Historic military mule trails", "Peaceful reflection pools"],
+          routeDescription: "Ascend via high shade forests from the Lepena Valley. Resting silently at 1,391m altitude, Krnsko jezero is the largest mountain lake in Slovenia, sitting tucked under majestic limestone peaks."
+        }
+      ]
     }
   ];
 
@@ -1375,38 +1534,286 @@ const HikingPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}
+              className={`flex flex-col ${i % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-20 items-stretch`}
             >
-              <div className="flex-1 space-y-6">
-                <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight">{group.title}</h2>
-                <p className="text-xl text-slate-300 leading-relaxed font-light">{group.description}</p>
-                <div className="space-y-3">
+              <div className="flex-1 space-y-6 flex flex-col justify-between">
+                <div>
+                  <h2 className="font-heading text-4xl font-bold text-white uppercase tracking-tight mb-4">{group.title}</h2>
+                  <p className="text-lg text-slate-300 leading-relaxed font-light">{group.description}</p>
+                </div>
+                
+                <div className="space-y-4 mt-6">
                   <p className="text-xs uppercase tracking-widest text-emerald-400 font-bold">Recommended Hikes</p>
-                  <ul className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {group.hikes.map((hike, idx) => (
-                      <li key={idx} className="flex items-center text-slate-200">
-                        <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                          <Check size={14} className="text-emerald-400" />
+                      <div 
+                        key={idx} 
+                        onClick={() => {
+                          setSelectedHike(hike);
+                          setActivePhotoIdx(0);
+                        }}
+                        className="group flex flex-col justify-between p-5 bg-white/[0.03] hover:bg-emerald-500/10 rounded-2xl border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer shadow-md hover:shadow-emerald-500/5 hover:-translate-y-1 duration-300"
+                        id={`hike-card-${i}-${idx}`}
+                      >
+                        <div>
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <span className="font-heading font-semibold text-slate-100 group-hover:text-emerald-400 transition-colors text-base leading-snug">{hike.name}</span>
+                            <span className={`text-[9px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full flex-shrink-0 ${
+                              hike.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                              hike.difficulty === 'Moderate' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                              'bg-red-500/10 text-red-400 border border-red-500/20'
+                            }`}>
+                              {hike.difficulty}
+                            </span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-400 font-light mt-3">
+                            <div className="flex items-center gap-1.5">
+                              <Clock size={12} className="text-emerald-400/70" />
+                              <span>{hike.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Activity size={12} className="text-emerald-400/70" />
+                              <span>{hike.distance}</span>
+                            </div>
+                          </div>
                         </div>
-                        <span className="font-medium text-slate-200">{hike}</span>
-                      </li>
+                        
+                        <div className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mt-4 flex items-center gap-1.5 group-hover:translate-x-1.5 transition-transform duration-300">
+                          <span>View Trail & Photo</span> 
+                          <ArrowRight size={11} />
+                        </div>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
-              <div className="flex-1 w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
+              
+              <div className="flex-1 w-full min-h-[300px] lg:min-h-[auto] rounded-3xl overflow-hidden shadow-2xl border border-white/5 relative group/img">
                 <img 
                   src={group.image} 
                   alt={group.title} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  className="absolute inset-0 w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
                   loading="lazy"
                   referrerPolicy="no-referrer"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
               </div>
             </motion.div>
           ))}
         </div>
       </section>
+
+      {/* ACTIVE HIKE MODAL ROUTE GUIDE VIEW */}
+      <AnimatePresence>
+        {selectedHike && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedHike(null)}
+              className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            />
+
+            {/* Modal Body */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 30 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative bg-[#061011] border border-white/10 rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-[0_0_50px_rgba(16,185,129,0.15)] z-10"
+              id="hike-detail-modal"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedHike(null)}
+                className="absolute top-4 right-4 text-slate-300 hover:text-white bg-black/60 hover:bg-black/90 p-2.5 rounded-full z-20 transition-all border border-white/10"
+                id="close-hike-modal"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Left Column: Hike Photo Slideshow/Gallery & Immersive Stats */}
+              <div 
+                onWheel={handlePhotoWheel} 
+                onTouchStart={handlePhotoTouchStart} 
+                onTouchMove={handlePhotoTouchMove} 
+                className="md:w-1/2 relative min-h-[350px] md:min-h-[auto] bg-slate-950 border-r border-[#10b981]/10 flex flex-col justify-between overflow-hidden touch-none"
+              >
+                {selectedHike.gallery ? (
+                  <div className="absolute inset-0 w-full h-full">
+                    {/* Active Image */}
+                    <AnimatePresence mode="wait">
+                      <motion.img 
+                        key={activePhotoIdx}
+                        src={selectedHike.gallery[activePhotoIdx].url} 
+                        alt={selectedHike.gallery[activePhotoIdx].label || selectedHike.name} 
+                        initial={{ opacity: 0, scale: 1.02 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </AnimatePresence>
+
+                    {/* Gradient overlay for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+
+                    {/* Left/Right Navigation Arrows */}
+                    {selectedHike.gallery.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePhotoIdx((prev) => (prev === 0 ? selectedHike.gallery.length - 1 : prev - 1));
+                          }}
+                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-emerald-500 hover:text-black text-white p-2 rounded-full border border-white/10 transition-all z-20 shadow-lg active:scale-95"
+                          title="Previous image"
+                        >
+                          <ChevronLeft size={18} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePhotoIdx((prev) => (prev === selectedHike.gallery.length - 1 ? 0 : prev + 1));
+                          }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-emerald-500 hover:text-black text-white p-2 rounded-full border border-white/10 transition-all z-20 shadow-lg active:scale-95"
+                          title="Next image"
+                        >
+                          <ChevronRight size={18} />
+                        </button>
+                      </>
+                    )}
+
+                    {/* Carousel Indicators / Micro-Dots */}
+                    <div className="absolute top-4 left-4 z-20 flex gap-1.5 bg-black/55 backdrop-blur-md p-1.5 rounded-full border border-white/10">
+                      {selectedHike.gallery.map((_: any, idx: number) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActivePhotoIdx(idx)}
+                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                            idx === activePhotoIdx ? 'bg-emerald-400 w-6' : 'bg-white/40 hover:bg-white/70'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <img 
+                      src={selectedHike.image} 
+                      alt={selectedHike.name} 
+                      className="absolute inset-0 w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/40 to-black/30" />
+                  </>
+                )}
+                
+                {/* Text Content Overlay at the bottom */}
+                <div className="absolute bottom-6 left-6 right-6 z-10 text-left pointer-events-none">
+                  <span className={`text-[10px] uppercase tracking-widest font-extrabold px-3 py-1 rounded-full inline-block mb-3 ${
+                    selectedHike.difficulty === 'Easy' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+                    selectedHike.difficulty === 'Moderate' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
+                    'bg-red-500/20 text-red-300 border border-red-500/30'
+                  }`}>
+                    {selectedHike.difficulty} Route
+                  </span>
+                  <h3 className="font-heading font-extrabold text-2xl md:text-3xl text-white uppercase leading-tight tracking-tight drop-shadow-md">
+                    {selectedHike.name}
+                  </h3>
+                  
+                  {/* Photo Caption Label */}
+                  {selectedHike.gallery && selectedHike.gallery[activePhotoIdx]?.label && (
+                    <div className="text-xs text-slate-200 font-light mt-2 bg-black/60 backdrop-blur-sm p-3 rounded-2xl border border-white/5 w-full drop-shadow-md">
+                      <span className="font-bold text-emerald-400 mr-1.5 uppercase tracking-wider text-[10px]">Photo {activePhotoIdx + 1} of {selectedHike.gallery.length}:</span>
+                      <span className="leading-relaxed">{selectedHike.gallery[activePhotoIdx].label}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Information Sheet & Highlights */}
+              <div 
+                ref={rightColumnRef} 
+                className="md:w-1/2 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[55vh] md:max-h-[80vh] bg-[#061011] text-left overscroll-contain"
+              >
+                <div className="space-y-6">
+                  {/* Route Quick Stats Panel */}
+                  <div>
+                    <h4 className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-3">Trail Statistics</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Duration</span>
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-white">
+                          <Clock size={13} className="text-emerald-400" />
+                          <span>{selectedHike.duration}</span>
+                        </div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Distance</span>
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-white">
+                          <Activity size={13} className="text-emerald-400" />
+                          <span>{selectedHike.distance}</span>
+                        </div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Elevation Gain</span>
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-white">
+                          <Mountain size={13} className="text-emerald-400" />
+                          <span>{selectedHike.elevation}</span>
+                        </div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Start Point</span>
+                        <div className="flex items-center gap-1.5 text-sm font-semibold text-white truncate">
+                          <MapPin size={13} className="text-emerald-400 flex-shrink-0" />
+                          <span className="truncate" title={selectedHike.startPoint}>{selectedHike.startPoint}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Route Guidance */}
+                  <div>
+                    <h4 className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-2">Route Guide</h4>
+                    <p className="text-sm text-slate-300 leading-relaxed font-light">
+                      {selectedHike.routeDescription}
+                    </p>
+                  </div>
+
+                  {/* Key Highlights Checkmarks */}
+                  <div>
+                    <h4 className="text-xs uppercase tracking-widest text-emerald-400 font-bold mb-2">Route Highlights</h4>
+                    <ul className="space-y-2">
+                      {selectedHike.routeHighlights.map((highlight: string, idx: number) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-300 font-light">
+                          <div className="w-4 h-4 bg-emerald-500/10 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                            <Check size={10} className="text-emerald-400" />
+                          </div>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <button 
+                    onClick={() => setSelectedHike(null)}
+                    className="w-full bg-emerald-500 hover:bg-emerald-400 text-black py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-colors"
+                  >
+                    Close Route Details & Maps
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* 4. OFFICIAL TRAILS LINK SECTION */}
       <section className="py-24 px-4 md:px-16 bg-transparent text-center border-t border-white/5">
