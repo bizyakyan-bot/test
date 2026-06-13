@@ -119,6 +119,8 @@ To help us prepare for our next guests, please follow these simple steps before 
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260601_181346_138ebbe1-b0c2-40d3-afae-0ca4703d3623.png&w=1280&q=85"
     ],
     isAvailable: true,
+    bookingScript: "//www.bentral.com/service/embed/booking.js?id=5f7a49774d775f4e&unit=5f5459344f544d4d&width=full&poweredby=0&lang=sl&key=0df768f0860b515090fa4499955a159e",
+    calendarScript: "//www.bentral.com/service/embed/calendar.js?uid=5f5459344f544d4d&unit=5f5459344f544d4d&months=1&cols=6&last=true&width=full&poweredby=0&lang=sl&key=0df768f0860b515090fa4499955a159e",
     location: "Soča"
   },
   {

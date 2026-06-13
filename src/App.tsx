@@ -40,9 +40,17 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
         href="https://www.instagram.com/b.i.z.i.c/" 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-all duration-300 drop-shadow-md text-emerald-400 glow-text-emerald"
+        className="flex items-center gap-2.5 font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-all duration-300 drop-shadow-md text-emerald-400 glow-text-emerald"
+        id="header-logo-link"
       >
-        J.Bizjak
+        <img 
+          src="/IMG_9899.png" 
+          alt="J.Bizjak Logo" 
+          className="h-8 md:h-9 w-auto object-contain brightness-110" 
+          id="header-logo-img"
+          referrerPolicy="no-referrer"
+        />
+        <span>J.Bizjak</span>
       </a>
       
       {/* Desktop Menu */}
