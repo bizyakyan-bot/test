@@ -1,3 +1,5 @@
+import { ShopOrder } from './types';
+
 export interface Apartment {
   id: string;
   name: string;
@@ -367,3 +369,180 @@ export const mtbRoutes: CyclingRoute[] = [
     description: "Easy scenic ride"
   }
 ];
+
+export interface ShopProduct {
+  id: string;
+  name: string;
+  category: 't-shirts' | 'caps';
+  price: number;
+  description: string;
+  images: string[];
+  colors: { name: string; hex: string }[];
+  sizes: string[];
+  features: string[];
+  inStock: boolean;
+  isNew?: boolean;
+  isBestseller?: boolean;
+}
+
+export const shopProducts: ShopProduct[] = [
+  {
+    id: "dreams-arrive-tshirt",
+    name: "Dreams Arrive, Adventures Begin! T-Shirt",
+    category: "t-shirts",
+    price: 25.00,
+    description: "Premium organic cotton t-shirt featuring the iconic slogan 'Dreams Arrive, Adventures Begin!' with the signature J.Bizjak mountain & river emblem. Soft, breathable, and crafted for mountain adventures or casual valley relaxation.",
+    images: [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80",
+      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&q=80"
+    ],
+    colors: [
+      { name: "Alpine Black", hex: "#121212" },
+      { name: "Forest Emerald", hex: "#0f523f" },
+      { name: "Heather Grey", hex: "#5a6268" }
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    features: [
+      "100% Organic Combed Cotton (180 gsm)",
+      "Screen-printed 'Dreams Arrive, Adventures Begin!' emblem",
+      "Reinforced collar and shoulder seams",
+      "Pre-shrunk fabric"
+    ],
+    inStock: true,
+    isBestseller: true
+  },
+  {
+    id: "soca-valley-cap-1st-ed",
+    name: "Soca Valley Hub Logo Cap 1st edition",
+    category: "caps",
+    price: 22.00,
+    description: "Classic structured 6-panel trucker cap with a 3D embroidered Soca Valley Hub logo (1st Edition). High-density mesh back keeps you cool during summer heat.",
+    images: [
+      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
+      "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=800&q=80"
+    ],
+    colors: [
+      { name: "Emerald & Black", hex: "#064e3b" },
+      { name: "Matte Black", hex: "#0f172a" },
+      { name: "Charcoal & Mesh", hex: "#475569" }
+    ],
+    sizes: ["One Size (Adjustable Snap)"],
+    features: [
+      "3D Embroidered Soca Valley Hub logo patch (1st Gen)",
+      "Breathable polyester mesh back",
+      "Adjustable snapback closure",
+      "Pre-curved visor"
+    ],
+    inStock: true,
+    isBestseller: true
+  },
+  {
+    id: "soca-valley-cap-2nd-ed",
+    name: "Soca Valley Hub Logo Cap 2nd edition",
+    category: "caps",
+    price: 24.00,
+    description: "Modern flat-brim snapback cap crafted with premium twill. High-density stitched Soca Valley Hub 2nd Edition emblem representing the peaks and emerald river.",
+    images: [
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260728_114017_385e7663-0f21-4efe-aefd-0ae01b5e7368.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260728_114338_1423ae86-8540-4c4f-af89-5bbb71231881.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260728_114318_9b1b6007-44c5-449a-9321-e3d7b8853bea.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260728_114328_b6252f4c-791f-4955-9ee3-5f6490746723.png&w=1280&q=85"
+    ],
+    colors: [
+      { name: "Forest Green", hex: "#14532d" },
+      { name: "Slate Grey", hex: "#334155" },
+      { name: "Deep Black", hex: "#020617" }
+    ],
+    sizes: ["One Size (Adjustable)"],
+    features: [
+      "Premium wool-blend fabric",
+      "Flat visor with green underbill",
+      "Sturdy 6-panel construction",
+      "Embroidered 2nd edition side logo detail"
+    ],
+    inStock: true,
+    isNew: true
+  }
+];
+
+export const ebikeModels = [
+  {
+    id: "headeer-bk20",
+    name: "Headeer BK20 All-Terrain Fat-Tire E-Bike",
+    category: "e-cruiser" as const,
+    tag: "Exclusive 2-Bike Private Fleet",
+    motor: "750W High-Torque Brushless Hub Motor",
+    battery: "48V 15Ah High-Capacity Lithium Battery",
+    range: "Up to 70 km per single charge",
+    shortCruisePrice: 15.00,
+    halfDayPrice: 25.00,
+    fullDayPrice: 35.00,
+    multiDayPricePerDay: 30.00,
+    sizes: ["One Size"] as ("S" | "M" | "L" | "XL" | "One Size")[],
+    totalStockPerSize: { "One Size": 2 },
+    image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260730_121504_8ddc24e2-8e83-416a-80b8-66af2dbfed94.png&w=1280&q=85",
+    description: "The official signature custom fat-tire e-bike of Apartma Pr Fejtne & J.Bizjak Bovec. Featuring 20x4.0'' puncture-resistant fat tires, dual rear coil suspension, vintage round LED headlight, and leather dual-bench saddle. Perfect for cruising Soča riverbanks, Boka Waterfall trails, and Čezsoča village.",
+    specs: ["20x4.0'' All-Terrain Fat Tires", "Dual Rear Hydraulic Coil Suspension", "Retro Motorcycle LED Headlight", "Shimano 7-Speed & Twist Throttle/Pedal Assist", "Strict 2-Bike Fleet Inventory"]
+  }
+];
+
+export const SAMPLE_INITIAL_SHOP_ORDERS: ShopOrder[] = [
+  {
+    id: 'shop-order-1',
+    orderRef: 'SO-9182',
+    customerName: 'Elena Rossi',
+    customerEmail: 'elena.rossi@gmail.com',
+    customerPhone: '+39 347 1234567',
+    deliveryMethod: 'postal-delivery',
+    shippingAddress: 'Via Dante 14, 20121 Milano, Italy',
+    notes: 'Please wrap carefully as a gift.',
+    items: [
+      {
+        productId: 'tshirt-soca-legend',
+        productName: 'J.Bizjak Soča Valley Legend T-Shirt',
+        selectedColor: 'Emerald Green',
+        selectedSize: 'M',
+        quantity: 1,
+        unitPrice: 29.00,
+        image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80'
+      },
+      {
+        productId: 'cap-bovec-peaks',
+        productName: 'Bovec Peaks Curved Snapback Cap',
+        selectedColor: 'Alpine Olive',
+        selectedSize: 'One Size',
+        quantity: 1,
+        unitPrice: 26.00,
+        image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80'
+      }
+    ],
+    totalAmount: 58.90,
+    status: 'pending',
+    createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
+  },
+  {
+    id: 'shop-order-2',
+    orderRef: 'SO-4019',
+    customerName: 'Jan Novak',
+    customerEmail: 'jan.novak@triera.si',
+    customerPhone: '+386 40 555 987',
+    deliveryMethod: 'bovec-pickup',
+    notes: 'Will pick up at Apartma Pr Fejtne hub tomorrow morning.',
+    items: [
+      {
+        productId: 'tshirt-emerald-river',
+        productName: 'Soča Emerald River Classic Tee',
+        selectedColor: 'Charcoal Gray',
+        selectedSize: 'L',
+        quantity: 1,
+        unitPrice: 29.00,
+        image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&q=80'
+      }
+    ],
+    totalAmount: 29.00,
+    status: 'completed',
+    createdAt: new Date(Date.now() - 3600000 * 36).toISOString()
+  }
+];
+
+

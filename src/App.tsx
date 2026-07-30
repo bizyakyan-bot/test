@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves, Clock, Activity } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves, Clock, Activity, ShoppingCart, ShoppingBag, Tag } from 'lucide-react';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
-import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute } from './data';
-import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar } from 'lucide-react';
+import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute, shopProducts, ShopProduct } from './data';
+import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar, Lock, Unlock, KeyRound } from 'lucide-react';
 import { ThreeCanvas } from './components/ThreeCanvas';
+import { ShopSection, ProductDetailModal, CartModal, CartItem } from './components/ShopSection';
+import { EBikeBookingSystem } from './components/EBikeBookingSystem';
+import { OwnerPortalModal } from './components/OwnerPortalModal';
 
 // Scroll to top component that only scrolls on PUSH/REPLACE, not POP (back button)
 const ScrollToTop = () => {
@@ -21,10 +24,22 @@ const ScrollToTop = () => {
   return null;
 };
 
-const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
+const Navbar = ({ 
+  onOpenAbout,
+  cartCount,
+  onOpenCart,
+  isOwnerUnlocked = false,
+  onOpenOwnerPortal
+}: { 
+  onOpenAbout: () => void;
+  cartCount?: number;
+  onOpenCart?: () => void;
+  isOwnerUnlocked?: boolean;
+  onOpenOwnerPortal?: () => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isShopPage = location.pathname === '/shop';
 
   const navLinks = [
     { name: 'About Us', href: '/#about' },
@@ -32,86 +47,213 @@ const Navbar = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
     { name: 'Activities', href: '/#activities' },
     { name: 'Reviews', href: '/#reviews' },
     { name: 'Contacts', href: '/#contact' },
+    { name: 'Shop', href: '/shop', isSpecial: true },
   ];
 
   return (
-    <nav className="flex items-center justify-between py-6 px-8 md:px-16 bg-[#061011]/85 backdrop-blur-md fixed top-0 left-0 right-0 w-full z-50 text-white/90 border-b border-emerald-500/10 shadow-lg">
-      <a 
-        href="https://www.instagram.com/b.i.z.i.c/" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="flex items-center gap-2.5 font-heading font-bold text-sm tracking-widest uppercase hover:text-accent transition-all duration-300 drop-shadow-md text-emerald-400 glow-text-emerald"
-        id="header-logo-link"
-      >
-        <img 
-          src="/IMG_9899.png" 
-          alt="J.Bizjak Logo" 
-          className="h-8 md:h-9 w-auto object-contain brightness-110" 
-          id="header-logo-img"
-          referrerPolicy="no-referrer"
-        />
-        <span>J.Bizjak</span>
-      </a>
-      
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center space-x-8">
-        <div className="flex space-x-8 text-xs font-semibold tracking-widest uppercase">
-          {navLinks.map((link) => (
-            <Link 
-              key={link.name} 
-              to={link.href} 
-              onClick={(e) => {
-                if (link.name === 'About Us') {
-                  e.preventDefault();
-                  onOpenAbout();
-                }
-              }}
-              className="hover:text-accent hover:scale-105 transition-all text-white/70 hover:text-white"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-      </div>
+    <nav className="flex items-center justify-between py-4 px-4 sm:px-6 md:px-8 lg:px-12 bg-[#061011]/90 backdrop-blur-md fixed top-0 left-0 right-0 w-full z-50 text-white/90 border-b border-emerald-500/10 shadow-lg">
+      <div className="flex items-center gap-3">
+        <Link 
+          to="/" 
+          className="flex items-center gap-2.5 font-heading font-bold text-sm sm:text-base tracking-widest uppercase hover:text-emerald-300 transition-all duration-300 text-emerald-400 glow-text-emerald flex-shrink-0 pr-2"
+          id="header-logo-link"
+        >
+          <img 
+            src="/IMG_9899.png" 
+            alt="J.Bizjak Logo" 
+            className="h-7 sm:h-8 w-auto object-contain brightness-110" 
+            id="header-logo-img"
+            referrerPolicy="no-referrer"
+          />
+          <span>J.Bizjak</span>
+        </Link>
 
-      {/* Mobile Menu Toggle */}
-      <div className="flex items-center space-x-4 md:hidden">
-        <button onClick={() => setIsOpen(!isOpen)} className="text-white">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu Dropdown */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-[#081315]/95 border-b border-emerald-500/10 p-8 flex flex-col space-y-4 shadow-lg md:hidden backdrop-blur-xl"
+        {isShopPage && (
+          <Link
+            to="/"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-emerald-400 transition-all bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 ml-2"
           >
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                to={link.href} 
-                onClick={(e) => {
-                  if (link.name === 'About Us') {
-                    e.preventDefault();
-                    onOpenAbout();
-                  }
-                  setIsOpen(false);
-                }} 
-                className="text-sm font-semibold tracking-widest uppercase text-white/80 hover:text-accent transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </motion.div>
+            <ArrowLeft size={14} />
+            <span>Main Site</span>
+          </Link>
         )}
-      </AnimatePresence>
+      </div>
+
+      {/* If on Shop Page: show clean shop header with Cart & Owner button */}
+      {isShopPage ? (
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="sm:hidden flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-emerald-400 bg-white/5 px-2.5 py-1.5 rounded-xl border border-white/10"
+          >
+            <ArrowLeft size={14} />
+            <span>Home</span>
+          </Link>
+
+          {onOpenOwnerPortal && (
+            <button
+              onClick={onOpenOwnerPortal}
+              className={`flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
+                isOwnerUnlocked
+                  ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300'
+                  : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200'
+              }`}
+              title="Owner Management Portal & Order Ledger"
+            >
+              {isOwnerUnlocked ? <Shield size={14} className="text-amber-400" /> : <Lock size={14} className="text-amber-400" />}
+              <span className="hidden sm:inline">{isOwnerUnlocked ? 'Host Portal' : 'Owner Login'}</span>
+            </button>
+          )}
+
+          {onOpenCart && (
+            <button
+              onClick={onOpenCart}
+              className="relative px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 transition-all flex items-center gap-2.5 group flex-shrink-0"
+              title="Cart"
+            >
+              <ShoppingCart size={18} className="group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-bold uppercase tracking-wider">Cart</span>
+              {cartCount !== undefined && cartCount > 0 && (
+                <span className="bg-emerald-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full shadow-md animate-pulse">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          )}
+        </div>
+      ) : (
+        /* Main Site Navigation */
+        <>
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-3 lg:space-x-6 xl:space-x-8">
+            <div className="flex space-x-3 lg:space-x-6 xl:space-x-8 text-[11px] lg:text-xs font-semibold tracking-wider xl:tracking-widest uppercase items-center whitespace-nowrap">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.name} 
+                  to={link.href} 
+                  onClick={(e) => {
+                    if (link.name === 'About Us') {
+                      e.preventDefault();
+                      onOpenAbout();
+                    }
+                  }}
+                  className={
+                    link.isSpecial
+                      ? "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 transition-all font-bold shadow-xs"
+                      : "hover:text-emerald-400 hover:scale-105 transition-all text-white/80 hover:text-white"
+                  }
+                >
+                  {link.isSpecial && <ShoppingBag size={14} className="text-emerald-400" />}
+                  {link.name}
+                </Link>
+              ))}
+
+              {/* Top Panel Owner Login / Host Portal Button */}
+              {onOpenOwnerPortal && (
+                <button
+                  onClick={onOpenOwnerPortal}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-[11px] lg:text-xs font-bold uppercase tracking-wider transition-all border ${
+                    isOwnerUnlocked
+                      ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300 shadow-sm'
+                      : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200 hover:text-white'
+                  }`}
+                  title="Host & Owner Access Gate (PIN Protected)"
+                >
+                  {isOwnerUnlocked ? (
+                    <>
+                      <Shield size={14} className="text-amber-400" />
+                      <span>Host Portal</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={14} className="text-amber-400" />
+                      <span>Owner Login</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Menu Toggle & Direct Mobile Owner Login */}
+          <div className="flex items-center space-x-3 md:hidden">
+            {onOpenOwnerPortal && (
+              <button
+                onClick={onOpenOwnerPortal}
+                className={`p-2 rounded-xl border text-xs font-bold transition-all flex items-center gap-1 ${
+                  isOwnerUnlocked
+                    ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                    : 'bg-white/5 border-white/15 text-slate-200'
+                }`}
+                title="Owner Login"
+              >
+                {isOwnerUnlocked ? <Shield size={16} className="text-amber-400" /> : <Lock size={16} className="text-amber-400" />}
+                <span className="text-[10px] uppercase font-bold">{isOwnerUnlocked ? 'Host' : 'Owner'}</span>
+              </button>
+            )}
+
+            <button onClick={() => setIsOpen(!isOpen)} className="text-white p-1">
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div 
+                key="mobile-menu-dropdown"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="absolute top-full left-0 w-full bg-[#081315]/95 border-b border-emerald-500/10 p-8 flex flex-col space-y-4 shadow-lg md:hidden backdrop-blur-xl"
+              >
+                {navLinks.map((link) => (
+                  <Link 
+                    key={link.name} 
+                    to={link.href} 
+                    onClick={(e) => {
+                      if (link.name === 'About Us') {
+                        e.preventDefault();
+                        onOpenAbout();
+                      }
+                      setIsOpen(false);
+                    }} 
+                    className={
+                      link.isSpecial
+                        ? "text-sm font-bold tracking-widest uppercase text-emerald-400 flex items-center gap-2 py-2 px-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30"
+                        : "text-sm font-semibold tracking-widest uppercase text-white/80 hover:text-emerald-400 transition-colors"
+                    }
+                  >
+                    {link.isSpecial && <ShoppingBag size={16} className="text-emerald-400" />}
+                    {link.name}
+                  </Link>
+                ))}
+
+                {onOpenOwnerPortal && (
+                  <button
+                    onClick={() => {
+                      onOpenOwnerPortal();
+                      setIsOpen(false);
+                    }}
+                    className={`text-sm font-bold tracking-widest uppercase flex items-center gap-2 py-2.5 px-3 rounded-xl border mt-2 ${
+                      isOwnerUnlocked
+                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                        : 'bg-white/5 border-white/15 text-amber-400'
+                    }`}
+                  >
+                    {isOwnerUnlocked ? <Shield size={16} className="text-amber-400" /> : <Lock size={16} className="text-amber-400" />}
+                    <span>{isOwnerUnlocked ? 'Host Control Portal (Unlocked)' : 'Owner Login (PIN Protected)'}</span>
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
     </nav>
   );
-}
+};
 
 const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }) => {
   const navigate = useNavigate();
@@ -567,6 +709,7 @@ const Slideshow = ({ images }: { images: string[] }) => {
       <AnimatePresence>
         {isLightboxOpen && (
           <Lightbox 
+            key="gallery-lightbox-modal"
             images={images} 
             currentIndex={currentIndex} 
             onClose={() => setIsLightboxOpen(false)}
@@ -1615,12 +1758,15 @@ const HikingPage = () => {
       {/* ACTIVE HIKE MODAL ROUTE GUIDE VIEW */}
       <AnimatePresence>
         {selectedHike && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <motion.div
+            key="hike-modal-wrapper"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          >
             {/* Backdrop */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <div 
               onClick={() => setSelectedHike(null)}
               className="absolute inset-0 bg-black/85 backdrop-blur-md"
             />
@@ -1819,7 +1965,7 @@ const HikingPage = () => {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -2192,6 +2338,11 @@ const CyclingPage = () => {
             />
           </motion.div>
         </div>
+      </section>
+
+      {/* 2.5 AUTOMATED E-BIKE RENTAL & RESERVATION SYSTEM */}
+      <section id="ebikes" className="py-16 px-4 md:px-16 max-w-7xl mx-auto border-t border-white/5">
+        <EBikeBookingSystem />
       </section>
 
       {/* 3. ROAD CYCLING ROUTES SECTION */}
@@ -3020,6 +3171,72 @@ const LocalShopsPage = () => {
   );
 };
 
+const ShopPage = ({
+  onOpenProductDetail,
+  onAddToCart,
+  cartItemsCount,
+  onOpenCart
+}: {
+  onOpenProductDetail: (product: ShopProduct) => void;
+  onAddToCart: (product: ShopProduct, color: string, size: string, qty: number) => void;
+  cartItemsCount: number;
+  onOpenCart: () => void;
+}) => {
+  return (
+    <div className="bg-transparent min-h-screen text-white pt-20">
+      <StickyBackButton to="/" />
+
+      {/* Hero Banner Header for the dedicated Shop page */}
+      <section className="relative h-[50vh] min-h-[360px] flex items-center justify-center overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1920&q=80" 
+          alt="J.Bizjak Official Shop" 
+          className="absolute inset-0 w-full h-full object-cover opacity-50"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/60 to-black/50" />
+        
+        <div className="relative z-10 text-center px-4 max-w-4xl space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold px-4 py-1.5 rounded-full text-xs uppercase tracking-widest backdrop-blur-md"
+          >
+            <Tag size={14} /> Official J.Bizjak Apparel & Caps
+          </motion.div>
+
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold text-white uppercase tracking-tight"
+          >
+            Soca Valley <span className="text-emerald-400 glow-text-emerald">Shop</span>
+          </motion.h1>
+
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="text-base md:text-xl text-slate-200 font-light max-w-2xl mx-auto leading-relaxed"
+          >
+            Official online store featuring unique J.Bizjak t-shirts and caps. Grab authentic apparel for your alpine adventures in the Soča Valley.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Main Shop Products Catalog & Section */}
+      <div className="relative z-10">
+        <ShopSection
+          onOpenProductDetail={onOpenProductDetail}
+          onAddToCart={onAddToCart}
+          cartItemsCount={cartItemsCount}
+          onOpenCart={onOpenCart}
+        />
+      </div>
+    </div>
+  );
+};
+
 const Home = ({ setCurrentSection }: { setCurrentSection: (sec: string) => void }) => {
   const { hash, state } = useLocation();
   const navigationType = useNavigationType();
@@ -3102,15 +3319,19 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <motion.div
+          key="about-modal-wrapper"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        >
+          <div
             onClick={onClose}
             className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
           <motion.div
+            key="about-modal-panel"
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -3157,7 +3378,7 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
@@ -3165,6 +3386,101 @@ const AboutModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
 
 const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   const [currentSection, setCurrentSection] = useState('about');
+  
+  // Owner Authentication & Portal State
+  const [isOwnerUnlocked, setIsOwnerUnlocked] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('ebike_owner_unlocked') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false);
+
+  const handleUnlockOwner = (pin: string) => {
+    const cleanPin = pin.trim().toLowerCase();
+    if (cleanPin === '1234' || cleanPin === 'bovec') {
+      setIsOwnerUnlocked(true);
+      try {
+        sessionStorage.setItem('ebike_owner_unlocked', 'true');
+      } catch (err) {
+        console.error(err);
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const handleLockOwner = () => {
+    setIsOwnerUnlocked(false);
+    try {
+      sessionStorage.removeItem('ebike_owner_unlocked');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('jbizjak_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [selectedProduct, setSelectedProduct] = useState<ShopProduct | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('jbizjak_cart', JSON.stringify(cart));
+    } catch (e) {
+      console.error('Failed to save cart to localStorage', e);
+    }
+  }, [cart]);
+
+  const handleAddToCart = (product: ShopProduct, selectedColor: string, selectedSize: string, quantity: number) => {
+    setCart((prev) => {
+      const existingIndex = prev.findIndex(
+        item => item.product.id === product.id && item.selectedColor === selectedColor && item.selectedSize === selectedSize
+      );
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex].quantity += quantity;
+        return updated;
+      }
+      return [...prev, { product, selectedColor, selectedSize, quantity }];
+    });
+  };
+
+  const handleUpdateQty = (index: number, delta: number) => {
+    setCart((prev) => {
+      const updated = [...prev];
+      const newQty = updated[index].quantity + delta;
+      if (newQty <= 0) {
+        return updated.filter((_, i) => i !== index);
+      }
+      updated[index].quantity = newQty;
+      return updated;
+    });
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleClearCart = () => {
+    setCart([]);
+  };
+
+  const handleOpenProductDetail = (product: ShopProduct) => {
+    setSelectedProduct(product);
+    setIsDetailOpen(true);
+  };
+
+  const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   const location = useLocation();
 
   // Set appropriate backdrop focal targets on route change
@@ -3174,6 +3490,8 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
         setCurrentSection('accommodation');
       } else if (location.pathname.startsWith('/hiking') || location.pathname.startsWith('/skydiving') || location.pathname.startsWith('/cycling') || location.pathname.startsWith('/soca-river')) {
         setCurrentSection('activities');
+      } else if (location.pathname.startsWith('/shop')) {
+        setCurrentSection('shop');
       } else if (location.pathname.startsWith('/booking')) {
         setCurrentSection('contact');
       } else {
@@ -3187,10 +3505,24 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
       {/* 3D background canvas layer */}
       <ThreeCanvas currentSection={currentSection} />
       
-      <Navbar onOpenAbout={onOpenAbout} />
+      <Navbar 
+        onOpenAbout={onOpenAbout} 
+        cartCount={totalCartItems}
+        onOpenCart={() => setIsCartOpen(true)}
+        isOwnerUnlocked={isOwnerUnlocked}
+        onOpenOwnerPortal={() => setIsOwnerModalOpen(true)}
+      />
+
       <main className="relative z-10">
         <Routes>
-          <Route path="/" element={<Home setCurrentSection={setCurrentSection} />} />
+          <Route 
+            path="/" 
+            element={
+              <Home 
+                setCurrentSection={setCurrentSection}
+              />
+            } 
+          />
           <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
           <Route path="/apartment/:id" element={<ApartmentDetail />} />
           <Route path="/booking/:id" element={<BookingPage />} />
@@ -3200,8 +3532,44 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
           <Route path="/soca-river" element={<SocaRiverPage />} />
           <Route path="/where-to-eat" element={<WhereToEatPage />} />
           <Route path="/local-shops" element={<LocalShopsPage />} />
+          <Route 
+            path="/shop" 
+            element={
+              <ShopPage 
+                onOpenProductDetail={handleOpenProductDetail}
+                onAddToCart={handleAddToCart}
+                cartItemsCount={totalCartItems}
+                onOpenCart={() => setIsCartOpen(true)}
+              />
+            } 
+          />
         </Routes>
       </main>
+
+      <ProductDetailModal
+        product={selectedProduct}
+        isOpen={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        onAddToCart={handleAddToCart}
+      />
+
+      <CartModal
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cart={cart}
+        onUpdateQty={handleUpdateQty}
+        onRemoveItem={handleRemoveItem}
+        onClearCart={handleClearCart}
+      />
+
+      <OwnerPortalModal
+        isOpen={isOwnerModalOpen}
+        onClose={() => setIsOwnerModalOpen(false)}
+        isUnlocked={isOwnerUnlocked}
+        onUnlock={handleUnlockOwner}
+        onLock={handleLockOwner}
+      />
+
       <Footer />
     </div>
   );
