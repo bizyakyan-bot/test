@@ -12,7 +12,10 @@ import { OwnerPortalModal } from './components/OwnerPortalModal';
 import { OwnerPortalPage, OwnerPortalIcon } from './components/OwnerPortalPage';
 import { ExperienceInquiryModal } from './components/ExperienceInquiryModal';
 import { LocalGuideSection } from './components/LocalGuideSection';
-import { ActivitiesAndGuideSection } from './components/ActivitiesAndGuideSection';
+import { ActivitiesSection } from './components/ActivitiesSection';
+import { ActivitiesPage } from './components/ActivitiesPage';
+import { HikeAndCyclePage } from './components/HikeAndCyclePage';
+import { RestaurantsAndShopsPage } from './components/RestaurantsAndShopsPage';
 import { RentABikePage } from './components/RentABikePage';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { LocationMapSection } from './components/LocationMapSection';
@@ -50,9 +53,9 @@ const Navbar = ({
 
   const navLinks = [
     { name: 'Stay', href: '/#accommodation' },
-    { name: 'Rent a Bike', href: '/rent-a-bike', isSpecial: true },
+    { name: 'Rent a Bike', href: '/rent-a-bike' },
     { name: 'Shop', href: '/shop', isSpecial: true },
-    { name: 'Activities & Guide', href: '/#activities-guide' },
+    { name: 'Local Guide', href: '/#local-guide' },
     { name: 'Contact', href: '/#contact' },
   ];
 
@@ -300,38 +303,6 @@ const Hero = () => {
         >
           Your Ultimate Basecamp for Apartments, Bike Rentals & Soča Valley Adventures
         </motion.p>
-
-        {/* Hero CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-4"
-        >
-          <a
-            href="#accommodation"
-            className="px-6 sm:px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all transform hover:-translate-y-0.5"
-          >
-            <Mountain size={16} />
-            <span>Stay</span>
-          </a>
-
-          <Link
-            to="/rent-a-bike"
-            className="px-6 sm:px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-emerald-400/50 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 backdrop-blur-md shadow-lg transition-all transform hover:-translate-y-0.5"
-          >
-            <Bike size={16} className="text-emerald-400" />
-            <span>Rent a Bike</span>
-          </Link>
-
-          <Link
-            to="/shop"
-            className="px-6 sm:px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-emerald-400/50 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 backdrop-blur-md shadow-lg transition-all transform hover:-translate-y-0.5"
-          >
-            <ShoppingBag size={16} className="text-emerald-400" />
-            <span>Shop</span>
-          </Link>
-        </motion.div>
       </div>
       
       {/* Main Visual Banner */}
@@ -379,13 +350,14 @@ const Hero = () => {
           </div>
 
           <div className="pt-6 mt-6 border-t border-white/5">
-            <a 
-              href="#accommodation"
+            <Link 
+              to="/accommodations/all"
+              state={{ from: '/#accommodation' }}
               className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
             >
               <span>Check Availability</span>
               <ArrowRight size={14} />
-            </a>
+            </Link>
           </div>
         </motion.div>
 
@@ -3438,7 +3410,7 @@ const Home = ({
 
   // Section visibility tracking utilizing standard IntersectionObserver
   useEffect(() => {
-    const sections = ['about', 'accommodation', 'activities-guide', 'location', 'reviews', 'contact'];
+    const sections = ['about', 'accommodation', 'activities', 'local-guide', 'location', 'reviews', 'contact'];
     const observers = sections.map(id => {
       const el = document.getElementById(id);
       if (!el) return null;
@@ -3467,8 +3439,7 @@ const Home = ({
     <>
       <Hero />
       <Accommodation />
-      <ActivitiesAndGuideSection />
-      <LocationMapSection />
+      <LocalGuideSection />
       <Reviews />
       <Contact />
     </>
@@ -3710,12 +3681,15 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
           <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
           <Route path="/apartment/:id" element={<ApartmentDetail />} />
           <Route path="/booking/:id" element={<BookingPage />} />
-          <Route path="/hiking" element={<HikingPage />} />
+          <Route path="/activities" element={<ActivitiesPage onOpenInquiry={handleOpenExperienceModal} />} />
+          <Route path="/hike-and-cycle" element={<HikeAndCyclePage />} />
+          <Route path="/hiking" element={<HikeAndCyclePage />} />
+          <Route path="/cycling" element={<HikeAndCyclePage />} />
+          <Route path="/restaurants-and-shops" element={<RestaurantsAndShopsPage />} />
+          <Route path="/where-to-eat" element={<RestaurantsAndShopsPage />} />
+          <Route path="/local-shops" element={<RestaurantsAndShopsPage />} />
           <Route path="/skydiving" element={<SkydivingPage />} />
-          <Route path="/cycling" element={<CyclingPage />} />
           <Route path="/soca-river" element={<SocaRiverPage />} />
-          <Route path="/where-to-eat" element={<WhereToEatPage />} />
-          <Route path="/local-shops" element={<LocalShopsPage />} />
           <Route path="/owner" element={<OwnerPortalPage />} />
           <Route 
             path="/shop" 
