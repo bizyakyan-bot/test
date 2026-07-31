@@ -300,6 +300,38 @@ const Hero = () => {
         >
           Your Ultimate Basecamp for Apartments, Bike Rentals & Soča Valley Adventures
         </motion.p>
+
+        {/* Hero CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-4"
+        >
+          <a
+            href="#accommodation"
+            className="px-6 sm:px-8 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all transform hover:-translate-y-0.5"
+          >
+            <Mountain size={16} />
+            <span>Stay</span>
+          </a>
+
+          <Link
+            to="/rent-a-bike"
+            className="px-6 sm:px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-emerald-400/50 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 backdrop-blur-md shadow-lg transition-all transform hover:-translate-y-0.5"
+          >
+            <Bike size={16} className="text-emerald-400" />
+            <span>Rent a Bike</span>
+          </Link>
+
+          <Link
+            to="/shop"
+            className="px-6 sm:px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-emerald-400/50 font-extrabold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-2 backdrop-blur-md shadow-lg transition-all transform hover:-translate-y-0.5"
+          >
+            <ShoppingBag size={16} className="text-emerald-400" />
+            <span>Shop</span>
+          </Link>
+        </motion.div>
       </div>
       
       {/* Main Visual Banner */}
@@ -444,13 +476,13 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
     <div className={`group glass-panel rounded-3xl transition-all duration-300 shadow-2xl border border-white/5 ${
       viewMode === 'grid' 
         ? 'flex flex-col h-full overflow-hidden' 
-        : 'flex flex-row w-full overflow-hidden md:overflow-visible'
+        : 'flex flex-col md:flex-row w-full overflow-hidden'
     } ${!isAvailable ? 'cursor-default' : 'cursor-pointer hover:scale-[1.02]'}`}>
       <div className={`relative overflow-hidden flex-shrink-0 ${
         viewMode === 'grid' 
-          ? 'aspect-[4/3] w-full' 
-          : 'w-[120px] md:w-[40%] h-auto md:h-auto aspect-square md:aspect-auto'
-      } ${viewMode === 'list' ? 'rounded-l-xl md:rounded-l-2xl md:rounded-t-none' : ''}`}>
+          ? 'aspect-[16/10] sm:aspect-[4/3] w-full' 
+          : 'w-full md:w-[40%] aspect-[16/10] md:aspect-auto'
+      }`}>
         <motion.img 
           whileHover={isAvailable ? { scale: 1.05 } : {}}
           transition={{ duration: 0.5 }}
@@ -460,63 +492,56 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
           referrerPolicy="no-referrer"
         />
         {!isAvailable && (
-          <div className={`absolute ${viewMode === 'grid' ? 'top-2 right-2' : 'top-1 right-1'} md:top-4 md:right-4 bg-black/75 backdrop-blur-sm text-emerald-400 border border-emerald-500/30 text-[8px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 md:px-3 md:py-1.5 rounded shadow-lg z-10`}>
-            {viewMode === 'grid' ? 'N/A' : 'Not available'}
+          <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-black/75 backdrop-blur-sm text-emerald-400 border border-emerald-500/30 text-[10px] md:text-xs font-bold uppercase tracking-widest px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg shadow-lg z-10">
+            Not Available
           </div>
         )}
       </div>
 
       <div className={`flex flex-col justify-between ${
-        viewMode === 'grid' ? 'p-3 md:p-6 flex-1' : 'p-4 md:p-8 flex-1 md:w-[60%]'
+        viewMode === 'grid' ? 'p-5 md:p-6 flex-1' : 'p-6 md:p-8 flex-1 md:w-[60%]'
       }`}>
         <div>
-          <h3 className={`font-heading font-bold mb-1 md:mb-2 transition-colors leading-tight text-white ${
-            viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-3xl'
+          <h3 className={`font-heading font-bold mb-1.5 md:mb-2 transition-colors leading-tight text-white ${
+            viewMode === 'grid' ? 'text-lg md:text-2xl' : 'text-xl md:text-3xl'
           } ${isAvailable ? 'group-hover:text-emerald-400' : ''}`}>
             {apt.name}
           </h3>
-          <div className={`flex items-center text-emerald-400 font-bold mb-2 uppercase tracking-widest ${
-            viewMode === 'grid' ? 'text-[8px] md:text-xs' : 'text-[10px] md:text-sm'
-          }`}>
-            <MapPin size={viewMode === 'grid' ? 10 : 14} className="mr-1 flex-shrink-0 text-emerald-400" />
+          <div className="flex items-center text-emerald-400 font-bold mb-2 uppercase tracking-widest text-xs md:text-xs">
+            <MapPin size={14} className="mr-1 flex-shrink-0 text-emerald-400" />
             <span>{apt.location}</span>
           </div>
-          <div className={`flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-slate-300 mb-2 md:mb-4 font-medium ${
-            viewMode === 'grid' ? 'text-[10px] md:text-sm' : 'text-xs md:text-sm'
-          }`}>
+          <div className="flex flex-wrap gap-x-2 gap-y-1 md:gap-4 text-slate-300 mb-3 md:mb-4 font-medium text-xs md:text-sm">
             <span>{apt.size}</span>
             <span className="opacity-30">•</span>
             <span>{apt.beds}</span>
           </div>
           
-          <ul className={`grid gap-x-2 gap-y-1 md:gap-x-4 md:gap-y-2 mb-3 md:mb-6 ${
+          <ul className={`grid gap-x-2 gap-y-1.5 md:gap-x-4 md:gap-y-2 mb-4 md:mb-6 ${
             viewMode === 'grid' 
-              ? 'hidden md:grid grid-cols-2' 
+              ? 'grid grid-cols-1 sm:grid-cols-2' 
               : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
           }`}>
             {apt.amenities.slice(0, viewMode === 'grid' ? 4 : 6).map((amenity, i) => (
-              <li key={i} className="flex items-center text-[10px] md:text-sm text-slate-300">
-                <Check size={16} className="text-emerald-400 mr-1 md:mr-2 flex-shrink-0" />
+              <li key={i} className="flex items-center text-xs md:text-sm text-slate-300">
+                <Check size={15} className="text-emerald-400 mr-1.5 md:mr-2 flex-shrink-0" />
                 <span className="truncate">{amenity}</span>
               </li>
             ))}
           </ul>
         </div>
         
-        <div className={`flex flex-col items-center gap-2 md:gap-3 pt-2 md:pt-4 border-t border-white/10 text-center`}>
-          <span className={`font-bold text-emerald-400 glow-text-emerald ${
-            viewMode === 'grid' ? 'text-sm md:text-2xl' : 'text-base md:text-2xl'
-          }`}>{apt.price}</span>
+        <div className="flex items-center justify-between gap-3 pt-3 md:pt-4 border-t border-white/10">
+          <div>
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">From</span>
+            <span className="font-bold text-emerald-400 glow-text-emerald text-lg md:text-2xl">{apt.price}</span>
+          </div>
           {isAvailable ? (
-            <button className={`bg-emerald-500 hover:bg-emerald-400 text-black rounded-full hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all font-bold uppercase tracking-widest whitespace-nowrap ${
-              viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
-            }`}>
+            <button className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2.5 rounded-xl hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.5)] transition-all font-extrabold text-xs uppercase tracking-widest whitespace-nowrap">
               View Details
             </button>
           ) : (
-            <button disabled className={`bg-white/5 text-slate-500 rounded-full font-bold uppercase tracking-widest cursor-not-allowed whitespace-nowrap ${
-              viewMode === 'grid' ? 'px-3 py-1 text-[8px] md:text-xs md:px-6 md:py-2' : 'px-4 py-1.5 text-[10px] md:text-xs md:px-6 md:py-2'
-            }`}>
+            <button disabled className="bg-white/5 text-slate-500 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest cursor-not-allowed whitespace-nowrap">
               Coming Soon
             </button>
           )}
@@ -599,7 +624,7 @@ const AccommodationsAllPage = () => {
 
         <div className="w-full">
           {/* Results Grid/List */}
-          <div className={viewMode === 'grid' ? 'grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8' : 'space-y-4 md:space-y-8 max-w-4xl mx-auto'}>
+          <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8' : 'space-y-6 max-w-4xl mx-auto'}>
             {apartments.map((apt) => (
               <AccommodationCard 
                 key={apt.id} 
@@ -618,16 +643,19 @@ const AccommodationsAllPage = () => {
 const Accommodation = () => {
   return (
     <section id="accommodation" className="py-20 px-4 md:px-16 bg-transparent text-white">
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 max-w-7xl mx-auto">
         <div>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white uppercase tracking-tight">Accommodation</h2>
-          <p className="text-slate-300 mt-4 max-w-xl text-lg font-light">
-            Discover our range of carefully curated apartments in the heart of Bovec. From cozy studios to spacious family suites.
+          <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 block mb-1">
+            Boutique Alpine Stays
+          </span>
+          <h2 className="font-heading text-4xl md:text-5xl font-extrabold text-white uppercase tracking-tight">Stay & Apartments</h2>
+          <p className="text-slate-300 mt-3 max-w-xl text-base md:text-lg font-light leading-relaxed">
+            Discover our range of carefully curated boutique apartments in Bovec & Čezsoča. From cozy alpine studios to spacious suites with mountain balconies.
           </p>
         </div>
       </div>
       
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 max-w-7xl mx-auto">
         {apartments.map((apt) => (
           <AccommodationCard 
             key={apt.id} 
@@ -635,11 +663,11 @@ const Accommodation = () => {
             origin="home"
           />
         ))}
-        <div className="flex items-center justify-center lg:col-span-3 lg:justify-center lg:mt-8 h-full">
+        <div className="flex items-center justify-center col-span-1 md:col-span-2 lg:col-span-3 lg:justify-center lg:mt-8 h-full">
           <Link 
             to="/accommodations/all"
             state={{ from: '/#accommodation' }}
-            className="inline-block px-12 py-4 bg-emerald-500 hover:bg-emerald-400 text-black rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] text-xs md:text-sm text-center"
+            className="inline-block px-12 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl font-extrabold uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] text-xs md:text-sm text-center"
           >
             View All Properties
           </Link>
