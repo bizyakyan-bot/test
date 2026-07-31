@@ -12,6 +12,7 @@ import { OwnerPortalModal } from './components/OwnerPortalModal';
 import { OwnerPortalPage, OwnerPortalIcon } from './components/OwnerPortalPage';
 import { ExperienceInquiryModal } from './components/ExperienceInquiryModal';
 import { LocalGuideSection } from './components/LocalGuideSection';
+import { ActivitiesAndGuideSection } from './components/ActivitiesAndGuideSection';
 import { RentABikePage } from './components/RentABikePage';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { LocationMapSection } from './components/LocationMapSection';
@@ -51,8 +52,7 @@ const Navbar = ({
     { name: 'Stay', href: '/#accommodation' },
     { name: 'Rent a Bike', href: '/rent-a-bike', isSpecial: true },
     { name: 'Shop', href: '/shop', isSpecial: true },
-    { name: 'Experiences', href: '/#experiences' },
-    { name: 'Local Guide', href: '/#local-guide' },
+    { name: 'Activities & Guide', href: '/#activities-guide' },
     { name: 'Contact', href: '/#contact' },
   ];
 
@@ -61,17 +61,17 @@ const Navbar = ({
       <div className="flex items-center gap-3">
         <Link 
           to="/" 
-          className="flex items-center gap-2.5 font-heading font-bold text-sm sm:text-base tracking-widest uppercase hover:text-emerald-300 transition-all duration-300 text-emerald-400 glow-text-emerald flex-shrink-0 pr-2"
+          className="flex items-center gap-2.5 font-heading font-extrabold text-sm sm:text-base tracking-widest uppercase hover:text-emerald-300 transition-all duration-300 text-emerald-400 glow-text-emerald flex-shrink-0 pr-2"
           id="header-logo-link"
         >
           <img 
             src="/IMG_9899.png" 
-            alt="J.Bizjak Logo" 
+            alt="BZC Logo" 
             className="h-7 sm:h-8 w-auto object-contain brightness-110" 
             id="header-logo-img"
             referrerPolicy="no-referrer"
           />
-          <span>J.Bizjak</span>
+          <span>BZC SOCA VALLEY HUB</span>
         </Link>
 
         {isShopPage && (
@@ -280,25 +280,25 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest"
         >
-          <Compass size={14} /> Official Basecamp in Bovec, Slovenia
+          <Compass size={14} /> Basecamp in Bovec & Čezsoča, Slovenia
         </motion.div>
 
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="font-heading font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight text-white leading-[1.1]"
+          className="font-heading font-extrabold text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight text-white leading-[1.05]"
         >
-          Your Ultimate Soča Valley Basecamp – <span className="text-emerald-400 glow-text-emerald">Stay, Rent & Experience</span>
+          BZC Soca Valley Hub
         </motion.h1>
 
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed"
+          className="text-emerald-300 sm:text-emerald-400 text-lg sm:text-2xl max-w-3xl mx-auto font-medium leading-relaxed glow-text-emerald"
         >
-          Your all-in-one hub in Bovec & Čezsoča for boutique alpine apartments, in-house E-Bike rentals, official adventure gear, and guided river & mountain activities.
+          Your Ultimate Basecamp for Apartments, Bike Rentals & Soča Valley Adventures
         </motion.p>
       </div>
       
@@ -1404,15 +1404,15 @@ const Contact = () => {
                 <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">+386 70 316 806</p>
               </div>
             </a>
-            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
+            <a href="mailto:bizyakyan@gmail.com" className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300 group">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/20">
                 <Mail className="text-emerald-400" />
               </div>
               <div>
                 <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Email</p>
-                <p className="font-bold text-xl text-white">bizyakyan@gmail.com</p>
+                <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">bizyakyan@gmail.com</p>
               </div>
-            </div>
+            </a>
             <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
                 <MapPin className="text-emerald-400" />
@@ -1502,8 +1502,8 @@ const Contact = () => {
 const Footer = () => {
   return (
     <footer className="bg-transparent text-slate-400 py-12 px-4 md:px-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between z-10 relative">
-      <p className="text-sm font-light tracking-wide">&copy; {new Date().getFullYear()} Soca Valley Hub. All rights reserved.</p>
-      <p className="text-xs text-white/45 mt-2 md:mt-0 font-mono">ADRENALINE & ECO LUXURY RESORT</p>
+      <p className="text-sm font-light tracking-wide">&copy; {new Date().getFullYear()} BZC Soca Valley Hub. All rights reserved.</p>
+      <p className="text-xs text-white/45 mt-2 md:mt-0 font-mono">BZC SOCA VALLEY HUB – STAY, RENT & ADVENTURE</p>
     </footer>
   );
 }
@@ -3410,7 +3410,7 @@ const Home = ({
 
   // Section visibility tracking utilizing standard IntersectionObserver
   useEffect(() => {
-    const sections = ['about', 'accommodation', 'experiences', 'local-guide', 'location', 'reviews', 'contact'];
+    const sections = ['about', 'accommodation', 'activities-guide', 'location', 'reviews', 'contact'];
     const observers = sections.map(id => {
       const el = document.getElementById(id);
       if (!el) return null;
@@ -3439,8 +3439,7 @@ const Home = ({
     <>
       <Hero />
       <Accommodation />
-      <ExperiencesSection onOpenInquiry={onOpenExperienceInquiry} />
-      <LocalGuideSection />
+      <ActivitiesAndGuideSection />
       <LocationMapSection />
       <Reviews />
       <Contact />

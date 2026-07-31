@@ -1,6 +1,6 @@
 {
-  "name": "Soča Valley Hub & Adventure Basecamp",
-  "description": "All-in-one Soča Valley Hub & Adventure Basecamp – Stay, Rent & Experience in Bovec",
+  "name": "BZC Soca Valley Hub",
+  "description": "Your Ultimate Basecamp for Apartments, Bike Rentals & Soča Valley Adventures",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
