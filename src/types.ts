@@ -52,6 +52,7 @@ export interface EBikeReservation {
   riderHeight: string;
   quantity: number;
   startDate: string;
+  pickupTime?: string;
   duration: 'short-cruise' | 'half-day' | 'full-day' | 'multi-day' | 'half-day-morning' | 'half-day-afternoon';
   numDays: number;
   totalAmount: number;

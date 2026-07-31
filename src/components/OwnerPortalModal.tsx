@@ -24,7 +24,8 @@ import {
   RefreshCw,
   User,
   Clock,
-  DollarSign
+  DollarSign,
+  Trash2
 } from 'lucide-react';
 import { EBikeReservation, ShopOrder } from '../types';
 import { SAMPLE_INITIAL_SHOP_ORDERS } from '../data';
@@ -132,9 +133,9 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   const [internalReservations, setInternalReservations] = useState<EBikeReservation[]>(() => {
     try {
       const saved = localStorage.getItem('ebike_reservations');
-      return saved ? JSON.parse(saved) : SAMPLE_INITIAL_BIKE_RESERVATIONS;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return SAMPLE_INITIAL_BIKE_RESERVATIONS;
+      return [];
     }
   });
 
@@ -142,9 +143,9 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   const [shopOrders, setShopOrders] = useState<ShopOrder[]>(() => {
     try {
       const saved = localStorage.getItem('ebike_shop_orders');
-      return saved ? JSON.parse(saved) : SAMPLE_INITIAL_SHOP_ORDERS;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return SAMPLE_INITIAL_SHOP_ORDERS;
+      return [];
     }
   });
 
@@ -204,6 +205,30 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   const handleUpdateShopOrderStatus = (id: string, status: ShopOrder['status']) => {
     setShopOrders(prev => {
       const updated = prev.map(o => o.id === id ? { ...o, status } : o);
+      try {
+        localStorage.setItem('ebike_shop_orders', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  };
+
+  const handleDeleteBikeReservation = (id: string) => {
+    setInternalReservations(prev => {
+      const updated = prev.filter(r => r.id !== id);
+      try {
+        localStorage.setItem('ebike_reservations', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
+  };
+
+  const handleDeleteShopOrder = (id: string) => {
+    setShopOrders(prev => {
+      const updated = prev.filter(o => o.id !== id);
       try {
         localStorage.setItem('ebike_shop_orders', JSON.stringify(updated));
       } catch (e) {
@@ -620,6 +645,14 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
                                   <option value="completed">Mark Returned</option>
                                   <option value="cancelled">Cancel Booking</option>
                                 </select>
+
+                                <button
+                                  onClick={() => handleDeleteBikeReservation(res.id)}
+                                  className="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors"
+                                  title="Delete from ledger"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
                               </div>
                             </div>
 
@@ -784,6 +817,14 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
                                   <option value="completed">Mark Completed</option>
                                   <option value="cancelled">Cancel Order</option>
                                 </select>
+
+                                <button
+                                  onClick={() => handleDeleteShopOrder(order.id)}
+                                  className="p-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors"
+                                  title="Delete order from ledger"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
                               </div>
                             </div>
 

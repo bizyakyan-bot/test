@@ -1,5 +1,6 @@
 {
-  "name": "Soca Valley Hub",
-  "description": "Website for Soca Valley Hub in the Soca Valley",
-  "requestFramePermissions": []
+  "name": "Soča Valley Hub & Adventure Basecamp",
+  "description": "All-in-one Soča Valley Hub & Adventure Basecamp – Stay, Rent & Experience in Bovec",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

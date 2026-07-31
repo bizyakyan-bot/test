@@ -9,6 +9,12 @@ import { ThreeCanvas } from './components/ThreeCanvas';
 import { ShopSection, ProductDetailModal, CartModal, CartItem } from './components/ShopSection';
 import { EBikeBookingSystem } from './components/EBikeBookingSystem';
 import { OwnerPortalModal } from './components/OwnerPortalModal';
+import { OwnerPortalPage, OwnerPortalIcon } from './components/OwnerPortalPage';
+import { ExperienceInquiryModal } from './components/ExperienceInquiryModal';
+import { LocalGuideSection } from './components/LocalGuideSection';
+import { RentABikePage } from './components/RentABikePage';
+import { MobileStickyBar } from './components/MobileStickyBar';
+import { LocationMapSection } from './components/LocationMapSection';
 
 // Scroll to top component that only scrolls on PUSH/REPLACE, not POP (back button)
 const ScrollToTop = () => {
@@ -42,12 +48,12 @@ const Navbar = ({
   const isShopPage = location.pathname === '/shop';
 
   const navLinks = [
-    { name: 'About Us', href: '/#about' },
-    { name: 'Accommodation', href: '/#accommodation' },
-    { name: 'Activities', href: '/#activities' },
-    { name: 'Reviews', href: '/#reviews' },
-    { name: 'Contacts', href: '/#contact' },
+    { name: 'Stay', href: '/#accommodation' },
+    { name: 'Rent a Bike', href: '/rent-a-bike', isSpecial: true },
     { name: 'Shop', href: '/shop', isSpecial: true },
+    { name: 'Experiences', href: '/#experiences' },
+    { name: 'Local Guide', href: '/#local-guide' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
   return (
@@ -90,20 +96,17 @@ const Navbar = ({
             <span>Home</span>
           </Link>
 
-          {onOpenOwnerPortal && (
-            <button
-              onClick={onOpenOwnerPortal}
-              className={`flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
-                isOwnerUnlocked
-                  ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300'
-                  : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200'
-              }`}
-              title="Owner Management Portal & Order Ledger"
-            >
-              {isOwnerUnlocked ? <Shield size={14} className="text-amber-400" /> : <Lock size={14} className="text-amber-400" />}
-              <span className="hidden sm:inline">{isOwnerUnlocked ? 'Host Portal' : 'Owner Login'}</span>
-            </button>
-          )}
+          <Link
+            to="/owner"
+            className={`p-2.5 rounded-xl border transition-all flex items-center justify-center ${
+              isOwnerUnlocked
+                ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300'
+                : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200 hover:text-white'
+            }`}
+            title={isOwnerUnlocked ? 'Host Portal (Unlocked)' : 'Owner Login'}
+          >
+            <OwnerPortalIcon isUnlocked={isOwnerUnlocked} />
+          </Link>
 
           {onOpenCart && (
             <button
@@ -148,50 +151,34 @@ const Navbar = ({
                 </Link>
               ))}
 
-              {/* Top Panel Owner Login / Host Portal Button */}
-              {onOpenOwnerPortal && (
-                <button
-                  onClick={onOpenOwnerPortal}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-[11px] lg:text-xs font-bold uppercase tracking-wider transition-all border ${
-                    isOwnerUnlocked
-                      ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300 shadow-sm'
-                      : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200 hover:text-white'
-                  }`}
-                  title="Host & Owner Access Gate (PIN Protected)"
-                >
-                  {isOwnerUnlocked ? (
-                    <>
-                      <Shield size={14} className="text-amber-400" />
-                      <span>Host Portal</span>
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
-                    </>
-                  ) : (
-                    <>
-                      <Lock size={14} className="text-amber-400" />
-                      <span>Owner Login</span>
-                    </>
-                  )}
-                </button>
-              )}
+              {/* Top Panel Owner Login / Host Portal Link */}
+              <Link
+                to="/owner"
+                className={`p-2 rounded-xl border transition-all flex items-center justify-center ${
+                  isOwnerUnlocked
+                    ? 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-300 shadow-sm'
+                    : 'bg-white/5 hover:bg-white/10 border-white/15 text-slate-200 hover:text-white'
+                }`}
+                title={isOwnerUnlocked ? 'Host Portal (Unlocked)' : 'Owner Login'}
+              >
+                <OwnerPortalIcon isUnlocked={isOwnerUnlocked} />
+              </Link>
             </div>
           </div>
 
           {/* Mobile Menu Toggle & Direct Mobile Owner Login */}
           <div className="flex items-center space-x-3 md:hidden">
-            {onOpenOwnerPortal && (
-              <button
-                onClick={onOpenOwnerPortal}
-                className={`p-2 rounded-xl border text-xs font-bold transition-all flex items-center gap-1 ${
-                  isOwnerUnlocked
-                    ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                    : 'bg-white/5 border-white/15 text-slate-200'
-                }`}
-                title="Owner Login"
-              >
-                {isOwnerUnlocked ? <Shield size={16} className="text-amber-400" /> : <Lock size={16} className="text-amber-400" />}
-                <span className="text-[10px] uppercase font-bold">{isOwnerUnlocked ? 'Host' : 'Owner'}</span>
-              </button>
-            )}
+            <Link
+              to="/owner"
+              className={`p-2 rounded-xl border transition-all flex items-center justify-center ${
+                isOwnerUnlocked
+                  ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                  : 'bg-white/5 border-white/15 text-slate-200'
+              }`}
+              title={isOwnerUnlocked ? 'Host Portal (Unlocked)' : 'Owner Login'}
+            >
+              <OwnerPortalIcon isUnlocked={isOwnerUnlocked} />
+            </Link>
 
             <button onClick={() => setIsOpen(!isOpen)} className="text-white p-1">
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -230,22 +217,18 @@ const Navbar = ({
                   </Link>
                 ))}
 
-                {onOpenOwnerPortal && (
-                  <button
-                    onClick={() => {
-                      onOpenOwnerPortal();
-                      setIsOpen(false);
-                    }}
-                    className={`text-sm font-bold tracking-widest uppercase flex items-center gap-2 py-2.5 px-3 rounded-xl border mt-2 ${
-                      isOwnerUnlocked
-                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
-                        : 'bg-white/5 border-white/15 text-amber-400'
-                    }`}
-                  >
-                    {isOwnerUnlocked ? <Shield size={16} className="text-amber-400" /> : <Lock size={16} className="text-amber-400" />}
-                    <span>{isOwnerUnlocked ? 'Host Control Portal (Unlocked)' : 'Owner Login (PIN Protected)'}</span>
-                  </button>
-                )}
+                <Link
+                  to="/owner"
+                  onClick={() => setIsOpen(false)}
+                  className={`text-sm font-bold tracking-widest uppercase flex items-center gap-2 py-2.5 px-3 rounded-xl border mt-2 ${
+                    isOwnerUnlocked
+                      ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                      : 'bg-white/5 border-white/15 text-amber-400'
+                  }`}
+                >
+                  <OwnerPortalIcon isUnlocked={isOwnerUnlocked} />
+                  <span>{isOwnerUnlocked ? 'Host Control Portal (Unlocked)' : 'Owner Login (PIN Protected)'}</span>
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>
@@ -289,77 +272,162 @@ const StickyBackButton = ({ to, onClick }: { to?: string, onClick?: () => void }
 
 const Hero = () => {
   return (
-    <section id="about" className="px-4 md:px-16 pt-24 md:pt-28 pb-16 relative">
-      <div className="mb-12">
-        <h1 className="font-heading font-black text-white uppercase leading-[0.85] flex flex-col w-full overflow-hidden">
-          <span className="text-[11.2vw] font-black tracking-tight select-none drop-shadow-2xl">
-            {"SOCA VALLEY".split("").map((char, i) => (
-              <motion.span 
-                key={i}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.03, ease: "easeOut" }}
-                className="inline-block"
-              >
-                {char === " " ? "\u00A0" : char}
-              </motion.span>
-            ))}
-          </span>
-          <span className="text-[11.2vw] flex items-center select-none mt-2 w-full">
-            <motion.span 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-              className="font-heading font-black text-emerald-400 tracking-tighter text-[11.2vw] glow-text-emerald"
-            >
-              {"HUB".split("").map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 + i * 0.05 }}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-              <motion.span
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 10, delay: 0.7 }}
-                className="text-emerald-300 inline-block glow-text-emerald"
-              >
-                .
-              </motion.span>
-            </motion.span>
-            <motion.span 
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="origin-left h-[0.8vw] bg-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)] flex-grow ml-6 rounded-full self-center" 
-            />
-          </span>
-        </h1>
+    <section id="about" className="px-4 md:px-16 pt-24 md:pt-28 pb-16 relative text-white">
+      {/* Hero Badge & Main Title */}
+      <div className="max-w-5xl mx-auto text-center mb-12 space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest"
+        >
+          <Compass size={14} /> Official Basecamp in Bovec, Slovenia
+        </motion.div>
+
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="font-heading font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight text-white leading-[1.1]"
+        >
+          Your Ultimate Soča Valley Basecamp – <span className="text-emerald-400 glow-text-emerald">Stay, Rent & Experience</span>
+        </motion.h1>
+
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="text-slate-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed"
+        >
+          Your all-in-one hub in Bovec & Čezsoča for boutique alpine apartments, in-house E-Bike rentals, official adventure gear, and guided river & mountain activities.
+        </motion.p>
       </div>
       
-      <div className="relative w-full h-[60vh] md:h-[80vh] rounded-3xl overflow-hidden shadow-3xl glass-panel">
+      {/* Main Visual Banner */}
+      <div className="relative w-full h-[45vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-3xl glass-panel mb-12 border border-white/10">
         <img 
           src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260219_225914_78050ddb-90c2-4464-bfbf-117e0c1c14b8.jpeg&w=1280&q=85" 
-          alt="Bovec Town Square at Sunset" 
-          className="w-full h-full object-cover opacity-80"
+          alt="Bovec Town Square & Soča Valley Basecamp" 
+          className="w-full h-full object-cover opacity-85"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-[#061011]/30 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-black/30 to-black/20" />
         
-        <div className="absolute bottom-8 left-8 md:bottom-16 md:left-16 max-w-sm z-10 p-6 rounded-2xl glass-panel border border-white/5 shadow-xl">
-          <p className="text-white text-lg md:text-xl font-medium drop-shadow-md">
-            Comfort in the heart of the Soca Valley
+        <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 max-w-md z-10 p-6 rounded-2xl glass-panel border border-white/10 shadow-xl backdrop-blur-md">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 block mb-1">
+            Julian Alps Basecamp
+          </span>
+          <p className="text-white text-base md:text-xl font-bold leading-snug">
+            Alpine Comfort, In-House E-Bikes & Unrivaled River Access
           </p>
         </div>
       </div>
+
+      {/* 3 Quick-Action Cards below Hero */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {/* Card 1: STAY */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
+        >
+          <div className="space-y-4">
+            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+              <Mountain size={28} />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">01. Accommodation</span>
+              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                STAY (Apartments in Bovec)
+              </h3>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+              Boutique apartments in Čezsoča (250m to river beach), Bovec town center, and Soča village with private balconies & mountain views.
+            </p>
+          </div>
+
+          <div className="pt-6 mt-6 border-t border-white/5">
+            <a 
+              href="#accommodation"
+              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+            >
+              <span>Check Availability</span>
+              <ArrowRight size={14} />
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Card 2: RENT A BIKE */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
+        >
+          <div className="space-y-4">
+            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+              <Bike size={28} />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">02. In-House Rentals</span>
+              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                RENT A BIKE
+              </h3>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+              High-end Bosch E-Bikes & mountain bikes. Complete with helmet, heavy lock, repair kit, GPS trails & free apartment delivery.
+            </p>
+          </div>
+
+          <div className="pt-6 mt-6 border-t border-white/5">
+            <Link 
+              to="/rent-a-bike"
+              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+            >
+              <span>Reserve a Bike</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Card 3: SHOP */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
+        >
+          <div className="space-y-4">
+            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+              <ShoppingBag size={28} />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">03. Official Apparel</span>
+              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                SHOP (Merch & Gear)
+              </h3>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+              Official J.Bizjak hoodies, cotton t-shirts, outdoor caps, and essential gear. Shop online with direct checkout.
+            </p>
+          </div>
+
+          <div className="pt-6 mt-6 border-t border-white/5">
+            <Link 
+              to="/shop"
+              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+            >
+              <span>Visit Shop</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
-}
+};
 
 interface AccommodationCardProps {
   apt: Apartment;
@@ -1038,61 +1106,133 @@ const BookingPage = () => {
   );
 };
 
-const Activities = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const activities = [
-    { name: "Water Activities", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_214627_1bb348aa-0921-45b8-b0cd-7cba3b6debae.jpeg&w=1280&q=85", link: "/soca-river" },
-    { name: "Hiking", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215737_4353f19e-15e6-47a2-a55e-7702fe41a357.png&w=1280&q=85", link: "/hiking" },
-    { name: "Skydiving", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215229_27d6bf17-7da2-4df9-8026-b33b2b90e9c1.jpeg&w=1280&q=85", link: "/skydiving" },
-    { name: "Cycling", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215336_6f5fe074-5598-494e-a05e-8d7a66ff1981.png&w=1280&q=85", link: "/cycling" },
-    { name: "Where to Eat", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215911_133805b3-a453-4b3c-ab4d-39d41aa1b21a.jpeg&w=1280&q=85", link: "/where-to-eat" },
-    { name: "Local Shops", image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215619_993cef2e-43fb-4094-9ed1-6b22c236b021.png&w=1280&q=85", link: "/local-shops" },
+const ExperiencesSection = ({ onOpenInquiry }: { onOpenInquiry: (activityName?: string) => void }) => {
+  const experiences = [
+    {
+      name: "Rafting on the Soča River",
+      category: "Water Adventure",
+      image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_214627_1bb348aa-0921-45b8-b0cd-7cba3b6debae.jpeg&w=1280&q=85",
+      link: "/soca-river",
+      desc: "Navigate crystal emerald rapids through breathtaking limestone gorges. Suitable for beginners and experienced rafters alike.",
+      highlights: ["Certified guides", "Full neoprene gear included", "Family & group options"]
+    },
+    {
+      name: "Canyoning in Hidden Gorges",
+      category: "Water & Cliff Adventure",
+      image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800&q=80",
+      link: "/soca-river",
+      desc: "Slide down natural water chutes, abseil waterfall drop-offs, and plunge into translucent mountain pools in Sušec gorge.",
+      highlights: ["Thrill-seeking jumps", "Rappelling equipment", "Safety briefing"]
+    },
+    {
+      name: "Tandem Skydiving above Julian Alps",
+      category: "Air Adventure",
+      image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215229_27d6bf17-7da2-4df9-8026-b33b2b90e9c1.jpeg&w=1280&q=85",
+      link: "/skydiving",
+      desc: "Experience 60 seconds of adrenaline freefall from 4,000m with 360° panoramic views over Mount Triglav and the Adriatic Coast.",
+      highlights: ["Bovec Airfield takeoff", "Professional video options", "Tandem master certified"]
+    },
+    {
+      name: "Guided Alpine Hiking & Treks",
+      category: "Mountain Trail",
+      image: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260222_215737_4353f19e-15e6-47a2-a55e-7702fe41a357.png&w=1280&q=85",
+      link: "/hiking",
+      desc: "Traverse high alpine meadows, mountain ridges, WW1 historical caverns, and glacial lakes with expert alpine guides.",
+      highlights: ["Triglav National Park", "Custom trail routes", "Flora & fauna guidance"]
+    }
   ];
 
   return (
-    <section id="activities" className="py-20 px-4 md:px-16 bg-transparent text-white relative overflow-hidden">
-      <div className="flex items-center justify-between mb-12">
-        <h2 className="font-heading text-4xl md:text-5xl font-bold uppercase tracking-tight">Activities</h2>
-      </div>
+    <section id="experiences" className="py-24 px-4 md:px-16 bg-transparent text-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest mb-3">
+              <Compass size={14} /> Basecamp Outdoor Adventures
+            </span>
+            <h2 className="font-heading text-4xl md:text-5xl font-extrabold uppercase tracking-tight text-white">
+              Our Experiences
+            </h2>
+            <p className="text-slate-300 mt-2 max-w-xl text-base md:text-lg font-light">
+              Water, air & outdoor mountain activities booked seamlessly through our Soča Valley Hub.
+            </p>
+          </div>
+        </div>
 
-      <div className="relative group">
-        <div 
-          ref={scrollRef}
-          className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scroll-smooth custom-scrollbar"
-        >
-          {activities.map((act, idx) => (
-            act.link ? (
-              <Link to={act.link} state={{ from: '/#activities' }} key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-3xl overflow-hidden aspect-[3/4] group/card border border-emerald-500/15 hover:border-emerald-500/30 transition-all duration-300 shadow-2xl block hover:scale-[1.01]">
-                <img 
-                  src={act.image} 
-                  alt={act.name} 
-                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 opacity-90 group-hover/card:opacity-100"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-8">
-                  <h3 className="font-heading text-2xl font-bold text-white mb-2">{act.name}</h3>
-                  <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest flex items-center">Explore adventure <ArrowRight size={12} className="ml-1 animate-pulse" /></span>
+        {/* Experience Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {experiences.map((exp, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-emerald-500/30 transition-all duration-300 shadow-2xl flex flex-col justify-between group"
+            >
+              <div>
+                {/* Image & Badge */}
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    src={exp.image}
+                    alt={exp.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-transparent to-transparent opacity-90" />
+                  <div className="absolute top-3 left-3 bg-black/75 backdrop-blur-md px-3 py-1 rounded-xl text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 border border-emerald-500/30">
+                    {exp.category}
+                  </div>
                 </div>
-              </Link>
-            ) : (
-              <div key={idx} className="min-w-[280px] md:min-w-[350px] snap-center relative rounded-3xl overflow-hidden aspect-[3/4] group/card border border-emerald-500/15 shadow-2xl hover:scale-[1.01]">
-                <img 
-                  src={act.image} 
-                  alt={act.name} 
-                  className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 opacity-90"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex items-end p-8">
-                  <h3 className="font-heading text-2xl font-bold text-white">{act.name}</h3>
+
+                {/* Content */}
+                <div className="p-6 space-y-3">
+                  <h3 className="font-heading text-xl font-bold text-white uppercase tracking-tight leading-snug">
+                    {exp.name}
+                  </h3>
+                  <p className="text-xs text-slate-300 font-light leading-relaxed">
+                    {exp.desc}
+                  </p>
+
+                  <ul className="space-y-1 pt-2">
+                    {exp.highlights.map((h, i) => (
+                      <li key={i} className="flex items-center text-[11px] text-slate-300 font-medium">
+                        <Check size={12} className="text-emerald-400 mr-2 flex-shrink-0" />
+                        <span>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            )
+
+              {/* Action & Partner Footer */}
+              <div className="p-5 pt-0 space-y-3">
+                <button
+                  onClick={() => onOpenInquiry(exp.name)}
+                  className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <span>Book / Inquire via Us</span>
+                  <ArrowRight size={14} />
+                </button>
+
+                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+                  <Link to={exp.link} className="hover:text-emerald-400 transition-colors">
+                    Learn more details →
+                  </Link>
+                </div>
+
+                <div className="bg-black/50 p-2.5 rounded-xl border border-white/5 text-[9.5px] text-slate-400 italic text-center leading-tight">
+                  *Guided by our trusted local partners (Aqua Tours, Soča Adventure, Everything Bovec)*
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   );
-}
+};
 
 const Location = () => {
   return (
@@ -1255,15 +1395,15 @@ const Contact = () => {
           </p>
           
           <div className="space-y-6">
-            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
+            <a href="tel:+38670316806" className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300 group">
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/20">
                 <Phone className="text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Phone</p>
-                <p className="font-bold text-xl text-white">+386 70 316 806</p>
+                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Phone / WhatsApp</p>
+                <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">+386 70 316 806</p>
               </div>
-            </div>
+            </a>
             <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
                 <Mail className="text-emerald-400" />
@@ -3237,7 +3377,13 @@ const ShopPage = ({
   );
 };
 
-const Home = ({ setCurrentSection }: { setCurrentSection: (sec: string) => void }) => {
+const Home = ({ 
+  setCurrentSection,
+  onOpenExperienceInquiry
+}: { 
+  setCurrentSection: (sec: string) => void;
+  onOpenExperienceInquiry: (activityName?: string) => void;
+}) => {
   const { hash, state } = useLocation();
   const navigationType = useNavigationType();
 
@@ -3264,7 +3410,7 @@ const Home = ({ setCurrentSection }: { setCurrentSection: (sec: string) => void 
 
   // Section visibility tracking utilizing standard IntersectionObserver
   useEffect(() => {
-    const sections = ['about', 'accommodation', 'activities', 'location', 'reviews', 'contact'];
+    const sections = ['about', 'accommodation', 'experiences', 'local-guide', 'location', 'reviews', 'contact'];
     const observers = sections.map(id => {
       const el = document.getElementById(id);
       if (!el) return null;
@@ -3293,8 +3439,9 @@ const Home = ({ setCurrentSection }: { setCurrentSection: (sec: string) => void 
     <>
       <Hero />
       <Accommodation />
-      <Activities />
-      <Location />
+      <ExperiencesSection onOpenInquiry={onOpenExperienceInquiry} />
+      <LocalGuideSection />
+      <LocationMapSection />
       <Reviews />
       <Contact />
     </>
@@ -3420,6 +3567,14 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
     }
   };
 
+  const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
+  const [selectedExperienceActivity, setSelectedExperienceActivity] = useState<string>('');
+
+  const handleOpenExperienceModal = (activityName?: string) => {
+    setSelectedExperienceActivity(activityName || '');
+    setIsExperienceModalOpen(true);
+  };
+
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('jbizjak_cart');
@@ -3520,9 +3675,11 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
             element={
               <Home 
                 setCurrentSection={setCurrentSection}
+                onOpenExperienceInquiry={handleOpenExperienceModal}
               />
             } 
           />
+          <Route path="/rent-a-bike" element={<RentABikePage />} />
           <Route path="/accommodations/all" element={<AccommodationsAllPage />} />
           <Route path="/apartment/:id" element={<ApartmentDetail />} />
           <Route path="/booking/:id" element={<BookingPage />} />
@@ -3532,6 +3689,7 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
           <Route path="/soca-river" element={<SocaRiverPage />} />
           <Route path="/where-to-eat" element={<WhereToEatPage />} />
           <Route path="/local-shops" element={<LocalShopsPage />} />
+          <Route path="/owner" element={<OwnerPortalPage />} />
           <Route 
             path="/shop" 
             element={
@@ -3568,6 +3726,16 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
         isUnlocked={isOwnerUnlocked}
         onUnlock={handleUnlockOwner}
         onLock={handleLockOwner}
+      />
+
+      <ExperienceInquiryModal
+        isOpen={isExperienceModalOpen}
+        onClose={() => setIsExperienceModalOpen(false)}
+        initialActivity={selectedExperienceActivity}
+      />
+
+      <MobileStickyBar
+        onOpenExperienceModal={() => handleOpenExperienceModal('Rafting on the Soča River')}
       />
 
       <Footer />
