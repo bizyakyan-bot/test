@@ -3672,7 +3672,6 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
   return (
     <div className="min-h-screen font-sans selection:bg-emerald-400 selection:text-black relative">
       {/* Scroll Effects & GDPR Banner */}
-      <ScrollProgressBar />
       <FloatingScrollToTop />
       <CookieBanner />
 
