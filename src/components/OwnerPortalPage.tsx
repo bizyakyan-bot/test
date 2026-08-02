@@ -8,6 +8,7 @@ import {
   deleteReservationFromFirebase,
   deleteShopOrderFromFirebase
 } from '../lib/firebaseService';
+import { sendStatusUpdateEmailNotification } from '../lib/sendEmail';
 import {
   Shield,
   Lock,
@@ -150,6 +151,10 @@ export const OwnerPortalPage: React.FC = () => {
 
   const handleUpdateBikeStatus = (id: string, status: EBikeReservation['status']) => {
     updateReservationStatusInFirebase(id, status);
+    const target = reservations.find(r => r.id === id);
+    if (target) {
+      sendStatusUpdateEmailNotification('reservation', { ...target, status }, status);
+    }
     setReservations(prev => {
       const updated = prev.map(r => r.id === id ? { ...r, status } : r);
       try {
@@ -163,6 +168,10 @@ export const OwnerPortalPage: React.FC = () => {
 
   const handleUpdateShopOrderStatus = (id: string, status: ShopOrder['status']) => {
     updateShopOrderStatusInFirebase(id, status);
+    const target = shopOrders.find(o => o.id === id);
+    if (target) {
+      sendStatusUpdateEmailNotification('shop_order', { ...target, status }, status);
+    }
     setShopOrders(prev => {
       const updated = prev.map(o => o.id === id ? { ...o, status } : o);
       try {

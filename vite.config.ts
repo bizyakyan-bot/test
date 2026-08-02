@@ -40,7 +40,90 @@ export default defineConfig(({ mode }) => {
                 let customerEmail = '';
                 let htmlContent = '';
 
-                if (type === 'reservation') {
+                if (type === 'status_update') {
+                  const { itemType, newStatus } = JSON.parse(body);
+                  let statusTitle = '';
+                  let statusBadgeColor = '#059669';
+                  let statusMessage = '';
+
+                  if (newStatus === 'confirmed') {
+                    statusTitle = 'ODOBRENO / POTRJENO';
+                    statusBadgeColor = '#059669';
+                    statusMessage = 'Z veseljem vas obveščamo, da je vaše naročilo / rezervacija odobreno!';
+                  } else if (newStatus === 'cancelled') {
+                    statusTitle = 'PREKLICANO';
+                    statusBadgeColor = '#dc2626';
+                    statusMessage = 'Obveščamo vas, da je bilo vaše naročilo / rezervacija preklicano. Če imate vprašanja, nas kontaktirajte.';
+                  } else if (newStatus === 'completed') {
+                    statusTitle = 'ZAKLJUČENO';
+                    statusBadgeColor = '#2563eb';
+                    statusMessage = 'Vaše naročilo / rezervacija je označena kot zaključena. Hvala za obisk in zaupanje!';
+                  } else {
+                    statusTitle = (newStatus || '').toUpperCase();
+                    statusBadgeColor = '#d97706';
+                    statusMessage = `Status vašega naročila je bil posodobljen na: ${newStatus}.`;
+                  }
+
+                  if (itemType === 'reservation') {
+                    const resData = data || {};
+                    customerEmail = resData.customer?.email;
+                    const ref = resData.bookingRef || resData.id || '';
+                    subject = `[Soča Valley E-Bikes] Posodobitev statusa rezervacije #${ref}: ${statusTitle}`;
+                    htmlContent = `
+                      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; background: #f9f9f9;">
+                        <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e0e0e0;">
+                          <h2 style="color: #059669; margin-top: 0;">Soča Valley E-Bikes Bovec</h2>
+                          <p>Spoštovani <strong>${resData.customer?.fullName || 'stranka'}</strong>,</p>
+                          <div style="background: #f3f4f6; border-left: 4px solid ${statusBadgeColor}; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${statusBadgeColor};">
+                              Sprememba statusa: ${statusTitle}
+                            </p>
+                            <p style="margin: 8px 0 0 0; color: #4b5563;">${statusMessage}</p>
+                          </div>
+                          <h3>Podrobnosti rezervacije #${ref}:</h3>
+                          <ul>
+                            <li><strong>Kolo:</strong> ${resData.bikeName || ''} (${resData.size || ''})</li>
+                            <li><strong>Začetek:</strong> ${resData.startDate || ''} ob ${resData.pickupTime || ''}</li>
+                            <li><strong>Trajanje:</strong> ${resData.duration === 'multi-day' ? `${resData.numDays} dni` : (resData.duration || '')}</li>
+                            <li><strong>Prevzem:</strong> ${resData.pickupLocation || ''}</li>
+                            <li><strong>Skupni znesek:</strong> €${resData.totalAmount || 0}</li>
+                          </ul>
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                          <p style="font-size: 12px; color: #777;">Soča Valley Apartments & E-Bikes Bovec</p>
+                        </div>
+                      </div>
+                    `;
+                  } else {
+                    const orderData = data || {};
+                    customerEmail = orderData.customerEmail;
+                    const ref = orderData.orderRef || orderData.id || '';
+                    subject = `[Soča Valley Shop] Posodobitev statusa naročila #${ref}: ${statusTitle}`;
+                    const itemsList = (orderData.items || []).map((i: any) => `<li>${i.productName} (${i.selectedColor}, ${i.selectedSize}) x${i.quantity} - €${(i.unitPrice * i.quantity).toFixed(2)}</li>`).join('');
+                    htmlContent = `
+                      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; background: #f9f9f9;">
+                        <div style="max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e0e0e0;">
+                          <h2 style="color: #059669; margin-top: 0;">Soča Valley Spletna Trgovina</h2>
+                          <p>Spoštovani <strong>${orderData.customerName || 'stranka'}</strong>,</p>
+                          <div style="background: #f3f4f6; border-left: 4px solid ${statusBadgeColor}; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                            <p style="margin: 0; font-size: 16px; font-weight: bold; color: ${statusBadgeColor};">
+                              Sprememba statusa: ${statusTitle}
+                            </p>
+                            <p style="margin: 8px 0 0 0; color: #4b5563;">${statusMessage}</p>
+                          </div>
+                          <h3>Podrobnosti naročila #${ref}:</h3>
+                          <ul>
+                            <li><strong>Dostava:</strong> ${orderData.deliveryMethod === 'postal-delivery' ? `Dostava (${orderData.shippingAddress})` : 'Osebni prevzem'}</li>
+                            <li><strong>Skupni znesek:</strong> €${Number(orderData.totalAmount || 0).toFixed(2)}</li>
+                          </ul>
+                          <h4>Kupljeni izdelki:</h4>
+                          <ul>${itemsList}</ul>
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                          <p style="font-size: 12px; color: #777;">Soča Valley Apartments & E-Bikes Bovec</p>
+                        </div>
+                      </div>
+                    `;
+                  }
+                } else if (type === 'reservation') {
                   customerEmail = data.customer?.email;
                   subject = `[Soča Valley E-Bikes] Potrditev rezervacije #${data.bookingRef}`;
                   htmlContent = `

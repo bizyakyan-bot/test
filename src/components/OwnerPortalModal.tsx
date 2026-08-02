@@ -8,6 +8,7 @@ import {
   deleteReservationFromFirebase,
   deleteShopOrderFromFirebase
 } from '../lib/firebaseService';
+import { sendStatusUpdateEmailNotification } from '../lib/sendEmail';
 import {
   Shield,
   Lock,
@@ -198,6 +199,10 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
     if (onUpdateReservationStatus) {
       onUpdateReservationStatus(id, status);
     }
+    const target = internalReservations.find(r => r.id === id);
+    if (target) {
+      sendStatusUpdateEmailNotification('reservation', { ...target, status }, status);
+    }
     setInternalReservations(prev => {
       const updated = prev.map(r => r.id === id ? { ...r, status } : r);
       try {
@@ -211,6 +216,10 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
 
   const handleUpdateShopOrderStatus = (id: string, status: ShopOrder['status']) => {
     updateShopOrderStatusInFirebase(id, status);
+    const target = shopOrders.find(o => o.id === id);
+    if (target) {
+      sendStatusUpdateEmailNotification('shop_order', { ...target, status }, status);
+    }
     setShopOrders(prev => {
       const updated = prev.map(o => o.id === id ? { ...o, status } : o);
       try {
