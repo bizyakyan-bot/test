@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { subscribeToReservations, subscribeToShopOrders, updateReservationStatusInFirebase, updateShopOrderStatusInFirebase } from '../lib/firebaseService';
+import { 
+  subscribeToReservations, 
+  subscribeToShopOrders, 
+  updateReservationStatusInFirebase, 
+  updateShopOrderStatusInFirebase,
+  deleteReservationFromFirebase,
+  deleteShopOrderFromFirebase
+} from '../lib/firebaseService';
 import {
   Shield,
   Lock,
@@ -168,6 +175,7 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   const handleDeleteBikeReservation = (id: string) => {
+    deleteReservationFromFirebase(id);
     setReservations(prev => {
       const updated = prev.filter(r => r.id !== id);
       try {
@@ -180,6 +188,7 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   const handleDeleteShopOrder = (id: string) => {
+    deleteShopOrderFromFirebase(id);
     setShopOrders(prev => {
       const updated = prev.filter(o => o.id !== id);
       try {
@@ -192,23 +201,38 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   const filteredReservations = reservations.filter(res => {
+    if (!res) return false;
+    const name = (res.customer?.fullName || '').toLowerCase();
+    const email = (res.customer?.email || '').toLowerCase();
+    const phone = res.customer?.phone || '';
+    const ref = (res.bookingRef || '').toLowerCase();
+    const bike = (res.bikeName || '').toLowerCase();
+    const query = rentalSearch.toLowerCase();
+
     const matchesSearch =
-      res.customer.fullName.toLowerCase().includes(rentalSearch.toLowerCase()) ||
-      res.customer.email.toLowerCase().includes(rentalSearch.toLowerCase()) ||
-      res.customer.phone.includes(rentalSearch) ||
-      res.bookingRef.toLowerCase().includes(rentalSearch.toLowerCase()) ||
-      res.bikeName.toLowerCase().includes(rentalSearch.toLowerCase());
+      name.includes(query) ||
+      email.includes(query) ||
+      phone.includes(rentalSearch) ||
+      ref.includes(query) ||
+      bike.includes(query);
 
     const matchesStatus = rentalStatusFilter === 'all' || res.status === rentalStatusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const filteredShopOrders = shopOrders.filter(order => {
+    if (!order) return false;
+    const name = (order.customerName || '').toLowerCase();
+    const email = (order.customerEmail || '').toLowerCase();
+    const phone = order.customerPhone || '';
+    const ref = (order.orderRef || '').toLowerCase();
+    const query = shopSearch.toLowerCase();
+
     const matchesSearch =
-      order.customerName.toLowerCase().includes(shopSearch.toLowerCase()) ||
-      order.customerEmail.toLowerCase().includes(shopSearch.toLowerCase()) ||
-      order.customerPhone.includes(shopSearch) ||
-      order.orderRef.toLowerCase().includes(shopSearch.toLowerCase());
+      name.includes(query) ||
+      email.includes(query) ||
+      phone.includes(shopSearch) ||
+      ref.includes(query);
 
     const matchesStatus = shopStatusFilter === 'all' || order.status === shopStatusFilter;
     return matchesSearch && matchesStatus;

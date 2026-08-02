@@ -5,6 +5,7 @@ import {
   getDocs,
   onSnapshot,
   updateDoc,
+  deleteDoc,
   query,
   orderBy
 } from 'firebase/firestore';
@@ -99,6 +100,46 @@ export const updateShopOrderStatusInFirebase = async (
   }
 };
 
+// Delete Reservation from Firestore & localStorage
+export const deleteReservationFromFirebase = async (id: string): Promise<void> => {
+  try {
+    // 1. Update local storage
+    const savedLocal = localStorage.getItem('ebike_reservations');
+    if (savedLocal) {
+      const list: EBikeReservation[] = JSON.parse(savedLocal);
+      const updated = list.filter(item => item.id !== id);
+      localStorage.setItem('ebike_reservations', JSON.stringify(updated));
+    }
+
+    // 2. Delete from Firestore
+    const docRef = doc(db, RESERVATIONS_COLLECTION, id);
+    await deleteDoc(docRef);
+    console.log('Reservation deleted from Firestore successfully:', id);
+  } catch (err) {
+    console.warn('Error deleting reservation from Firestore:', err);
+  }
+};
+
+// Delete Shop Order from Firestore & localStorage
+export const deleteShopOrderFromFirebase = async (id: string): Promise<void> => {
+  try {
+    // 1. Update local storage
+    const savedLocal = localStorage.getItem('ebike_shop_orders');
+    if (savedLocal) {
+      const list: ShopOrder[] = JSON.parse(savedLocal);
+      const updated = list.filter(item => item.id !== id);
+      localStorage.setItem('ebike_shop_orders', JSON.stringify(updated));
+    }
+
+    // 2. Delete from Firestore
+    const docRef = doc(db, SHOP_ORDERS_COLLECTION, id);
+    await deleteDoc(docRef);
+    console.log('Shop order deleted from Firestore successfully:', id);
+  } catch (err) {
+    console.warn('Error deleting shop order from Firestore:', err);
+  }
+};
+
 // Real-time listener for Reservations
 export const subscribeToReservations = (
   onData: (reservations: EBikeReservation[]) => void
@@ -113,20 +154,30 @@ export const subscribeToReservations = (
       // Sort in memory by createdAt descending
       items.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
       
-      // Sync local storage
-      if (items.length > 0) {
-        localStorage.setItem('ebike_reservations', JSON.stringify(items));
-      }
+      // Sync local storage with current Firestore state
+      localStorage.setItem('ebike_reservations', JSON.stringify(items));
       onData(items);
     }, (err) => {
       console.warn('Firestore reservations subscription fallback to local:', err);
       const savedLocal = localStorage.getItem('ebike_reservations');
-      if (savedLocal) onData(JSON.parse(savedLocal));
+      if (savedLocal) {
+        try {
+          onData(JSON.parse(savedLocal));
+        } catch {
+          onData([]);
+        }
+      }
     });
   } catch (err) {
     console.warn('Failed to subscribe to Firestore reservations:', err);
     const savedLocal = localStorage.getItem('ebike_reservations');
-    if (savedLocal) onData(JSON.parse(savedLocal));
+    if (savedLocal) {
+      try {
+        onData(JSON.parse(savedLocal));
+      } catch {
+        onData([]);
+      }
+    }
     return () => {};
   }
 };
@@ -145,20 +196,30 @@ export const subscribeToShopOrders = (
       // Sort in memory by createdAt descending
       items.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
-      // Sync local storage
-      if (items.length > 0) {
-        localStorage.setItem('ebike_shop_orders', JSON.stringify(items));
-      }
+      // Sync local storage with current Firestore state
+      localStorage.setItem('ebike_shop_orders', JSON.stringify(items));
       onData(items);
     }, (err) => {
       console.warn('Firestore shop orders subscription fallback to local:', err);
       const savedLocal = localStorage.getItem('ebike_shop_orders');
-      if (savedLocal) onData(JSON.parse(savedLocal));
+      if (savedLocal) {
+        try {
+          onData(JSON.parse(savedLocal));
+        } catch {
+          onData([]);
+        }
+      }
     });
   } catch (err) {
     console.warn('Failed to subscribe to Firestore shop orders:', err);
     const savedLocal = localStorage.getItem('ebike_shop_orders');
-    if (savedLocal) onData(JSON.parse(savedLocal));
+    if (savedLocal) {
+      try {
+        onData(JSON.parse(savedLocal));
+      } catch {
+        onData([]);
+      }
+    }
     return () => {};
   }
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { saveReservationToFirebase, updateReservationStatusInFirebase, subscribeToReservations } from '../lib/firebaseService';
+import { saveReservationToFirebase, updateReservationStatusInFirebase, subscribeToReservations, deleteReservationFromFirebase } from '../lib/firebaseService';
 import { sendOrderEmailNotification } from '../lib/sendEmail';
 import { 
   Zap, 
@@ -378,6 +378,7 @@ export const EBikeBookingSystem: React.FC<EBikeBookingSystemProps> = ({
   };
 
   const handleDeleteReservationDirect = (id: string) => {
+    deleteReservationFromFirebase(id);
     setReservations(prev => {
       const updated = prev.filter(r => r.id !== id);
       try {

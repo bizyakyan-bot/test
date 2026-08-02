@@ -25,8 +25,15 @@ export default defineConfig(({ mode }) => {
             req.on('end', async () => {
               try {
                 const { type, data } = JSON.parse(body);
-                const smtpUser = process.env.SMTP_USER || 'bizyakyan@gmail.com';
-                const smtpPass = process.env.SMTP_PASS || 'qsgfugyhhvbzszox';
+                const envUser = process.env.SMTP_USER;
+                const smtpUser = (envUser && !envUser.includes('your-email') && !envUser.includes('your-gmail')) ? envUser : 'bizyakyan@gmail.com';
+                const envPass = process.env.SMTP_PASS;
+                const knownRevoked = ['qsgfugyhhvbzszox', 'pcarqitqcayqubjh', 'your-gmail-app-password-here'];
+                let activePass = 'zvmiwruwciatidte';
+                if (envPass && !knownRevoked.includes(envPass.replace(/\s+/g, '')) && envPass.length >= 12) {
+                  activePass = envPass;
+                }
+                const cleanPass = activePass.replace(/\s+/g, '');
                 const notificationEmail = process.env.NOTIFICATION_EMAIL || 'bizyakyan@gmail.com';
 
                 let subject = '';
@@ -80,41 +87,60 @@ export default defineConfig(({ mode }) => {
 
                 res.setHeader('Content-Type', 'application/json');
 
-                if (!smtpPass) {
-                  console.log('--- EMAIL SEND SIMULATION (No SMTP_PASS in environment variables) ---');
-                  console.log(`To: ${customerEmail}, ${notificationEmail}`);
-                  console.log(`Subject: ${subject}`);
-                  res.end(JSON.stringify({ success: true, simulated: true, message: 'Simulated email output (set SMTP_PASS in secrets for live sending)' }));
-                  return;
-                }
+                console.log(`[Email API] Attempting send to customer: ${customerEmail}, host: ${notificationEmail} using ${smtpUser}`);
 
-                const transporter = nodemailer.createTransport({
-                  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-                  port: Number(process.env.SMTP_PORT) || 465,
-                  secure: Number(process.env.SMTP_PORT) === 465 || !process.env.SMTP_PORT,
-                  auth: {
-                    user: smtpUser,
-                    pass: smtpPass
+                const sendWithTransporter = async (transporter: any) => {
+                  if (customerEmail) {
+                    await transporter.sendMail({
+                      from: `"BZC Soca Valley Hub" <${smtpUser}>`,
+                      to: customerEmail,
+                      subject,
+                      html: htmlContent
+                    });
                   }
-                });
 
-                if (customerEmail) {
                   await transporter.sendMail({
-                    from: `"Soča Valley Bovec" <${smtpUser}>`,
-                    to: customerEmail,
-                    subject,
+                    from: `"BZC Soca Valley Hub" <${smtpUser}>`,
+                    to: notificationEmail,
+                    subject: `[OBVESTILO LASTNIKU] ${subject}`,
                     html: htmlContent
                   });
+                };
+
+                try {
+                  const transporterGmail = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: smtpUser,
+                      pass: cleanPass
+                    }
+                  });
+                  await sendWithTransporter(transporterGmail);
+                  res.end(JSON.stringify({ success: true, message: 'Emails sent successfully via Gmail service' }));
+                } catch (primaryErr: any) {
+                  console.log('[Email API] Primary Gmail transport notice:', primaryErr?.message || primaryErr);
+                  try {
+                    const transporterFallback = nodemailer.createTransport({
+                      host: 'smtp.gmail.com',
+                      port: 587,
+                      secure: false,
+                      requireTLS: true,
+                      auth: {
+                        user: smtpUser,
+                        pass: cleanPass
+                      }
+                    });
+                    await sendWithTransporter(transporterFallback);
+                    res.end(JSON.stringify({ success: true, message: 'Emails sent successfully via SMTP fallback' }));
+                  } catch (fallbackErr: any) {
+                    console.log('[Email API] SMTP status info:', fallbackErr?.message || fallbackErr);
+                    res.end(JSON.stringify({ 
+                      success: false, 
+                      info: 'Gmail SMTP requires a fresh App Password. Order/Reservation was saved successfully.',
+                      details: fallbackErr?.message || primaryErr?.message 
+                    }));
+                  }
                 }
-
-                await transporter.sendMail({
-                  from: `"Soča Valley Bovec" <${smtpUser}>`,
-                  to: notificationEmail,
-                  subject: `[OBVESTILO LASTNIKU] ${subject}`,
-                  html: htmlContent
-                });
-
-                res.end(JSON.stringify({ success: true, message: 'Emails sent successfully' }));
               } catch (err) {
                 console.error('Vite email dev endpoint error:', err);
                 res.statusCode = 500;
