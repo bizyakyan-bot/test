@@ -12,6 +12,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollEffects';
 
 export const LocalGuideSection = () => {
   const guidePanels = [
@@ -58,7 +59,7 @@ export const LocalGuideSection = () => {
       <div className="max-w-7xl mx-auto space-y-16">
         
         {/* Section Title Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
+        <ScrollReveal direction="up" className="text-center max-w-3xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest">
             <Compass size={14} /> Curated Bovec & Soča Valley Guide
           </div>
@@ -68,83 +69,78 @@ export const LocalGuideSection = () => {
           <p className="text-slate-300 text-base sm:text-lg font-light leading-relaxed">
             Everything you need for your Bovec adventure — select a guide section below to view activities, hiking & cycling trails, and local dining recommendations.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* 3 Main Interactive Panels Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {guidePanels.map((panel, index) => (
-            <motion.div
-              key={panel.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              className="group relative flex flex-col justify-between rounded-3xl overflow-hidden glass-panel border border-white/10 hover:border-emerald-500/50 transition-all duration-500 shadow-2xl hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] bg-slate-900/60"
-            >
-              {/* Top Banner Image with Gradient */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={panel.image} 
-                  alt={panel.title} 
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-                
-                {/* Badge & Icon Floating Header */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                  <span className="bg-slate-950/80 backdrop-blur-md text-emerald-400 font-extrabold text-[11px] uppercase tracking-wider px-3 py-1 rounded-xl border border-emerald-500/30">
-                    {panel.badge}
-                  </span>
-                  <div className="w-10 h-10 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-md">
-                    {panel.icon}
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {guidePanels.map((panel) => (
+            <StaggerItem key={panel.id}>
+              <div className="group relative flex flex-col justify-between rounded-3xl overflow-hidden glass-panel border border-white/10 hover:border-emerald-500/50 transition-all duration-500 shadow-2xl hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] bg-slate-900/60 h-full">
+                {/* Top Banner Image with Gradient */}
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={panel.image} 
+                    alt={panel.title} 
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                  
+                  {/* Badge & Icon Floating Header */}
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                    <span className="bg-slate-950/80 backdrop-blur-md text-emerald-400 font-extrabold text-[11px] uppercase tracking-wider px-3 py-1 rounded-xl border border-emerald-500/30">
+                      {panel.badge}
+                    </span>
+                    <div className="w-10 h-10 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-md">
+                      {panel.icon}
+                    </div>
+                  </div>
+
+                  {/* Card Title inside image bottom */}
+                  <div className="absolute bottom-4 left-6 right-6">
+                    <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight group-hover:text-emerald-400 transition-colors">
+                      {panel.title}
+                    </h3>
+                    <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider mt-0.5">
+                      {panel.subtitle}
+                    </p>
                   </div>
                 </div>
 
-                {/* Card Title inside image bottom */}
-                <div className="absolute bottom-4 left-6 right-6">
-                  <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight group-hover:text-emerald-400 transition-colors">
-                    {panel.title}
-                  </h3>
-                  <p className="text-emerald-400 text-xs font-semibold uppercase tracking-wider mt-0.5">
-                    {panel.subtitle}
+                {/* Card Body & Description */}
+                <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
+                  <p className="text-slate-300 text-sm font-light leading-relaxed">
+                    {panel.description}
                   </p>
-                </div>
-              </div>
 
-              {/* Card Body & Description */}
-              <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6">
-                <p className="text-slate-300 text-sm font-light leading-relaxed">
-                  {panel.description}
-                </p>
+                  {/* Highlight Pills */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {panel.highlights.map((h, i) => (
+                      <span 
+                        key={i} 
+                        className="bg-white/5 border border-white/10 text-slate-200 text-xs font-medium px-2.5 py-1 rounded-lg"
+                      >
+                        {h}
+                      </span>
+                    ))}
+                  </div>
 
-                {/* Highlight Pills */}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {panel.highlights.map((h, i) => (
-                    <span 
-                      key={i} 
-                      className="bg-white/5 border border-white/10 text-slate-200 text-xs font-medium px-2.5 py-1 rounded-lg"
+                  {/* Action CTA Button */}
+                  <div className="pt-4 border-t border-white/10">
+                    <Link
+                      to={panel.link}
+                      className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 group-hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg group-hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                     >
-                      {h}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action CTA Button */}
-                <div className="pt-4 border-t border-white/10">
-                  <Link
-                    to={panel.link}
-                    className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 group-hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg group-hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-                  >
-                    <span>{panel.btnText}</span>
-                    <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                      <span>{panel.btnText}</span>
+                      <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
       </div>
     </section>

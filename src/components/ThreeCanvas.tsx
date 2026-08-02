@@ -19,8 +19,8 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
     if (!containerRef.current) return;
 
     // --- 1. SETUP THREE.JS SCENE, CAMERA & RENDERER ---
-    const width = containerRef.current.clientWidth;
-    const height = containerRef.current.clientHeight;
+    const width = (containerRef.current.clientWidth || window.innerWidth) || 800;
+    const height = (containerRef.current.clientHeight || window.innerHeight) || 600;
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2('#061011', 0.015);
@@ -31,12 +31,20 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
     camera.position.set(0, 15, 30);
     const cameraTarget = new THREE.Vector3(0, 2, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap;
-    containerRef.current.appendChild(renderer.domElement);
+    let renderer: THREE.WebGLRenderer | null = null;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.BasicShadowMap;
+      if (containerRef.current) {
+        containerRef.current.appendChild(renderer.domElement);
+      }
+    } catch (e) {
+      console.warn("WebGL initialization skipped:", e);
+      return () => {};
+    }
 
     // --- 2. LIGHTING SYSTEM ---
     const ambientLight = new THREE.AmbientLight('#0a1b1d', 1.5);
@@ -228,7 +236,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
 
     // Resize handling
     const handleResize = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !renderer) return;
       const nw = containerRef.current.clientWidth;
       const nh = containerRef.current.clientHeight;
 
@@ -323,7 +331,12 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
 
       camera.lookAt(cameraTarget);
 
-      renderer.render(scene, camera);
+      try {
+        renderer.render(scene, camera);
+      } catch (err) {
+        console.warn("WebGL render tick failed, stopping loop:", err);
+        return;
+      }
       frameId = requestAnimationFrame(tick);
     };
 
@@ -334,7 +347,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ currentSection }) => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(frameId);
-      renderer.dispose();
+      if (renderer) {
+        try {
+          renderer.dispose();
+        } catch (_) {}
+      }
       terrainGeo.dispose();
       terrainMat.dispose();
       riverGeo.dispose();

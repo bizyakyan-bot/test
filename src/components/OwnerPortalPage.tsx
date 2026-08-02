@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { subscribeToReservations, subscribeToShopOrders, updateReservationStatusInFirebase, updateShopOrderStatusInFirebase } from '../lib/firebaseService';
 import {
   Shield,
   Lock,
@@ -102,7 +103,16 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   useEffect(() => {
-    handleRefreshData();
+    const unsubRentals = subscribeToReservations((items) => {
+      setReservations(items);
+    });
+    const unsubOrders = subscribeToShopOrders((items) => {
+      setShopOrders(items);
+    });
+    return () => {
+      unsubRentals();
+      unsubOrders();
+    };
   }, []);
 
   const handlePinSubmit = (e: React.FormEvent) => {
@@ -132,6 +142,7 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   const handleUpdateBikeStatus = (id: string, status: EBikeReservation['status']) => {
+    updateReservationStatusInFirebase(id, status);
     setReservations(prev => {
       const updated = prev.map(r => r.id === id ? { ...r, status } : r);
       try {
@@ -144,6 +155,7 @@ export const OwnerPortalPage: React.FC = () => {
   };
 
   const handleUpdateShopOrderStatus = (id: string, status: ShopOrder['status']) => {
+    updateShopOrderStatusInFirebase(id, status);
     setShopOrders(prev => {
       const updated = prev.map(o => o.id === id ? { ...o, status } : o);
       try {

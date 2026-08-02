@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { saveReservationToFirebase, updateReservationStatusInFirebase, subscribeToReservations } from '../lib/firebaseService';
 import { 
   Zap, 
   Bike,
@@ -119,12 +120,11 @@ export const EBikeBookingSystem: React.FC<EBikeBookingSystemProps> = ({
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem('ebike_reservations', JSON.stringify(reservations));
-    } catch (e) {
-      console.error('Failed to save reservations to local storage', e);
-    }
-  }, [reservations]);
+    const unsubscribe = subscribeToReservations((items) => {
+      setReservations(items);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Total shop fleet size constraint: Exactly 2 units of Headeer BK20 owned by host
   const TOTAL_FLEET_SIZE = 2;
@@ -359,6 +359,7 @@ export const EBikeBookingSystem: React.FC<EBikeBookingSystemProps> = ({
       status: 'confirmed'
     };
 
+    saveReservationToFirebase(newReservation);
     setReservations(prev => [newReservation, ...prev]);
     setLastConfirmedReservation(newReservation);
     setStep(6);
@@ -366,6 +367,7 @@ export const EBikeBookingSystem: React.FC<EBikeBookingSystemProps> = ({
 
 
   const handleUpdateStatus = (id: string, status: 'confirmed' | 'active' | 'completed' | 'cancelled') => {
+    updateReservationStatusInFirebase(id, status);
     setReservations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
   };
 

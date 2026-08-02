@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Bike, Calendar, Clock, MapPin, ShieldCheck, Zap, ArrowLeft, Check, Compass, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EBikeBookingSystem } from './EBikeBookingSystem';
+import { ScrollReveal, StaggerContainer, StaggerItem, ScrollScale } from './ScrollEffects';
 
 export const RentABikePage = () => {
   return (
@@ -19,7 +20,7 @@ export const RentABikePage = () => {
       </div>
 
       {/* Hero Banner */}
-      <div className="max-w-7xl mx-auto px-4 md:px-16 mb-16">
+      <ScrollScale className="max-w-7xl mx-auto px-4 md:px-16 mb-16">
         <div className="relative rounded-3xl overflow-hidden glass-panel p-8 sm:p-12 md:p-16 border border-emerald-500/20 bg-gradient-to-r from-emerald-950/40 via-teal-950/20 to-black/80 shadow-2xl">
           {/* Ambient light */}
           <div className="absolute -top-10 -right-10 w-80 h-80 bg-emerald-500/15 blur-[100px] rounded-full pointer-events-none" />
@@ -58,25 +59,25 @@ export const RentABikePage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </ScrollScale>
 
       {/* Main Reservation Component */}
-      <div className="max-w-7xl mx-auto px-4 md:px-16">
+      <ScrollReveal className="max-w-7xl mx-auto px-4 md:px-16">
         <EBikeBookingSystem />
-      </div>
+      </ScrollReveal>
 
       {/* Recommended Trails & GPS Routes */}
       <div className="max-w-7xl mx-auto px-4 md:px-16 mt-20">
-        <div className="text-center mb-12">
+        <ScrollReveal className="text-center mb-12">
           <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-2 block">
             Curated Cycling Adventures
           </span>
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold uppercase tracking-tight text-white">
             Top Soča Valley Bike Routes
           </h2>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <StaggerContainer className="grid md:grid-cols-3 gap-6">
           {[
             {
               name: 'Čezsoča & Soča River Loop',
@@ -100,26 +101,28 @@ export const RentABikePage = () => {
               img: 'https://images.unsplash.com/photo-1517649763962-0c623266010b?w=800&q=80'
             }
           ].map((route, i) => (
-            <div key={i} className="glass-panel rounded-2xl overflow-hidden border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between">
-              <div>
-                <div className="relative h-48 overflow-hidden">
-                  <img src={route.img} alt={route.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  <div className="absolute top-3 left-3 bg-black/75 px-3 py-1 rounded-lg text-xs font-bold text-emerald-400 border border-emerald-500/30">
-                    {route.dist}
+            <StaggerItem key={i}>
+              <div className="glass-panel rounded-2xl overflow-hidden border border-white/10 hover:border-emerald-500/30 transition-all flex flex-col justify-between h-full">
+                <div>
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={route.img} alt={route.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                    <div className="absolute top-3 left-3 bg-black/75 px-3 py-1 rounded-lg text-xs font-bold text-emerald-400 border border-emerald-500/30">
+                      {route.dist}
+                    </div>
+                  </div>
+                  <div className="p-6 space-y-2">
+                    <h3 className="font-heading text-xl font-bold uppercase tracking-tight text-white">{route.name}</h3>
+                    <p className="text-xs text-slate-300 font-light leading-relaxed">{route.desc}</p>
                   </div>
                 </div>
-                <div className="p-6 space-y-2">
-                  <h3 className="font-heading text-xl font-bold uppercase tracking-tight text-white">{route.name}</h3>
-                  <p className="text-xs text-slate-300 font-light leading-relaxed">{route.desc}</p>
+                <div className="p-4 bg-black/40 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+                  <span className="flex items-center gap-1.5 text-emerald-300 font-semibold"><Clock size={14} /> {route.time}</span>
+                  <span className="text-[11px] text-slate-400">GPS Track Provided</span>
                 </div>
               </div>
-              <div className="p-4 bg-black/40 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1.5 text-emerald-300 font-semibold"><Clock size={14} /> {route.time}</span>
-                <span className="text-[11px] text-slate-400">GPS Track Provided</span>
-              </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </div>
   );

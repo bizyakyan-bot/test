@@ -4,6 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Soca Valley Hub | Apartments near Bovec, Slovenia</title>
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Captured Window Error:', e);
+        var errDiv = document.getElementById('global-error-overlay');
+        if (!errDiv) {
+          errDiv = document.createElement('div');
+          errDiv.id = 'global-error-overlay';
+          errDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#0f172a;color:#f87171;padding:24px;z-index:999999;font-family:monospace;overflow:auto;';
+          document.body.appendChild(errDiv);
+        }
+        errDiv.innerHTML = '<h2 style="color:#ef4444;margin-top:0;">Runtime Error:</h2><pre style="background:#1e293b;padding:16px;border-radius:8px;white-space:pre-wrap;color:#f1f5f9;">' + (e.error ? (e.error.stack || e.error.message || e.error) : e.message) + '</pre>';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Captured Promise Rejection:', e);
+        var errDiv = document.getElementById('global-error-overlay');
+        if (!errDiv) {
+          errDiv = document.createElement('div');
+          errDiv.id = 'global-error-overlay';
+          errDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#0f172a;color:#f87171;padding:24px;z-index:999999;font-family:monospace;overflow:auto;';
+          document.body.appendChild(errDiv);
+        }
+        errDiv.innerHTML = '<h2 style="color:#ef4444;margin-top:0;">Promise Rejection Error:</h2><pre style="background:#1e293b;padding:16px;border-radius:8px;white-space:pre-wrap;color:#f1f5f9;">' + (e.reason ? (e.reason.stack || e.reason.message || e.reason) : e) + '</pre>';
+      });
+    </script>
     <link rel="canonical" href="https://www.socavalley-stays.com/" />
     <meta name="description" content="Modern apartments in Soca Valley near Bovec. Book direct stays surrounded by alpine nature and alpine landscapes.">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -36,8 +60,8 @@
     }
     </script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="background-color: #061011; color: #f1f5f9; margin: 0; padding: 0;">
+    <div id="root" style="background-color: #061011; min-height: 100vh;"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

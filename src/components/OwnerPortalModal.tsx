@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { subscribeToReservations, subscribeToShopOrders, updateReservationStatusInFirebase, updateShopOrderStatusInFirebase } from '../lib/firebaseService';
 import {
   Shield,
   Lock,
@@ -156,21 +157,19 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   const [shopSearch, setShopSearch] = useState('');
   const [shopStatusFilter, setShopStatusFilter] = useState('all');
 
-  // Sync shop orders from local storage periodically when modal opens
+  // Sync shop orders & rentals from Firebase in real-time
   useEffect(() => {
     if (isOpen) {
-      try {
-        const savedOrders = localStorage.getItem('ebike_shop_orders');
-        if (savedOrders) {
-          setShopOrders(JSON.parse(savedOrders));
-        }
-        const savedRentals = localStorage.getItem('ebike_reservations');
-        if (savedRentals) {
-          setInternalReservations(JSON.parse(savedRentals));
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      const unsubRentals = subscribeToReservations((items) => {
+        setInternalReservations(items);
+      });
+      const unsubOrders = subscribeToShopOrders((items) => {
+        setShopOrders(items);
+      });
+      return () => {
+        unsubRentals();
+        unsubOrders();
+      };
     }
   }, [isOpen]);
 
@@ -188,6 +187,7 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   };
 
   const handleUpdateBikeStatus = (id: string, status: EBikeReservation['status']) => {
+    updateReservationStatusInFirebase(id, status);
     if (onUpdateReservationStatus) {
       onUpdateReservationStatus(id, status);
     }
@@ -203,6 +203,7 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
   };
 
   const handleUpdateShopOrderStatus = (id: string, status: ShopOrder['status']) => {
+    updateShopOrderStatusInFirebase(id, status);
     setShopOrders(prev => {
       const updated = prev.map(o => o.id === id ? { ...o, status } : o);
       try {

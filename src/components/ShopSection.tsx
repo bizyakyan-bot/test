@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ShoppingBag, ShoppingCart, Check, X, Tag, SlidersHorizontal, ArrowRight, Truck, ShieldCheck, RefreshCw, Heart, Plus, Minus, Info } from 'lucide-react';
 import { shopProducts, ShopProduct, SAMPLE_INITIAL_SHOP_ORDERS } from '../data';
 import { ShopOrder } from '../types';
+import { saveShopOrderToFirebase } from '../lib/firebaseService';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollEffects';
 
 
 export interface CartItem {
@@ -75,7 +77,7 @@ export const ShopSection = ({
 
       <div className="max-w-7xl mx-auto space-y-12 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
+        <ScrollReveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold tracking-widest text-xs uppercase rounded-full flex items-center gap-1.5">
@@ -104,10 +106,10 @@ export const ShopSection = ({
               </span>
             )}
           </button>
-        </div>
+        </ScrollReveal>
 
         {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <ScrollReveal delay={0.05} className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2 p-1.5 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-md">
             <button
               onClick={() => setActiveCategory('all')}
@@ -149,21 +151,16 @@ export const ShopSection = ({
               <ShieldCheck size={14} className="text-emerald-400" /> 100% Organic Cotton & Premium Quality
             </span>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Products Grid with Stagger */}
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
-            <motion.div
-              key={product.id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.4 }}
-              onClick={() => onOpenProductDetail(product)}
-              className="group glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-emerald-500/40 transition-all duration-500 flex flex-col justify-between cursor-pointer hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] relative"
-            >
+            <StaggerItem key={product.id}>
+              <div
+                onClick={() => onOpenProductDetail(product)}
+                className="group glass-panel rounded-3xl overflow-hidden border border-white/10 hover:border-emerald-500/40 transition-all duration-500 flex flex-col justify-between cursor-pointer hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] relative h-full"
+              >
               <div>
                 {/* Product Image Container */}
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900/60">
@@ -254,9 +251,10 @@ export const ShopSection = ({
                   <span>Add to Cart</span>
                 </button>
               </div>
-            </motion.div>
+            </div>
+          </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
 
         {/* Info Banner below grid */}
         <div className="glass-panel p-8 rounded-3xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-emerald-950/30 via-slate-900/60 to-teal-950/30">
@@ -577,6 +575,8 @@ export const CartModal = ({
       status: 'pending',
       createdAt: new Date().toISOString()
     };
+
+    saveShopOrderToFirebase(newOrder);
 
     try {
       const saved = localStorage.getItem('ebike_shop_orders');

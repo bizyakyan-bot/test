@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves, Clock, Activity, ShoppingCart, ShoppingBag, Tag } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, Check, Menu, X, ArrowLeft, ChevronLeft, ChevronRight, Wifi, Coffee, Tv, Wind, Utensils, Bath, ExternalLink, LayoutGrid, List, SlidersHorizontal, Mountain, Waves, Clock, Activity, ShoppingCart, ShoppingBag, Tag, Download } from 'lucide-react';
 import { HashRouter, Routes, Route, Link, useParams, useNavigate, useLocation, useNavigationType } from 'react-router-dom';
 import { apartments, Apartment, hikingActivities, HikingActivity, raftingPartners, RaftingPartner, roadCyclingRoutes, mtbRoutes, CyclingRoute, shopProducts, ShopProduct } from './data';
 import { Bike, Map as MapIcon, Shield, Users, Heart, Zap, Compass, Settings, Calendar, Lock, Unlock, KeyRound } from 'lucide-react';
@@ -19,6 +19,8 @@ import { RestaurantsAndShopsPage } from './components/RestaurantsAndShopsPage';
 import { RentABikePage } from './components/RentABikePage';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { LocationMapSection } from './components/LocationMapSection';
+import { ScrollProgressBar, FloatingScrollToTop, ScrollReveal, ParallaxWrapper, StaggerContainer, StaggerItem, ScrollScale } from './components/ScrollEffects';
+import { CookieBanner } from './components/CookieBanner';
 
 // Scroll to top component that only scrolls on PUSH/REPLACE, not POP (back button)
 const ScrollToTop = () => {
@@ -54,9 +56,9 @@ const Navbar = ({
   const navLinks = [
     { name: 'Stay', href: '/#accommodation' },
     { name: 'Rent a Bike', href: '/rent-a-bike' },
-    { name: 'Shop', href: '/shop', isSpecial: true },
     { name: 'Local Guide', href: '/#local-guide' },
     { name: 'Contact', href: '/#contact' },
+    { name: 'Shop', href: '/shop', isSpecial: true },
   ];
 
   return (
@@ -305,130 +307,121 @@ const Hero = () => {
         </motion.p>
       </div>
       
-      {/* Main Visual Banner */}
-      <div className="relative w-full h-[45vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-3xl glass-panel mb-12 border border-white/10">
-        <img 
-          src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260219_225914_78050ddb-90c2-4464-bfbf-117e0c1c14b8.jpeg&w=1280&q=85" 
-          alt="Bovec Town Square & Soča Valley Basecamp" 
-          className="w-full h-full object-cover opacity-85"
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-black/30 to-black/20" />
-        
-        <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 max-w-md z-10 p-6 rounded-2xl glass-panel border border-white/10 shadow-xl backdrop-blur-md">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 block mb-1">
-            Julian Alps Basecamp
-          </span>
-          <p className="text-white text-base md:text-xl font-bold leading-snug">
-            Alpine Comfort, In-House E-Bikes & Unrivaled River Access
-          </p>
-        </div>
-      </div>
-
-      {/* 3 Quick-Action Cards below Hero */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
-        {/* Card 1: STAY */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
-        >
-          <div className="space-y-4">
-            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
-              <Mountain size={28} />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">01. Accommodation</span>
-              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
-                STAY (Apartments in Bovec)
-              </h3>
-            </div>
-            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
-              Boutique apartments in Čezsoča (250m to river beach), Bovec town center, and Soča village with private balconies & mountain views.
+      {/* Main Visual Banner with Scroll Scale */}
+      <ScrollScale className="mb-12">
+        <div className="relative w-full h-[45vh] md:h-[60vh] rounded-3xl overflow-hidden shadow-3xl glass-panel border border-white/10 group">
+          <img 
+            src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260219_225914_78050ddb-90c2-4464-bfbf-117e0c1c14b8.jpeg&w=1280&q=85" 
+            alt="Bovec Town Square & Soča Valley Basecamp" 
+            className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-700 ease-out"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#061011] via-black/30 to-black/20" />
+          
+          <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 max-w-md z-10 p-6 rounded-2xl glass-panel border border-white/10 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 block mb-1">
+              Julian Alps Basecamp
+            </span>
+            <p className="text-white text-base md:text-xl font-bold leading-snug">
+              Alpine Comfort, In-House E-Bikes & Unrivaled River Access
             </p>
           </div>
+        </div>
+      </ScrollScale>
 
-          <div className="pt-6 mt-6 border-t border-white/5">
-            <Link 
-              to="/accommodations/all"
-              state={{ from: '/#accommodation' }}
-              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-            >
-              <span>Check Availability</span>
-              <ArrowRight size={14} />
-            </Link>
+      {/* 3 Quick-Action Cards below Hero with Staggered Scroll Reveal */}
+      <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {/* Card 1: STAY */}
+        <StaggerItem>
+          <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02] h-full">
+            <div className="space-y-4">
+              <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+                <Mountain size={28} />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">01. Accommodation</span>
+                <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                  STAY (Apartments in Bovec)
+                </h3>
+              </div>
+              <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+                Boutique apartments in Čezsoča (250m to river beach), Bovec town center, and Soča village with private balconies & mountain views.
+              </p>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-white/5">
+              <Link 
+                to="/accommodations/all"
+                state={{ from: '/#accommodation' }}
+                className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              >
+                <span>Check Availability</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
-        </motion.div>
+        </StaggerItem>
 
         {/* Card 2: RENT A BIKE */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
-        >
-          <div className="space-y-4">
-            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
-              <Bike size={28} />
+        <StaggerItem>
+          <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02] h-full">
+            <div className="space-y-4">
+              <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+                <Bike size={28} />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">02. In-House Rentals</span>
+                <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                  RENT A BIKE
+                </h3>
+              </div>
+              <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+                High-end Bosch E-Bikes & mountain bikes. Complete with helmet, heavy lock, repair kit, GPS trails & free apartment delivery.
+              </p>
             </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">02. In-House Rentals</span>
-              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
-                RENT A BIKE
-              </h3>
-            </div>
-            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
-              High-end Bosch E-Bikes & mountain bikes. Complete with helmet, heavy lock, repair kit, GPS trails & free apartment delivery.
-            </p>
-          </div>
 
-          <div className="pt-6 mt-6 border-t border-white/5">
-            <Link 
-              to="/rent-a-bike"
-              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-            >
-              <span>Reserve a Bike</span>
-              <ArrowRight size={14} />
-            </Link>
+            <div className="pt-6 mt-6 border-t border-white/5">
+              <Link 
+                to="/rent-a-bike"
+                className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              >
+                <span>Reserve a Bike</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
-        </motion.div>
+        </StaggerItem>
 
         {/* Card 3: SHOP */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02]"
-        >
-          <div className="space-y-4">
-            <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
-              <ShoppingBag size={28} />
+        <StaggerItem>
+          <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl flex flex-col justify-between group hover:scale-[1.02] h-full">
+            <div className="space-y-4">
+              <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400">
+                <ShoppingBag size={28} />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">03. Official Apparel</span>
+                <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
+                  SHOP (Merch & Gear)
+                </h3>
+              </div>
+              <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
+                Official J.Bizjak hoodies, cotton t-shirts, outdoor caps, and essential gear. Shop online with direct checkout.
+              </p>
             </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">03. Official Apparel</span>
-              <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-white mt-1">
-                SHOP (Merch & Gear)
-              </h3>
-            </div>
-            <p className="text-slate-300 text-xs sm:text-sm font-light leading-relaxed">
-              Official J.Bizjak hoodies, cotton t-shirts, outdoor caps, and essential gear. Shop online with direct checkout.
-            </p>
-          </div>
 
-          <div className="pt-6 mt-6 border-t border-white/5">
-            <Link 
-              to="/shop"
-              className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
-            >
-              <span>Visit Shop</span>
-              <ArrowRight size={14} />
-            </Link>
+            <div className="pt-6 mt-6 border-t border-white/5">
+              <Link 
+                to="/shop"
+                className="w-full py-3.5 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              >
+                <span>Visit Shop</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
-        </motion.div>
-      </div>
+        </StaggerItem>
+      </StaggerContainer>
     </section>
   );
 };
@@ -524,12 +517,27 @@ const AccommodationCard = ({ apt, viewMode = 'grid', origin }: AccommodationCard
 
   return isAvailable ? (
     <Link to={`/apartment/${apt.id}`} state={{ from: location.pathname + location.hash }} key={apt.id} className={viewMode === 'grid' ? 'h-full block' : 'block'}>
-      {CardContent}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.5 }}
+        className="h-full"
+      >
+        {CardContent}
+      </motion.div>
     </Link>
   ) : (
-    <div key={apt.id} className={viewMode === 'grid' ? 'h-full' : ''}>
+    <motion.div
+      key={apt.id}
+      initial={{ opacity: 0, y: 25 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.5 }}
+      className={viewMode === 'grid' ? 'h-full' : ''}
+    >
       {CardContent}
-    </div>
+    </motion.div>
   );
 };
 
@@ -3438,10 +3446,18 @@ const Home = ({
   return (
     <>
       <Hero />
-      <Accommodation />
-      <LocalGuideSection />
-      <Reviews />
-      <Contact />
+      <ScrollReveal direction="up">
+        <Accommodation />
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={0.05}>
+        <LocalGuideSection />
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={0.05}>
+        <Reviews />
+      </ScrollReveal>
+      <ScrollReveal direction="up" delay={0.05}>
+        <Contact />
+      </ScrollReveal>
     </>
   );
 };
@@ -3655,6 +3671,11 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
 
   return (
     <div className="min-h-screen font-sans selection:bg-emerald-400 selection:text-black relative">
+      {/* Scroll Effects & GDPR Banner */}
+      <ScrollProgressBar />
+      <FloatingScrollToTop />
+      <CookieBanner />
+
       {/* 3D background canvas layer */}
       <ThreeCanvas currentSection={currentSection} />
       
@@ -3699,6 +3720,15 @@ const AppContent = ({ onOpenAbout }: { onOpenAbout: () => void }) => {
                 onAddToCart={handleAddToCart}
                 cartItemsCount={totalCartItems}
                 onOpenCart={() => setIsCartOpen(true)}
+              />
+            } 
+          />
+          <Route 
+            path="*" 
+            element={
+              <Home 
+                setCurrentSection={setCurrentSection}
+                onOpenExperienceInquiry={handleOpenExperienceModal}
               />
             } 
           />

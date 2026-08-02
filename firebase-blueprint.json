@@ -1,0 +1,62 @@
+{
+  "entities": {
+    "reservations": {
+      "title": "EBike Reservations",
+      "description": "E-bike rental bookings submitted by guests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingRef": { "type": "string" },
+        "bikeId": { "type": "string" },
+        "bikeName": { "type": "string" },
+        "bikeImage": { "type": "string" },
+        "size": { "type": "string" },
+        "riderHeight": { "type": "string" },
+        "quantity": { "type": "number" },
+        "startDate": { "type": "string" },
+        "pickupTime": { "type": "string" },
+        "duration": { "type": "string" },
+        "numDays": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "pickupLocation": { "type": "string" },
+        "addons": { "type": "array" },
+        "customer": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["bookingRef", "bikeId", "customer", "createdAt", "status"]
+    },
+    "shop_orders": {
+      "title": "Shop Orders",
+      "description": "Official merch and apparel orders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderRef": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "deliveryMethod": { "type": "string" },
+        "shippingAddress": { "type": "string" },
+        "notes": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["orderRef", "customerName", "customerEmail", "items", "totalAmount", "status", "createdAt"]
+    }
+  },
+  "securityRules": [
+    {
+      "collection": "reservations",
+      "read": "true",
+      "write": "true"
+    },
+    {
+      "collection": "shop_orders",
+      "read": "true",
+      "write": "true"
+    }
+  ]
+}

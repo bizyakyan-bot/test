@@ -27,6 +27,21 @@ html, body {
   color: #f1f5f9;
   overflow-x: hidden;
   width: 100%;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 .glow-text-emerald {
