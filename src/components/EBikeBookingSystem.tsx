@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { saveReservationToFirebase, updateReservationStatusInFirebase, subscribeToReservations } from '../lib/firebaseService';
+import { sendOrderEmailNotification } from '../lib/sendEmail';
 import { 
   Zap, 
   Bike,
@@ -360,6 +361,7 @@ export const EBikeBookingSystem: React.FC<EBikeBookingSystemProps> = ({
     };
 
     saveReservationToFirebase(newReservation);
+    sendOrderEmailNotification('reservation', newReservation);
     setReservations(prev => [newReservation, ...prev]);
     setLastConfirmedReservation(newReservation);
     setStep(6);

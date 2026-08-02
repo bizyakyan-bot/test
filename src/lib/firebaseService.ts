@@ -14,6 +14,11 @@ import { EBikeReservation, ShopOrder } from '../types';
 const RESERVATIONS_COLLECTION = 'reservations';
 const SHOP_ORDERS_COLLECTION = 'shop_orders';
 
+// Helper to strip undefined values which crash Firestore setDoc
+const sanitizeForFirestore = <T>(obj: T): T => {
+  return JSON.parse(JSON.stringify(obj));
+};
+
 // Save Reservation to Firestore & localStorage
 export const saveReservationToFirebase = async (reservation: EBikeReservation): Promise<void> => {
   try {
@@ -23,9 +28,9 @@ export const saveReservationToFirebase = async (reservation: EBikeReservation): 
     const updatedLocal = [reservation, ...existingLocal.filter(r => r.id !== reservation.id)];
     localStorage.setItem('ebike_reservations', JSON.stringify(updatedLocal));
 
-    // 2. Save to Firestore database
+    // 2. Save to Firestore database (sanitized)
     const docRef = doc(db, RESERVATIONS_COLLECTION, reservation.id);
-    await setDoc(docRef, reservation);
+    await setDoc(docRef, sanitizeForFirestore(reservation));
     console.log('Reservation saved to Firestore successfully:', reservation.bookingRef);
   } catch (err) {
     console.warn('Error saving reservation to Firestore (saved to localStorage):', err);
@@ -41,9 +46,9 @@ export const saveShopOrderToFirebase = async (order: ShopOrder): Promise<void> =
     const updatedLocal = [order, ...existingLocal.filter(o => o.id !== order.id)];
     localStorage.setItem('ebike_shop_orders', JSON.stringify(updatedLocal));
 
-    // 2. Save to Firestore database
+    // 2. Save to Firestore database (sanitized)
     const docRef = doc(db, SHOP_ORDERS_COLLECTION, order.id);
-    await setDoc(docRef, order);
+    await setDoc(docRef, sanitizeForFirestore(order));
     console.log('Shop order saved to Firestore successfully:', order.orderRef);
   } catch (err) {
     console.warn('Error saving shop order to Firestore (saved to localStorage):', err);
@@ -99,12 +104,15 @@ export const subscribeToReservations = (
   onData: (reservations: EBikeReservation[]) => void
 ) => {
   try {
-    const q = query(collection(db, RESERVATIONS_COLLECTION), orderBy('createdAt', 'desc'));
-    return onSnapshot(q, (snapshot) => {
+    const colRef = collection(db, RESERVATIONS_COLLECTION);
+    return onSnapshot(colRef, (snapshot) => {
       const items: EBikeReservation[] = [];
       snapshot.forEach(docSnap => {
         items.push(docSnap.data() as EBikeReservation);
       });
+      // Sort in memory by createdAt descending
+      items.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      
       // Sync local storage
       if (items.length > 0) {
         localStorage.setItem('ebike_reservations', JSON.stringify(items));
@@ -128,12 +136,15 @@ export const subscribeToShopOrders = (
   onData: (orders: ShopOrder[]) => void
 ) => {
   try {
-    const q = query(collection(db, SHOP_ORDERS_COLLECTION), orderBy('createdAt', 'desc'));
-    return onSnapshot(q, (snapshot) => {
+    const colRef = collection(db, SHOP_ORDERS_COLLECTION);
+    return onSnapshot(colRef, (snapshot) => {
       const items: ShopOrder[] = [];
       snapshot.forEach(docSnap => {
         items.push(docSnap.data() as ShopOrder);
       });
+      // Sort in memory by createdAt descending
+      items.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
       // Sync local storage
       if (items.length > 0) {
         localStorage.setItem('ebike_shop_orders', JSON.stringify(items));

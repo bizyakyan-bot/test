@@ -4,6 +4,7 @@ import { ShoppingBag, ShoppingCart, Check, X, Tag, SlidersHorizontal, ArrowRight
 import { shopProducts, ShopProduct, SAMPLE_INITIAL_SHOP_ORDERS } from '../data';
 import { ShopOrder } from '../types';
 import { saveShopOrderToFirebase } from '../lib/firebaseService';
+import { sendOrderEmailNotification } from '../lib/sendEmail';
 import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollEffects';
 
 
@@ -577,6 +578,7 @@ export const CartModal = ({
     };
 
     saveShopOrderToFirebase(newOrder);
+    sendOrderEmailNotification('shop_order', newOrder);
 
     try {
       const saved = localStorage.getItem('ebike_shop_orders');
