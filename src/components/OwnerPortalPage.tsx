@@ -554,7 +554,7 @@ export const OwnerPortalPage: React.FC = () => {
                               {res.bookingRef}
                             </span>
                             <span className="text-xs text-slate-400 font-semibold">
-                              Created {new Date(res.createdAt).toLocaleDateString()}
+                              Created {new Date(res.createdAt).toLocaleDateString()} {new Date(res.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
 
@@ -700,7 +700,7 @@ export const OwnerPortalPage: React.FC = () => {
                               {order.orderRef}
                             </span>
                             <span className="text-xs text-slate-400 font-semibold">
-                              Placed {new Date(order.createdAt).toLocaleDateString()}
+                              Placed {new Date(order.createdAt).toLocaleDateString()} {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
 

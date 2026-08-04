@@ -15,6 +15,30 @@ export interface CartItem {
   quantity: number;
 }
 
+const handleProductImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const target = e.currentTarget;
+  const currentSrc = target.src || '';
+  if (currentSrc.endsWith('.png')) {
+    target.src = currentSrc.replace(/\.png$/, '.jpg');
+  } else if (currentSrc.endsWith('.jpg')) {
+    target.src = currentSrc.replace(/\.jpg$/, '.jpeg');
+  } else if (currentSrc.endsWith('.jpeg')) {
+    target.src = currentSrc.replace(/\.jpeg$/, '.webp');
+  } else {
+    if (currentSrc.includes('cap_1') || currentSrc.includes('cap_front') || currentSrc.includes('_1')) {
+      target.src = '/images/cap_1st_ed_front_1785868180277.jpg';
+    } else if (currentSrc.includes('cap_2') || currentSrc.includes('cap_angle') || currentSrc.includes('_2')) {
+      target.src = '/images/cap_1st_ed_angle_1785868196018.jpg';
+    } else if (currentSrc.includes('cap_3') || currentSrc.includes('cap_side') || currentSrc.includes('_3')) {
+      target.src = '/images/cap_1st_ed_side_1785868209869.jpg';
+    } else if (currentSrc.includes('cap_4') || currentSrc.includes('cap_back') || currentSrc.includes('_4')) {
+      target.src = '/images/cap_1st_ed_back_1785868224168.jpg';
+    } else {
+      target.src = '/images/cap_1st_ed_front_1785868180277.jpg';
+    }
+  }
+};
+
 export const ShopSection = ({ 
   onOpenProductDetail, 
   onAddToCart,
@@ -171,6 +195,7 @@ export const ShopSection = ({
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
                     referrerPolicy="no-referrer"
+                    onError={handleProductImgError}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20 opacity-60 group-hover:opacity-40 transition-opacity" />
 
@@ -293,11 +318,9 @@ export const ProductDetailModal = ({
   onClose: () => void;
   onAddToCart: (product: ShopProduct, color: string, size: string, qty: number) => void;
 }) => {
-  if (!product) return null;
-
-  const [selectedImage, setSelectedImage] = useState<string>(product.images[0] || '');
-  const [selectedColor, setSelectedColor] = useState<string>(product.colors[0]?.name || '');
-  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || '');
+  const [selectedImage, setSelectedImage] = useState<string>(product?.images?.[0] || '');
+  const [selectedColor, setSelectedColor] = useState<string>(product?.colors?.[0]?.name || '');
+  const [selectedSize, setSelectedSize] = useState<string>(product?.sizes?.[0] || '');
   const [quantity, setQuantity] = useState<number>(1);
   const [addedSuccess, setAddedSuccess] = useState<boolean>(false);
 
@@ -312,6 +335,8 @@ export const ProductDetailModal = ({
     }
   }, [product]);
 
+  if (!product) return null;
+
   const handleAdd = () => {
     onAddToCart(product, selectedColor, selectedSize, quantity);
     setAddedSuccess(true);
@@ -320,6 +345,8 @@ export const ProductDetailModal = ({
       onClose();
     }, 1200);
   };
+
+  const activeImageSrc = selectedImage || product.images[0] || undefined;
 
   return (
     <AnimatePresence>
@@ -355,9 +382,10 @@ export const ProductDetailModal = ({
             <div className="md:w-1/2 p-6 bg-slate-950 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
               <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-900 border border-white/10">
                 <img
-                  src={selectedImage}
+                  src={activeImageSrc}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  onError={handleProductImgError}
                 />
                 <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 flex items-center gap-2">
                   <img src="/IMG_9899.png" alt="Logo" className="w-5 h-5 object-contain" />
@@ -376,7 +404,7 @@ export const ProductDetailModal = ({
                         selectedImage === img ? 'border-emerald-400 scale-105 shadow-lg' : 'border-white/10 opacity-60 hover:opacity-100'
                       }`}
                     >
-                      <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                      <img src={img} alt="Thumbnail" className="w-full h-full object-cover" onError={handleProductImgError} />
                     </button>
                   ))}
                 </div>
@@ -677,6 +705,7 @@ export const CartModal = ({
                             src={item.product.images[0]}
                             alt={item.product.name}
                             className="w-16 h-16 object-cover rounded-xl border border-white/10 flex-shrink-0"
+                            onError={handleProductImgError}
                           />
 
                           <div className="flex-1 min-w-0">

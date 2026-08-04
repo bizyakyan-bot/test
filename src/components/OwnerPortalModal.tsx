@@ -657,6 +657,11 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
                                 <span className="text-xs text-slate-400">
                                   Date: <strong className="text-white">{res.startDate}</strong> ({res.duration})
                                 </span>
+                                {res.createdAt && (
+                                  <span className="text-xs text-slate-400">
+                                    Placed: <strong className="text-white">{new Date(res.createdAt).toLocaleDateString()} {new Date(res.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+                                  </span>
+                                )}
                               </div>
 
                               <div className="flex items-center gap-2">
@@ -696,10 +701,12 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
                                 <span className="text-[10px] text-slate-400 uppercase font-bold block">Customer Details</span>
                                 <p className="font-bold text-white text-sm">{res.customer.fullName}</p>
                                 <p className="text-slate-300 flex items-center gap-1.5">
-                                  <Phone size={12} className="text-amber-400" /> {res.customer.phone}
+                                  <Phone size={12} className="text-amber-400" />
+                                  <a href={`tel:${res.customer.phone}`} className="hover:text-amber-300 underline font-mono">{res.customer.phone}</a>
                                 </p>
                                 <p className="text-slate-300 flex items-center gap-1.5">
-                                  <Mail size={12} className="text-amber-400" /> {res.customer.email}
+                                  <Mail size={12} className="text-amber-400" />
+                                  <a href={`mailto:${res.customer.email}`} className="hover:text-amber-300 underline">{res.customer.email}</a>
                                 </p>
                               </div>
 
@@ -868,10 +875,12 @@ export const OwnerPortalModal: React.FC<OwnerPortalModalProps> = ({
                                 <span className="text-[10px] text-slate-400 uppercase font-bold block">Buyer Contact</span>
                                 <p className="font-bold text-white text-sm">{order.customerName}</p>
                                 <p className="text-slate-300 flex items-center gap-1.5">
-                                  <Phone size={12} className="text-emerald-400" /> {order.customerPhone}
+                                  <Phone size={12} className="text-emerald-400" />
+                                  <a href={`tel:${order.customerPhone}`} className="hover:text-emerald-300 underline font-mono">{order.customerPhone}</a>
                                 </p>
                                 <p className="text-slate-300 flex items-center gap-1.5">
-                                  <Mail size={12} className="text-emerald-400" /> {order.customerEmail}
+                                  <Mail size={12} className="text-emerald-400" />
+                                  <a href={`mailto:${order.customerEmail}`} className="hover:text-emerald-300 underline">{order.customerEmail}</a>
                                 </p>
                               </div>
 

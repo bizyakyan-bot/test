@@ -1403,33 +1403,66 @@ const Contact = () => {
           </p>
           
           <div className="space-y-6">
-            <a href="tel:+38670316806" className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300 group">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/20">
-                <Phone className="text-emerald-400" />
+            <a 
+              href="tel:+38670316806" 
+              className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] hover:border-emerald-500/40 transition-all duration-300 group cursor-pointer"
+              title="Klikni za klic"
+            >
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
+                  <Phone className="text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1 flex items-center gap-1.5">
+                    Phone / WhatsApp
+                  </p>
+                  <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">+386 70 316 806</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Phone / WhatsApp</p>
-                <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">+386 70 316 806</p>
-              </div>
+              <span className="hidden sm:inline-flex text-xs bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-full font-semibold group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                Kliči zdaj
+              </span>
             </a>
-            <a href="mailto:bizyakyan@gmail.com" className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300 group">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/20">
-                <Mail className="text-emerald-400" />
+
+            <a 
+              href="mailto:bizyakyan@gmail.com?subject=Povpraševanje%20-%20Soča%20Valley" 
+              className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] hover:border-emerald-500/40 transition-all duration-300 group cursor-pointer"
+              title="Klikni za pošiljanje e-pošte"
+            >
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
+                  <Mail className="text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Email</p>
+                  <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">bizyakyan@gmail.com</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Email</p>
-                <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">bizyakyan@gmail.com</p>
-              </div>
+              <span className="hidden sm:inline-flex text-xs bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-full font-semibold group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                Pošlji mail
+              </span>
             </a>
-            <div className="flex items-center glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] transition-transform duration-300">
-              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0">
-                <MapPin className="text-emerald-400" />
+
+            <a 
+              href="https://maps.google.com/?q=Brdo+24,+5230+Bovec,+Slovenia" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-between glass-panel p-5 rounded-2xl border border-white/5 shadow-xl hover:scale-[1.01] hover:border-emerald-500/40 transition-all duration-300 group cursor-pointer"
+              title="Odpri na Google Maps"
+            >
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mr-6 shrink-0 group-hover:bg-emerald-500/30 group-hover:scale-110 transition-all">
+                  <MapPin className="text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Address</p>
+                  <p className="font-bold text-xl text-white group-hover:text-emerald-300 transition-colors">Brdo 24<br/>5230 Bovec, Slovenia</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-emerald-400 uppercase tracking-widest font-bold mb-1">Address</p>
-                <p className="font-bold text-xl text-white">Brdo 24<br/>5230 Bovec, Slovenia</p>
-              </div>
-            </div>
+              <span className="hidden sm:inline-flex text-xs bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-full font-semibold group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                Zemljevid
+              </span>
+            </a>
           </div>
         </div>
 

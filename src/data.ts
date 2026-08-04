@@ -418,13 +418,13 @@ export const shopProducts: ShopProduct[] = [
     price: 22.00,
     description: "Classic structured 6-panel trucker cap with a 3D embroidered Soca Valley Hub logo (1st Edition). High-density mesh back keeps you cool during summer heat.",
     images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
-      "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=800&q=80"
+      "/1st_e_cap_1.jpeg",
+      "/1st_e_cap_2.jpeg",
+      "/1st_e_cap_3.jpeg",
+      "/1st_e_cap_4.jpeg"
     ],
     colors: [
-      { name: "Emerald & Black", hex: "#064e3b" },
-      { name: "Matte Black", hex: "#0f172a" },
-      { name: "Charcoal & Mesh", hex: "#475569" }
+      { name: "Black", hex: "#121212" }
     ],
     sizes: ["One Size (Adjustable Snap)"],
     features: [
@@ -449,9 +449,7 @@ export const shopProducts: ShopProduct[] = [
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_387shkKkmXDrcfmHjvQKC7VHsui%2Fhf_20260728_114328_b6252f4c-791f-4955-9ee3-5f6490746723.png&w=1280&q=85"
     ],
     colors: [
-      { name: "Forest Green", hex: "#14532d" },
-      { name: "Slate Grey", hex: "#334155" },
-      { name: "Deep Black", hex: "#020617" }
+      { name: "Beige", hex: "#e4d5b7" }
     ],
     sizes: ["One Size (Adjustable)"],
     features: [
